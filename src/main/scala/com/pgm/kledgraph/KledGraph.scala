@@ -478,15 +478,18 @@ object KledGraph {
 
       val variableSet = items.toSet // factors
       seqFactor.foreach(x=> {
-        val fVariable = x.getVariables.toSet
-        val diff = fVariable -- variableSet
-        if(diff.size == 0){
-          var tmpSeq:Seq[Int] = Seq()
-          x._variables.foreach(v =>{
-            tmpSeq = tmpSeq :+ 1
-          })
-          val ps = getCPDPosition(tmpSeq)
-          p = p * x._cpds(ps)
+        if(x._isUsed == false){
+          val fVariable = x.getVariables.toSet
+          val diff = fVariable -- variableSet
+          if( diff.size == 0){
+            var tmpSeq:Seq[Int] = Seq()
+            x._variables.foreach(v =>{
+              tmpSeq = tmpSeq :+ 1
+            })
+            val ps = getCPDPosition(tmpSeq)
+            p = p * x._cpds(ps)
+            x.setUsed
+          }
         }
       })
 
@@ -527,7 +530,7 @@ object KledGraph {
     p
   }
 
-  def makeCliqueTree() = {}
+  def makeCliqueTree(mapFactor:Map[Int, BayesFactor]) = {}
 
 
   def main(args: Array[String]): Unit = {
