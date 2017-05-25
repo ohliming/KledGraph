@@ -350,10 +350,11 @@ object KledGraph {
     })
   }
 
-  def makeMapFactor(mapFactor:Map[Int, BayesFactor],initPair:List[(Int,Int)],setVal:Set[BayesVar]):Unit = {
+  def makeMapFactor(mapFactor:Map[Int, BayesFactor],initPair:List[(Int,Int)],mapVal:Map[Int, BayesVar]):Unit = {
     initPair.foreach(x => {
-      val start = new BayesVar(x._1)
-      val end = new BayesVar((x._2))
+      val start =  if(mapVal.contains(x._1)) mapVal(x._1) else new BayesVar(x._1)
+      val end = if(mapVal.contains(x._2)) mapVal(x._2) else new BayesVar((x._2))
+
       if(!mapFactor.contains(x._1)) {
         start.addChild(end)
         mapFactor += ((x._1-> new BayesFactor(start)))
@@ -367,7 +368,8 @@ object KledGraph {
       }else{
         end.addParent(start)
       }
-      setVal.add(start);setVal.add(end)
+      mapVal.update(x._1, start)
+      mapVal.update(x._2, end)
     })
   }
 
@@ -551,8 +553,9 @@ object KledGraph {
     val initPair = structGrahpList(listRecords, mapTopic, mapQuestTopic, mapTopicQuest)
     println("the pair len is:" + initPair.length)
 
-    var setVal:Set[BayesVar] = Set()
-    var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor,initPair,setVal)
+    var mapVal:Map[Int,BayesVar] = Map()
+    var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor,initPair,mapVal)
+
     var mapIndex:Map[Int, Int] = mapTopic2Index(mapTopic)
     val matrixTopic = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex) // spare matrix
     staticTopicCPD(mapFactor, matrixTopic, mapIndex)
@@ -567,7 +570,7 @@ object KledGraph {
 
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
     val p = condSumProductVE(mapFactor,sequence, target, 1, mapEvidences)
-
+    println(p) // output p
     sc.stop
   }
 }

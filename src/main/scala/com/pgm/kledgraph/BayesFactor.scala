@@ -1,10 +1,11 @@
 package com.pgm.kledgraph
 
 import org.apache.spark.SparkContext
-
 import scala.collection.mutable
 import scala.collection.mutable.{Map, Seq, Set}
 
+import org.json4s.native.JsonMethods._
+import org.json4s.JsonDSL._
 
 /**
   * Created by liming on 17-5-8.
@@ -39,12 +40,63 @@ class BayesModel {
   var _factors:Set[BayesFactor] = Set() // factors
   def addFactor(variable:BayesFactor) = { _factors.add(variable) }
 
-  def save(hfile:String, sc:SparkContext) = {
-    val rdd = sc.makeRDD(_factors.toSeq)
-    rdd.saveAsTextFile(hfile)
+  def save(hFile:String, sc:SparkContext) = {
+    var resSeq:Seq[String] = Seq()
+    _factors.foreach(factor => {
+      var mapRes:Map[String, String] = Map()
+      mapRes += (( "cpdNegative" -> factor._cpdNegative.toString ))
+      mapRes += (( "cpdPositive" -> factor._cpdPositive.toString ))
+      mapRes += (( "cpds" -> factor._cpds.toString ))
+      mapRes += (( "variables" -> factor._variables.map(x=>x._v).toString ))
+      mapRes += (( "eliParents" -> factor._eliminate._parents.map(x=>x._v).toString ))
+      mapRes += (( "eliChilds" -> factor._eliminate._childs.map(x=>x._v).toString ))
+      mapRes += (( "eliV" -> factor._eliminate._v.toString ))
+      val jsonMap = compact(render(mapRes)).toString
+      resSeq = resSeq :+ jsonMap
+    })
+    val rdd = sc.makeRDD(resSeq)
+    rdd.saveAsTextFile(hFile)
   }
 
-  def load(hfile:String, sc:SparkContext) = {
-    val rdd = sc.textFile(hfile)
+  def load(hFile:String, sc:SparkContext) = {
+    val rdd = sc.textFile(hFile)
+    var mapVal:Map[Int,BayesVar] = Map()
+    rdd.foreach(line =>{
+      var bayes = new BayesVar(0)
+      var factor = new BayesFactor(bayes)
+
+      var t = parse("\"\""+ line+ "\"\"",false)
+      for( (k,v) <- t.values.asInstanceOf[Map[String,String]]) {
+        if(k.equals("eliV")){
+          bayes.setVar(v.toInt)
+        }else if(k.equals("eliParents")){
+          val parents = v.replace("List(","").replace(")","").split(",").map(x=> x.toInt)
+          parents.foreach(x=>{
+            val pBayes = if(mapVal.contains(x)) mapVal(x) else new BayesVar(x)
+            pBayes.addChild(bayes)
+            bayes.addParent(pBayes)
+            mapVal.update(x, pBayes)
+          })
+        }else if(k.equals("variables")) {
+          val variables = v.replace("List(","").replace(")","").split(",").map(x=> x.toInt)
+          variables.foreach(x => {
+            val pBayes = if(mapVal.contains(x)) mapVal(x) else new BayesVar(x)
+            factor.addVariable(pBayes)
+            mapVal.update(x,pBayes)
+          })
+        }else if(k.equals("cpds")){
+          val cpds = v.replace("List(","").replace(")","").split(",").map(x=> x.toDouble)
+          cpds.foreach(x=>{factor._cpds = factor._cpds :+ x})
+        }else if(k.equals("cpdPositive")){
+          val cpdsPositive = v.replace("List(","").replace(")","").split(",").map(x=> x.toDouble)
+          cpdsPositive.foreach(x=>{factor._cpdPositive = factor._cpds :+ x})
+        }else if(k.equals("cpdNegative")){
+          val cpdNegative = v.replace("List(","").replace(")","").split(",").map(x=> x.toDouble)
+          cpdNegative.foreach(x=>{factor._cpdNegative = factor._cpds :+ x})
+        }
+      }
+
+      this.addFactor(factor)
+    })
   }
 }
