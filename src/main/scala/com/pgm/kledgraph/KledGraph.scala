@@ -77,10 +77,10 @@ object KledGraph {
 
   // cache the exceries records
   def getStudRecords(mapQuestTopic: Map[Int, Set[Int]], mapTopic: Map[Int, String], sqlContext: HiveContext) = {
-    var listRecords:List[(Int, Int, Int)] = List() // records object
+    var listRecords:List[(Long, Int, Int)] = List() // records object
     val rows = sqlContext.sql("select student_id, question_id, result from entity_student_exercise where student_id>0 and question_id>0")
     rows.foreach(x => {
-      val studentId = x.get(0).toString.toInt
+      val studentId = x.get(0).toString.toLong
       val questionId = x.get(1).toString.toInt
       var result = x.get(2).toString
 
@@ -118,10 +118,10 @@ object KledGraph {
     listRecords
   }
 
-  def staticContionPro(listRecords: List[(Int, Int, Int)], mapQuestTopic: Map[Int,Set[Int]], startTopicSet:Set[Int], endTopic:Int, label:Int) = {
-    var setStart:Set[Int] = Set() // start student set
-    var setEnd:Set[Int] = Set() // end student set
-    var mapStudent: Map[Int, Int] = Map() // student set
+  def staticContionPro(listRecords: List[(Long, Int, Int)], mapQuestTopic: Map[Int,Set[Int]], startTopicSet:Set[Int], endTopic:Int, label:Int) = {
+    var setStart:Set[Long] = Set() // start student set
+    var setEnd:Set[Long] = Set() // end student set
+    var mapStudent: Map[Long, Int] = Map() // student set
 
     listRecords.foreach(x => {
       val studentId = x._1
@@ -206,7 +206,7 @@ object KledGraph {
     false
   }
 
-  def structGrahpList(listRecords:List[(Int,Int,Int)], mapTopic:Map[Int, String], mapQuestTopic:Map[Int,Set[Int]],
+  def structGrahpList(listRecords:List[(Long,Int,Int)], mapTopic:Map[Int, String], mapQuestTopic:Map[Int,Set[Int]],
                       mapTopicQuest:Map[Int,Set[Int]],throld: Int = 30, inDreege:Int = 3, outDreege:Int = 4) = {
     var initPair:List[(Int,Int)]= List()
     var listPair:List[((Int,Int),Int)] = List()
@@ -257,7 +257,7 @@ object KledGraph {
     initPair
   }
 
-  def makeTopicMatrix(listRecords: List[(Int, Int, Int)], mapQuestTopic:Map[Int,Set[Int]], mapIndex: Map[Int,Int]) = {
+  def makeTopicMatrix(listRecords: List[(Long, Int, Int)], mapQuestTopic:Map[Int,Set[Int]], mapIndex: Map[Int,Int]) = {
     var columns:Seq[Int] = Seq(); var rows:Seq[Int] = Seq() // row and column
     var values:Seq[Double] = Seq()
     var rowCount = 0
