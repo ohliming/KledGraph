@@ -78,7 +78,7 @@ object KledGraph {
   // cache the exceries records
   def getStudRecords(mapQuestTopic: Map[Int, Set[Int]], mapTopic: Map[Int, String], sqlContext: HiveContext) = {
     var listRecords:List[(Int, Int, Int)] = List() // records object
-    val rows = sqlContext.sql("select student_id, question_id, result from entity_student_exercise")
+    val rows = sqlContext.sql("select student_id, question_id, result from entity_student_exercise where student_id>0 and question_id>0")
     rows.foreach(x => {
       val studentId = x.get(0).toString.toInt
       val questionId = x.get(1).toString.toInt
@@ -539,17 +539,19 @@ object KledGraph {
     val conf = new SparkConf().setAppName("KledGraph") // init the spark
     val sc = new SparkContext(conf)
     val sqlContext = new HiveContext(sc)
-    sqlContext.sql("use neworiental_v3") //use databases
+    // sqlContext.sql("use neworiental_v3") //use databases
 
     val mapTopic = getTopic(stageDict("CZ"), subjectDict("cz_chemical"), sqlContext)
     val pair = getQuestionTopic(mapTopic, sqlContext)
     val mapQuestTopic: Map[Int,Set[Int]] = pair._1
     println("the question len is:" + mapQuestTopic.size)
+
     val mapTopicQuest: Map[Int,Set[Int]] = pair._2
     println("the topic len is:" + mapTopicQuest.size)
 
     val listRecords = getStudRecords(mapQuestTopic, mapTopic, sqlContext)
     println("the record len is:" + listRecords.length)
+
     val initPair = structGrahpList(listRecords, mapTopic, mapQuestTopic, mapTopicQuest)
     println("the pair len is:" + initPair.length)
 
