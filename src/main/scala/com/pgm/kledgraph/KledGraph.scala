@@ -532,9 +532,6 @@ object KledGraph {
     p
   }
 
-  def makeCliqueTree(mapFactor:Map[Int, BayesFactor]) = {}
-
-
   def main(args: Array[String]): Unit = {
     val conf = new SparkConf().setAppName("KledGraph") // init the spark
     val sc = new SparkContext(conf)
