@@ -7,7 +7,9 @@ import org.apache.spark.mllib.linalg.{Matrices, Matrix}
 
 import scala.collection.mutable.{ListBuffer, Map, Seq, Set}
 import scala.util.control.Breaks._
-import scala.util.parsing.json._
+
+import org.json4s.native.JsonMethods._
+import org.json4s.JsonDSL._
 
 object KledGraph {
   val stageDict: Map[String, Int] = Map(
@@ -95,19 +97,13 @@ object KledGraph {
         if (setMerge.size > 0) {
           if (regex.findFirstMatchIn(result) != None) {
             res = result.toInt
-          } else if (result.equals("NULL")) {
+          } else if (result.equals("NULL") || result.equals("")) {
             res = 2
           } else {
-            val optJson = JSON.parseFull(result)
-            optJson match {
-              case Some(x) => {
-                val mapJson = x.asInstanceOf[Map[String, Double]]
-                res = if (mapJson("result") == 1) 1 else 2
-              }
-              case None => {
-                res = -1
-              }
-            }
+            val formatRes = "\"\""+result+"\"\""
+            val t = parse(formatRes, false)
+            val mapJson = t.values.asInstanceOf[Map[String,String]]
+            res =  if(mapJson("result") == "1") 1 else 2
           }
 
           listRecords = listRecords.+:(studentId, questionId, res) // add list record
