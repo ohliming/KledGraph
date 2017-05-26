@@ -92,7 +92,7 @@ object KledGraph {
         setTopic.foreach(x => {
           if( mapTopic.contains(x) ){
             bFlag = true
-            break
+            break()
           }
         })
       }
@@ -290,7 +290,7 @@ object KledGraph {
     indSeq.foreach(x => {
       if(x == 0){
         indSeq.update(indSeq.indexOf(x), 1)
-        break
+        break()
       }else{
         indSeq.update(indSeq.indexOf(x), 0)
       }
@@ -319,7 +319,7 @@ object KledGraph {
         val v = matrixTopic.apply(index, mapIndex(variables(i)._v))
         if(v != indSeq(i)){
           isFlag = false
-          break
+          break()
         }
       }
 
@@ -419,7 +419,7 @@ object KledGraph {
       posMap.foreach(pair => {
         if(index(pair._1) != pair._2 ){
           bFlag = false
-          break
+          break()
         }
       })
 
