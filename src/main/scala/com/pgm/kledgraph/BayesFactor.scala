@@ -4,9 +4,9 @@ import org.apache.spark.SparkContext
 import scala.collection.mutable
 import scala.collection.mutable.{Map, Seq, Set}
 
+import org.json4s._
 import org.json4s.native.JsonMethods._
 import org.json4s.JsonDSL._
-
 /**
   * Created by liming on 17-5-8.
   */
@@ -51,6 +51,7 @@ class BayesModel {
       mapRes += (( "eliParents" -> factor._eliminate._parents.map(x=>x._v).toString ))
       mapRes += (( "eliChilds" -> factor._eliminate._childs.map(x=>x._v).toString ))
       mapRes += (( "eliV" -> factor._eliminate._v.toString ))
+
       val jsonMap = compact(render(mapRes)).toString
       resSeq = resSeq :+ jsonMap
     })

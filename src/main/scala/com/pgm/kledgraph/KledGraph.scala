@@ -101,9 +101,10 @@ object KledGraph {
             res = 2
           } else {
             val formatRes = "\"\"\""+result.replace("]","").replace("[","")+"\"\"\""
+            println(formatRes)
             val t = parse(formatRes, false)
             val mapJson = t.values.asInstanceOf[Map[String,String]]
-            res =  if(mapJson("result") == 1) 1 else 2
+            res =  if(mapJson("result") == "1"  ) 1 else 2
           }
 
           listRecords = listRecords.+:(studentId, questionId, res) // add list record

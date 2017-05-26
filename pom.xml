@@ -33,14 +33,13 @@
       <version>2.1.0</version>
     </dependency>
 
-    <!-- https://mvnrepository.com/artifact/org.json4s/json4s-native_2.11 -->
+    <!-- https://mvnrepository.com/artifact/org.json4s/json4s-native_2.10 -->
     <dependency>
       <groupId>org.json4s</groupId>
-      <artifactId>json4s-native_2.11</artifactId>
+      <artifactId>json4s-native_2.10</artifactId>
       <version>3.5.2</version>
     </dependency>
   </dependencies>
-
   <build>
     <sourceDirectory>src/main/scala</sourceDirectory>
     <plugins>
