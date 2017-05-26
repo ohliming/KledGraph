@@ -79,7 +79,7 @@ object KledGraph {
   def getStudRecords(mapQuestTopic: Map[Int, Set[Int]], mapTopic: Map[Int, String], sqlContext: HiveContext,subjectId:Int,stageId:Int) = {
     var listRecords:List[(Long, Int, Int)] = List() // records object
     var sql = "select a.student_id,a.question_id,a.result from entity_student_exercise as a join link_question_topic as b on " +
-      "b.question_id=a.question_id) join entity_topic as c on (c.id = b.topic_id) where a.result != \"\" and c.subject_id="+subjectId+" and c.stage_id ="+stageId
+      "(b.question_id=a.question_id) join entity_topic as c on (c.id = b.topic_id) where c.subject_id="+subjectId+" and c.stage_id ="+stageId
     val rows = sqlContext.sql(sql).collect()
     rows.foreach(x => {
       val studentId = x.get(0).toString.toLong
