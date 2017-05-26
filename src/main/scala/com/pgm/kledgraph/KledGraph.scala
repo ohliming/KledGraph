@@ -76,9 +76,11 @@ object KledGraph {
   }
 
   // cache the exceries records
-  def getStudRecords(mapQuestTopic: Map[Int, Set[Int]], mapTopic: Map[Int, String], sqlContext: HiveContext) = {
+  def getStudRecords(mapQuestTopic: Map[Int, Set[Int]], mapTopic: Map[Int, String], sqlContext: HiveContext,subjectId:Int,stageId:Int) = {
     var listRecords:List[(Long, Int, Int)] = List() // records object
-    val rows = sqlContext.sql("select student_id, question_id, result from entity_student_exercise where student_id>0 and question_id>0").collect()
+    var sql = "select a.student_id,a.question_id,a.result from entity_student_exercise as a join link_question_topic as b on " +
+      "b.question_id=a.question_id) join entity_topic as c on (c.id = b.topic_id) where a.result != \"\" and c.subject_id="+subjectId+" and c.stage_id ="+stageId
+    val rows = sqlContext.sql(sql).collect()
     rows.foreach(x => {
       val studentId = x.get(0).toString.toLong
       val questionId = x.get(1).toString.toInt
@@ -100,6 +102,8 @@ object KledGraph {
       if ( bFlag ) {
         if(regex.findFirstMatchIn(result) != None){
           res = result.toInt
+        }else if (result.equals("NULL")){
+          res = 2
         }else {
           val optJson = JSON.parseFull(result)
           optJson match {
@@ -118,12 +122,12 @@ object KledGraph {
     listRecords
   }
 
-  def staticContionPro(listRecords: List[(Long, Int, Int)], mapQuestTopic: Map[Int,Set[Int]], startTopicSet:Set[Int], endTopic:Int, label:Int) = {
+  def staticConditionPro(listRecords: List[(Long, Int, Int)], mapQuestTopic: Map[Int,Set[Int]], startTopicSet:Set[Int], endTopic:Int, label:Int) = {
     var setStart:Set[Long] = Set() // start student set
     var setEnd:Set[Long] = Set() // end student set
     var mapStudent: Map[Long, Int] = Map() // student set
 
-    listRecords.foreach(x => {
+    listRecords.foreach( x => {
       val studentId = x._1
       val questionId = x._2
       val result = x._3
@@ -236,7 +240,7 @@ object KledGraph {
     var mapChild:Map[Int,Set[Int]] = Map() // cache child
     listSort.foreach(x => {
       var (topic1, topic2) = x._1
-      val (p0,p1) = staticContionPro(listRecords,mapQuestTopic,Set(topic1), topic2, 1)
+      val (p0,p1) = staticConditionPro(listRecords,mapQuestTopic,Set(topic1), topic2, 1)
       if(p1 > p0){
         val temp = topic1
         topic1 = topic2
@@ -546,7 +550,7 @@ object KledGraph {
     val mapTopicQuest: Map[Int,Set[Int]] = pair._2
     println("the topic len is:" + mapTopicQuest.size)
 
-    val listRecords = getStudRecords(mapQuestTopic, mapTopic, sqlContext)
+    val listRecords = getStudRecords(mapQuestTopic, mapTopic, sqlContext, subjectDict("cz_chemical"), stageDict("CZ"))
     println("the record len is:" + listRecords.length)
 
     val initPair = structGrahpList(listRecords, mapTopic, mapQuestTopic, mapTopicQuest)
