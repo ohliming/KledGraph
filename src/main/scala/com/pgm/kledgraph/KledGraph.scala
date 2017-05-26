@@ -100,7 +100,7 @@ object KledGraph {
           } else if (result.equals("NULL") || result.equals("")) {
             res = 2
           } else {
-            val formatRes = "\"\""+result+"\"\""
+            val formatRes = "\"\"\""+result+"\"\"\""
             val t = parse(formatRes, false)
             val mapJson = t.values.asInstanceOf[Map[String,String]]
             res =  if(mapJson("result") == "1") 1 else 2
