@@ -6,8 +6,7 @@ import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.mllib.linalg.{Matrices, Matrix}
 
 import scala.collection.mutable.{ListBuffer, Map, Seq, Set}
-import scala.util.control.Breaks.{break, breakable}
-import scala.util.control.ControlThrowable
+import scala.util.control.Breaks._
 import scala.util.parsing.json._
 
 object KledGraph {
@@ -82,46 +81,37 @@ object KledGraph {
     var sql = "select a.student_id,a.question_id,a.result from entity_student_exercise as a join link_question_topic as b on " +
       "(b.question_id=a.question_id) join entity_topic as c on (c.id = b.topic_id) where c.subject_id="+subjectId+" and c.stage_id ="+stageId
     val rows = sqlContext.sql(sql).collect()
+    val setKeyTopic = mapTopic.map(x=>x._1).toSet
+    val regex="""^\d+$""".r  //process effective records
     rows.foreach(x => {
       val studentId = x.get(0).toString.toLong
       val questionId = x.get(1).toString.toInt
       var result = x.get(2).toString
-
-      var bFlag:Boolean = false
-      if ( mapQuestTopic.contains(questionId) ){
-        val setTopic = mapQuestTopic(questionId)
-        setTopic.foreach(x => {
-          try{
-            if( mapTopic.contains(x) ){
-              bFlag = true
-              break
-            }
-          }catch {
-            case c: ControlThrowable => throw c
-            case t: Throwable => t.printStackTrace
-          }
-        })
-      }
-
-      val regex="""^\d+$""".r  //process effective records
       var res = -1  // init
-      if ( bFlag ) {
-        if(regex.findFirstMatchIn(result) != None){
-          res = result.toInt
-        }else if (result.equals("NULL")){
-          res = 2
-        }else {
-          val optJson = JSON.parseFull(result)
-          optJson match {
-            case Some(x) => {
-              val mapJson = x.asInstanceOf[scala.collection.immutable.Map[String,Double]]
-              res = if(mapJson("result") == 1) 1 else 2
-            }
-            case None => { res = -1 }
-          }
-        }
 
-        listRecords = listRecords. +: (studentId, questionId, res) // add list record
+      if ( mapQuestTopic.contains(questionId) ) {
+        val setTopic = mapQuestTopic(questionId)
+        val setMerge = setKeyTopic & setTopic
+        if (setMerge.size > 0) {
+          if (regex.findFirstMatchIn(result) != None) {
+            res = result.toInt
+          } else if (result.equals("NULL")) {
+            res = 2
+          } else {
+            val optJson = JSON.parseFull(result)
+            optJson match {
+              case Some(x) => {
+                val mapJson = x.asInstanceOf[scala.collection.immutable.Map[String, Double]]
+                res = if (mapJson("result") == 1) 1 else 2
+              }
+              case None => {
+                res = -1
+              }
+            }
+          }
+
+          listRecords = listRecords.+:(studentId, questionId, res) // add list record
+        }
       }
     })
 
@@ -294,16 +284,11 @@ object KledGraph {
 
   def add(indSeq:Seq[Int]) = {
     indSeq.foreach(x => {
-      try{
-        if(x == 0){
-          indSeq.update(indSeq.indexOf(x), 1)
-          break
-        }else{
-          indSeq.update(indSeq.indexOf(x), 0)
-        }
-      }catch {
-        case c: ControlThrowable => throw c
-        case t: Throwable => t.printStackTrace
+      if(x == 0){
+        indSeq.update(indSeq.indexOf(x), 1)
+        break
+      }else{
+        indSeq.update(indSeq.indexOf(x), 0)
       }
     })
   }
@@ -328,14 +313,9 @@ object KledGraph {
       var isFlag:Boolean = true
       for(i <- 0 until indSeq.size){
         val v = matrixTopic.apply(index, mapIndex(variables(i)._v))
-        try{
-          if(v != indSeq(i)){
-            isFlag = false
-            break
-          }
-        } catch {
-          case c: ControlThrowable => throw c
-          case t: Throwable => t.printStackTrace
+        if(v != indSeq(i)){
+          isFlag = false
+          break
         }
       }
 
@@ -433,14 +413,9 @@ object KledGraph {
       val index = pos2Seq(count,len)
       var bFlag = true
       posMap.foreach(pair => {
-        try{
-          if(index(pair._1) != pair._2 ){
-            bFlag = false
-            break
-          }
-        }catch {
-          case c: ControlThrowable => throw c
-          case t: Throwable => t.printStackTrace
+        if(index(pair._1) != pair._2 ){
+          bFlag = false
+          break
         }
       })
 
