@@ -6,7 +6,8 @@ import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.mllib.linalg.{Matrices, Matrix}
 
 import scala.collection.mutable.{ListBuffer, Map, Seq, Set}
-import scala.util.control.Breaks._
+import scala.util.control.Breaks.{break, breakable}
+import scala.util.control.ControlThrowable
 import scala.util.parsing.json._
 
 object KledGraph {
@@ -90,9 +91,14 @@ object KledGraph {
       if ( mapQuestTopic.contains(questionId) ){
         val setTopic = mapQuestTopic(questionId)
         setTopic.foreach(x => {
-          if( mapTopic.contains(x) ){
-            bFlag = true
-            break()
+          try{
+            if( mapTopic.contains(x) ){
+              bFlag = true
+              break
+            }
+          }catch {
+            case c: ControlThrowable => throw c
+            case t: Throwable => t.printStackTrace
           }
         })
       }
@@ -288,11 +294,16 @@ object KledGraph {
 
   def add(indSeq:Seq[Int]) = {
     indSeq.foreach(x => {
-      if(x == 0){
-        indSeq.update(indSeq.indexOf(x), 1)
-        break()
-      }else{
-        indSeq.update(indSeq.indexOf(x), 0)
+      try{
+        if(x == 0){
+          indSeq.update(indSeq.indexOf(x), 1)
+          break
+        }else{
+          indSeq.update(indSeq.indexOf(x), 0)
+        }
+      }catch {
+        case c: ControlThrowable => throw c
+        case t: Throwable => t.printStackTrace
       }
     })
   }
@@ -317,9 +328,14 @@ object KledGraph {
       var isFlag:Boolean = true
       for(i <- 0 until indSeq.size){
         val v = matrixTopic.apply(index, mapIndex(variables(i)._v))
-        if(v != indSeq(i)){
-          isFlag = false
-          break()
+        try{
+          if(v != indSeq(i)){
+            isFlag = false
+            break
+          }
+        } catch {
+          case c: ControlThrowable => throw c
+          case t: Throwable => t.printStackTrace
         }
       }
 
@@ -343,7 +359,7 @@ object KledGraph {
       val variables = x._2.getVariables
       var indSeq:Seq[Int] = Seq(); variables.foreach(x=>{ indSeq = indSeq :+ 0 })
       var index = 0; val border = math.pow(2.0, variables.size)
-      while(index < border){
+      while( index < border ){
         val p1 = preConditionPro(matrixTopic, x._2._eliminate._v, 1, variables, indSeq, mapIndex)
         val p0 = preConditionPro(matrixTopic, x._2._eliminate._v, 0, variables, indSeq, mapIndex)
         x._2._cpdPositive = x._2._cpdPositive :+ p1
@@ -417,9 +433,14 @@ object KledGraph {
       val index = pos2Seq(count,len)
       var bFlag = true
       posMap.foreach(pair => {
-        if(index(pair._1) != pair._2 ){
-          bFlag = false
-          break()
+        try{
+          if(index(pair._1) != pair._2 ){
+            bFlag = false
+            break
+          }
+        }catch {
+          case c: ControlThrowable => throw c
+          case t: Throwable => t.printStackTrace
         }
       })
 
