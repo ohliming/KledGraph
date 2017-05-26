@@ -78,7 +78,7 @@ object KledGraph {
   // cache the exceries records
   def getStudRecords(mapQuestTopic: Map[Int, Set[Int]], mapTopic: Map[Int, String], sqlContext: HiveContext) = {
     var listRecords:List[(Long, Int, Int)] = List() // records object
-    val rows = sqlContext.sql("select student_id, question_id, result from entity_student_exercise where student_id>0 and question_id>0")
+    val rows = sqlContext.sql("select student_id, question_id, result from entity_student_exercise where student_id>0 and question_id>0").collect()
     rows.foreach(x => {
       val studentId = x.get(0).toString.toLong
       val questionId = x.get(1).toString.toInt
