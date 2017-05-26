@@ -101,7 +101,7 @@ object KledGraph {
             val optJson = JSON.parseFull(result)
             optJson match {
               case Some(x) => {
-                val mapJson = x.asInstanceOf[scala.collection.immutable.Map[String, Double]]
+                val mapJson = x.asInstanceOf[Map[String, Double]]
                 res = if (mapJson("result") == 1) 1 else 2
               }
               case None => {
