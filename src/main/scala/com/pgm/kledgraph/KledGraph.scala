@@ -212,8 +212,7 @@ object KledGraph {
 
     mapTopic.foreach(topic1 => {
       mapTopic.foreach(topic2 => {
-        val setCom = if(mapTemp.contains(topic2._1)) mapTemp(topic2._1) else Set(0)
-        if(topic1._1 != topic2._1 && setCom.contains(topic1._1)){
+        if(topic1._1 != topic2._1){
           val setQuest1 = mapTopicQuest(topic1._1)
           val setQuest2 = mapTopicQuest(topic2._1)
           val lem = (setQuest1 & setQuest2).size
