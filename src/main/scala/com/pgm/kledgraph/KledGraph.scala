@@ -88,7 +88,7 @@ object KledGraph {
       val studentId = x.get(0).toString.toLong
       val questionId = x.get(1).toString.toInt
       var result = x.get(2).toString
-      var res = 2  // init
+      var res = -1  // init
 
       if ( mapQuestTopic.contains(questionId) ) {
         val setTopic = mapQuestTopic(questionId)
@@ -96,17 +96,19 @@ object KledGraph {
         if (setMerge.size > 0) {
           if (regex.findFirstMatchIn(result) != None) {
             res = result.toInt
-          } else if (result.equals("NULL") || result.equals("") || result.eq(None)) {
-            res = 2
-          } else {
+          } else if (!result.equals("NULL") && !result.equals("") && !result.eq(None)) {
             val t = parse(result.replace("]","").replace("[",""))
             val mapJson = t.values.asInstanceOf[scala.collection.immutable.Map[String,_]]
             if(mapJson.contains("result")){
-                res =  if(mapJson("result").equals("1") && mapJson("result") != null) 1 else 2
+              if(mapJson("result") != null){
+                res =  if(mapJson("result").equals("1")) 1 else 2
+              }
             }
           }
 
-          listRecords = listRecords.+:(studentId, questionId, res) // add list record
+          if(res > 0) { //normal record add the list
+            listRecords = listRecords.+:(studentId, questionId, res)
+          }
         }
       }
     })
