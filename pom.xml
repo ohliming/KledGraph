@@ -37,8 +37,15 @@
     <dependency>
       <groupId>org.json4s</groupId>
       <artifactId>json4s-native_2.10</artifactId>
-      <version>3.5.2</version>
+      <version>3.3.0</version>
     </dependency>
+    <!-- https://mvnrepository.com/artifact/org.json4s/json4s-jackson_2.10 -->
+    <dependency>
+      <groupId>org.json4s</groupId>
+      <artifactId>json4s-jackson_2.10</artifactId>
+      <version>3.3.0</version>
+    </dependency>
+
   </dependencies>
   <build>
     <sourceDirectory>src/main/scala</sourceDirectory>
