@@ -101,7 +101,9 @@ object KledGraph {
           } else {
             val t = parse(result.replace("]","").replace("[",""))
             val mapJson = t.values.asInstanceOf[scala.collection.immutable.Map[String,_]]
-            res =  if(mapJson("result").equals("1") ) 1 else 2
+            if(mapJson.contains("result")){
+              res =  if(mapJson("result").equals("1") ) 1 else 2
+            }
           }
 
           listRecords = listRecords.+:(studentId, questionId, res) // add list record
