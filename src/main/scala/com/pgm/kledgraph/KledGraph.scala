@@ -102,8 +102,7 @@ object KledGraph {
             val t = parse(result.replace("]","").replace("[",""))
             val mapJson = t.values.asInstanceOf[scala.collection.immutable.Map[String,_]]
             if(mapJson.contains("result")){
-              println(mapJson)
-              res =  if(mapJson("result").equals("1") ) 1 else 2
+                res =  if(mapJson("result").equals("1") && mapJson("result") != null) 1 else 2
             }
           }
 
