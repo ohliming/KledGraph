@@ -100,7 +100,7 @@ object KledGraph {
             res = 2
           } else {
             val t = parse(result.replace("]","").replace("[",""))
-            val mapJson = t.values.asInstanceOf[mutable.Map[String,_]]
+            val mapJson = t.values.asInstanceOf[scala.collection.immutable.Map[String,_]]
             res =  if(mapJson("result").equals("1") ) 1 else 2
           }
 
