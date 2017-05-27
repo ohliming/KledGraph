@@ -65,8 +65,7 @@ object KledGraph {
           mapTopicQuest += ((topicId -> Set(questionId)))
         }
 
-        // process mapQuestTopic
-        if (mapQuestTopic.contains(questionId)){
+        if (mapQuestTopic.contains(questionId)){ // process mapQuestTopic
           mapQuestTopic(questionId).add(topicId)
         }else{
           mapQuestTopic += ((questionId -> Set(topicId)))
@@ -101,10 +100,9 @@ object KledGraph {
             res = 2
           } else {
             val formatRes = "\"\"\""+result.replace("]","").replace("[","")+"\"\"\""
-            println(formatRes)
-            val t = parse(formatRes, false)
-            val mapJson = t.values.asInstanceOf[Map[String,String]]
-            res =  if(mapJson("result") == "1"  ) 1 else 2
+            val t = parse(formatRes)
+            val mapJson = t.values.asInstanceOf[Map[String,_]]
+            res =  if(mapJson("result").asInstanceOf[Int] == 1  ) 1 else 2
           }
 
           listRecords = listRecords.+:(studentId, questionId, res) // add list record
