@@ -5,9 +5,9 @@ import org.apache.spark.SparkContext
 import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.mllib.linalg.{Matrices, Matrix}
 
+import scala.collection.mutable
 import scala.collection.mutable.{ListBuffer, Map, Seq, Set}
 import scala.util.control.Breaks._
-
 import org.json4s._
 import org.json4s.native.JsonMethods._
 
@@ -100,7 +100,7 @@ object KledGraph {
             res = 2
           } else {
             val t = parse(result.replace("]","").replace("[",""))
-            val mapJson = t.values.asInstanceOf[Map[String,_]]
+            val mapJson = t.values.asInstanceOf[mutable.Map[String,_]]
             res =  if(mapJson("result").equals("1") ) 1 else 2
           }
 
