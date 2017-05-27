@@ -99,8 +99,7 @@ object KledGraph {
           } else if (result.equals("NULL") || result.equals("")) {
             res = 2
           } else {
-            val formatRes = "\"\"\""+result.replace("]","").replace("[","")+"\"\"\""
-            val t = parse(formatRes)
+            val t = parse(result.replace("]","").replace("[",""))
             val mapJson = t.values.asInstanceOf[Map[String,_]]
             res =  if(mapJson("result").asInstanceOf[Int] == 1  ) 1 else 2
           }
@@ -440,8 +439,7 @@ object KledGraph {
     var p:Double  = 1.0
     var index = 0; val border = math.pow(2.0, items.size)
     val eliVariables = delFactor.getVariables
-    while( index < border ){
-      // parent variable
+    while( index < border ){ // parent variable
       var mapIndex:Map[BayesVar,Int] = Map()
       for(pos <- 0 until indexSeq.size){
         mapIndex += ((items(pos), indexSeq(pos)))

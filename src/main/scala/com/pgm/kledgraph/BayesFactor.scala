@@ -66,7 +66,7 @@ class BayesModel {
       var bayes = new BayesVar(0)
       var factor = new BayesFactor(bayes)
 
-      var t = parse("\"\"\""+ line+ "\"\"\"",false)
+      var t = parse(line)
       for( (k,v) <- t.values.asInstanceOf[Map[String,String]]) {
         if(k.equals("eliV")){
           bayes.setVar(v.toInt)
