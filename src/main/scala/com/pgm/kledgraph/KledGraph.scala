@@ -242,8 +242,8 @@ object KledGraph {
       }
 
       val bFlag = isLoopGraph(topic1, topic2, mapChild)
-      println("the flag is:" + bFlag)
-      if(bFlag){
+      println(bFlag)
+      if(!bFlag){
         initPair = initPair. +: (topic1, topic2)
         if(mapChild.contains(topic2)){
           mapChild(topic2).add(topic1) // add topic1
