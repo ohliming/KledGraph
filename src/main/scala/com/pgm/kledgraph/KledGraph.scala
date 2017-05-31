@@ -179,7 +179,7 @@ object KledGraph {
     (p0, p1)
   }
 
-  def isLoopGraph(topic1:Int,topic2:Int, mapChild:Map[Int,Set[Int]]):Boolean = {
+  def isLoopGraph(topic1:Int,topic2:Int, mapParents:Map[Int,Set[Int]]):Boolean = {
     var listStack:ListBuffer[Int] = ListBuffer(topic1) // stack
     var setMiss:Set[Int] = Set()
     var setPop:Set[Int] = Set()
@@ -191,8 +191,8 @@ object KledGraph {
 
       topic = listStack.last
       listStack = listStack.init
-      if( mapChild.contains(topic) && !setPop.contains(topic) ){
-        val childs = mapChild(topic)
+      if( mapParents.contains(topic) && !setPop.contains(topic) ){
+        val childs = mapParents(topic)
         childs.foreach(x => { listStack +=  x; setMiss.add(x) })
         setPop.add(topic)
       }
@@ -202,9 +202,8 @@ object KledGraph {
   }
 
   def structGrahpList(listRecords:List[(Long,Int,Int)], mapTopic:Map[Int, String], mapQuestTopic:Map[Int,Set[Int]],
-                      mapTopicQuest:Map[Int,Set[Int]],throld: Int = 30, inDreege:Int = 3, outDreege:Int = 4) = {
+                      mapTopicQuest:Map[Int,Set[Int]],throld: Int = 30, inDreege:Int = 5, outDreege:Int = 4) = {
     var listPair:List[((Int,Int),Int)] = List()
-    var mapTemp:Map[Int,Set[Int]] = Map()
 
     mapTopic.foreach(topic1 => {
       mapTopic.foreach(topic2 => {
@@ -213,21 +212,14 @@ object KledGraph {
           val setQuest1 = mapTopicQuest(topic1._1)
           val setQuest2 = mapTopicQuest(topic2._1)
           val lem = (setQuest1 & setQuest2).size
-          if( lem > throld ){
-            listPair = listPair. +: ((topic1._1, topic2._1), lem)
-            if( mapTemp.contains(topic2._1) ){
-              mapTemp(topic2._1).add(topic1._1)
-            }else{
-              mapTemp += ((topic2._1 -> Set(topic1._1)))
-            }
-          }
+          if( lem > throld ){ listPair = listPair. +: ((topic1._1, topic2._1), lem)}
         }
       })
     })
 
     println("the list pair len is:"+ listPair.size)
     val listSort = listPair.sortWith(_._2 > _._2)
-    var mapChild:Map[Int,Set[Int]] = Map() // cache child
+    var mapParents:Map[Int,Set[Int]] = Map() // cache child
     var initPair:List[(Int,Int)]= List()
     listSort.foreach(x => {
       var (topic1, topic2) = x._1
@@ -239,14 +231,15 @@ object KledGraph {
         topic2 = temp
       }
 
-      val bFlag = isLoopGraph(topic1, topic2, mapChild)
-      println("the flag is:" + bFlag+"and map len is:"+mapChild.size)
-      if(!bFlag){
+      val bFlag = isLoopGraph(topic1, topic2, mapParents)
+      val throldCnt = if(mapParents.contains(topic2)) mapParents(topic2).size else 0
+      println("the flag is:" + bFlag+"and map len is:"+mapParents.size)
+      if(!bFlag && throldCnt < inDreege){
         initPair = initPair. +: (topic1, topic2)
-        if(mapChild.contains(topic2)){
-          mapChild(topic2).add(topic1) // add topic1
+        if(mapParents.contains(topic2)){
+          mapParents(topic2).add(topic1) // add topic1
         }else{
-          mapChild += ((topic2 -> Set(topic1)))
+          mapParents += ((topic2 -> Set(topic1)))
         }
       }
     })
