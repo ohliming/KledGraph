@@ -146,8 +146,8 @@ object KledGraph {
     println("the set end len is:" + setEnd.size)
 
     var p0:Double = 0.0
-    var fenzi = 0
-    var fenmu = 0
+    var fenzi:Double = 0
+    var fenmu:Double = 0
     setStart.foreach(x => {
       if(mapStudent.contains(x)){
         fenmu += mapStudent(x)
@@ -168,8 +168,8 @@ object KledGraph {
     println("the p0 is:"+ p0)
 
     var p1:Double =0.0
-    var rfenzi  = 0
-    var rfenmu  = 0
+    var rfenzi:Double  = 0
+    var rfenmu:Double  = 0
     setEnd.foreach(x =>{
       if(mapStudent.contains(x)){
         rfenmu += mapStudent(x)
