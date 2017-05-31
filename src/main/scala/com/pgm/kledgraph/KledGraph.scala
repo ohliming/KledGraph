@@ -165,6 +165,7 @@ object KledGraph {
     }else{
       p0 = 0.0
     }
+    println("the p0 is:"+ p0)
 
     var p1:Double =0.0
     var rfenzi  = 0
@@ -186,6 +187,8 @@ object KledGraph {
     }else{
       p1 = 0.0
     }
+
+    println("the p1 is:"+ p1)
 
     (p0, p1)
   }
