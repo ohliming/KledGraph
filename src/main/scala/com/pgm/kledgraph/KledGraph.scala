@@ -128,6 +128,7 @@ object KledGraph {
       if(result == label && mapQuestTopic.contains(questionId)){
         val setTopic = mapQuestTopic(questionId)
         val intersection = setTopic & startTopicSet
+
         if(intersection.size > 0){setStart.add(studentId)}
         if(setTopic.contains(endTopic)){setEnd.add(studentId)}
 
@@ -139,6 +140,10 @@ object KledGraph {
         }
       }
     })
+
+    println("the map student is:" + mapStudent.size)
+    println("the set start len is"+ setStart.size)
+    println("the set end len is:" + setEnd.size)
 
     var p0 = 0.0
     var fenzi = 0
@@ -237,8 +242,6 @@ object KledGraph {
     listSort.foreach(x => {
       var (topic1, topic2) = x._1
       val (p0,p1) = staticConditionPro(listRecords,mapQuestTopic,Set(topic1), topic2, 1)
-      println("the p0 is:"+ p0)
-      println("the p1 is:"+ p1)
 
       if(p1 > p0){
         val temp = topic1
