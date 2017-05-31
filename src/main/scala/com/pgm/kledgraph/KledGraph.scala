@@ -227,9 +227,7 @@ object KledGraph {
     })
 
     println("the list pair len is:" + listPair.size)
-
     val listSort = listPair.sortWith(_._2 > _._2)
-    println("the list sort len is:" + listSort.length)
     var mapChild:Map[Int,Set[Int]] = Map() // cache child
     listSort.foreach(x => {
       var (topic1, topic2) = x._1
@@ -242,7 +240,6 @@ object KledGraph {
       }
 
       val bFlag = isLoopGraph(topic1, topic2, mapChild)
-      println(bFlag)
       if(!bFlag){
         initPair = initPair. +: (topic1, topic2)
         if(mapChild.contains(topic2)){
