@@ -145,7 +145,7 @@ object KledGraph {
     println("the set start len is"+ setStart.size)
     println("the set end len is:" + setEnd.size)
 
-    var p0 = 0.0
+    var p0:Double = 0.0
     var fenzi = 0
     var fenmu = 0
     setStart.foreach(x => {
@@ -157,13 +157,16 @@ object KledGraph {
       }
     })
 
+    println("fenzi:"+fenzi)
+    println("fenmu:"+fenmu)
+
     if(fenmu > 0 && fenzi < fenmu){
       p0 = fenzi / fenmu
     }else{
       p0 = 0.0
     }
 
-    var p1 =0.0
+    var p1:Double =0.0
     var rfenzi  = 0
     var rfenmu  = 0
     setEnd.foreach(x =>{
@@ -174,6 +177,9 @@ object KledGraph {
         }
       }
     })
+
+    println("rfenzi:"+rfenzi)
+    println("rfenmu:"+rfenmu)
 
     if(rfenmu > 0 && rfenmu > rfenzi){
       p1 = rfenzi / rfenmu
