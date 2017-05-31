@@ -5,7 +5,6 @@ import org.apache.spark.SparkContext
 import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.mllib.linalg.{Matrices, Matrix}
 
-import scala.collection.mutable
 import scala.collection.mutable.{ListBuffer, Map, Seq, Set}
 import scala.util.control.Breaks._
 import org.json4s._
@@ -180,7 +179,7 @@ object KledGraph {
     (p0, p1)
   }
 
-  def isLoopGraph(topic1:Int,topic2:Int,initPair:List[(Int, Int)], mapChild:Map[Int,Set[Int]]):Boolean = {
+  def isLoopGraph(topic1:Int,topic2:Int, mapChild:Map[Int,Set[Int]]):Boolean = {
     var listStack:ListBuffer[Int] = ListBuffer(topic1) // stack
     var setMiss:Set[Int] = Set()
     var setPop:Set[Int] = Set()
@@ -192,13 +191,10 @@ object KledGraph {
 
       topic = listStack.last
       listStack = listStack.init
-      setPop.add(topic)
-      if(mapChild.contains(topic) && !setPop.contains(topic)){
+      if( mapChild.contains(topic) && !setPop.contains(topic) ){
         val childs = mapChild(topic)
-        childs.foreach(x => {
-          listStack +=  topic
-        })
-        setMiss.add(topic)
+        childs.foreach(x => { listStack +=  x; setMiss.add(x) })
+        setPop.add(topic)
       }
     }
 
@@ -245,7 +241,7 @@ object KledGraph {
         topic2 = temp
       }
 
-      val bFlag = isLoopGraph(topic1, topic2, initPair, mapChild)
+      val bFlag = isLoopGraph(topic1, topic2, mapChild)
       println("the flag is:" + bFlag)
       if(bFlag){
         initPair = initPair. +: (topic1, topic2)
