@@ -229,10 +229,9 @@ object KledGraph {
       })
     })
 
-    println("the map temp:"+mapTemp.size)
-    println("the list pair:"+listPair.size)
+    println("the map temp len is:"+mapTemp.size)
+    println("the list pair len is:"+ listPair.length)
 
-    // add edge for bn
     val listSort = listPair.sortWith(_._2 > _._2)
     var mapChild:Map[Int,Set[Int]] = Map() // cache child
     listSort.foreach(x => {
