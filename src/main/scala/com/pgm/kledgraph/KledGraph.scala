@@ -230,7 +230,10 @@ object KledGraph {
       })
     })
 
+    println("the list pair len is:" + listPair.size)
+
     val listSort = listPair.sortWith(_._2 > _._2)
+    println("the list sort len is:" + listSort.length)
     var mapChild:Map[Int,Set[Int]] = Map() // cache child
     listSort.foreach(x => {
       var (topic1, topic2) = x._1
@@ -242,8 +245,8 @@ object KledGraph {
         topic2 = temp
       }
 
-      println("the p0 is:"+p0+" and p1 is:"+p1)
       val bFlag = isLoopGraph(topic1, topic2, initPair, mapChild)
+      println("the flag is:" + bFlag)
       if(bFlag){
         initPair = initPair. +: (topic1, topic2)
         if(mapChild.contains(topic2)){
@@ -255,6 +258,7 @@ object KledGraph {
     })
 
     println("the map size is:"+mapChild.size)
+    println("the list pair len is:" + initPair.size)
 
     initPair
   }
@@ -571,6 +575,7 @@ object KledGraph {
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
     val p = condSumProductVE(mapFactor,sequence, target, 1, mapEvidences)
     println(p) // output p
+
     sc.stop
   }
 }
