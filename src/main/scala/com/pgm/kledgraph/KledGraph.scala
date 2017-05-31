@@ -237,6 +237,9 @@ object KledGraph {
     listSort.foreach(x => {
       var (topic1, topic2) = x._1
       val (p0,p1) = staticConditionPro(listRecords,mapQuestTopic,Set(topic1), topic2, 1)
+      println("the p0 is:"+ p0)
+      println("the p1 is:"+ p1)
+
       if(p1 > p0){
         val temp = topic1
         topic1 = topic2
@@ -253,6 +256,8 @@ object KledGraph {
         }
       }
     })
+
+    println("the child map len is:"+ mapChild.size)
 
     initPair
   }
