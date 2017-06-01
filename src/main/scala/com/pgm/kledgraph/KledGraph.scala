@@ -220,6 +220,7 @@ object KledGraph {
     println("the list pair len is:"+ listPair.size)
     val listSort = listPair.sortWith(_._2 > _._2)
     var mapParents:Map[Int,Set[Int]] = Map() // cache child
+    var mapChilds:Map[Int,Set[Int]] = Map()
     var initPair:List[(Int,Int)]= List()
     listSort.foreach(x => {
       var (topic1, topic2) = x._1
@@ -232,14 +233,20 @@ object KledGraph {
       }
 
       val bFlag = isLoopGraph(topic1, topic2, mapParents)
-      val throldCnt = if(mapParents.contains(topic2)) mapParents(topic2).size else 0
+      val inCnt = if(mapParents.contains(topic2)) mapParents(topic2).size else 0
+      val outCnt = if(mapChilds.contains(topic1)) mapChilds(topic1).size else 0
       println("the flag is:" + bFlag+"and map len is:"+mapParents.size)
-      if(!bFlag && throldCnt < inDreege){
+      if(!bFlag && inCnt < inDreege && outCnt < outDreege ){
         initPair = initPair. +: (topic1, topic2)
         if(mapParents.contains(topic2)){
           mapParents(topic2).add(topic1) // add topic1
         }else{
           mapParents += ((topic2 -> Set(topic1)))
+        }
+        if(mapChilds.contains(topic1)){
+          mapChilds(topic1).add(topic2)
+        }else{
+          mapChilds += ((topic1 -> Set(topic2)))
         }
       }
     })
@@ -548,17 +555,20 @@ object KledGraph {
     val matrixTopic = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex) // spare matrix
     staticTopicCPD(mapFactor, matrixTopic, mapIndex)
 
+    println("the cpd factor len is:"+ mapFactor.size)
+
     val model = new BayesModel; mapFactor.foreach(x=>{model.addFactor(x._2)})
     var setFactor:Set[BayesFactor] = Set() // factors set
     mapFactor.foreach(x=>{ setFactor.add(x._2) })
 
     val sequence = getSequence(setFactor)
+    println("the sequence len is:"+ sequence.size)
     val pos = 1
     val target = sequence(pos); sequence.drop(pos)
 
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
     val p = condSumProductVE(mapFactor,sequence, target, 1, mapEvidences)
-    println(p) // output p
+    println("the result is:"+p) // output p
 
     sc.stop
   }
