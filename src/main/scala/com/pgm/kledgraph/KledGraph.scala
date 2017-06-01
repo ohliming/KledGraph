@@ -202,9 +202,8 @@ object KledGraph {
   }
 
   def structGrahpList(listRecords:List[(Long,Int,Int)], mapTopic:Map[Int, String], mapQuestTopic:Map[Int,Set[Int]],
-                      mapTopicQuest:Map[Int,Set[Int]],throld: Int = 30, inDreege:Int = 5, outDreege:Int = 4) = {
+                      mapTopicQuest:Map[Int,Set[Int]],throld: Int = 30, inDreege:Int = 3, outDreege:Int = 4) = {
     var listPair:List[((Int,Int),Int)] = List()
-
     mapTopic.foreach(topic1 => {
       mapTopic.foreach(topic2 => {
         val flag:Boolean = mapTopicQuest.contains(topic1._1) && mapTopicQuest.contains(topic2._1)
@@ -217,7 +216,6 @@ object KledGraph {
       })
     })
 
-    println("the list pair len is:"+ listPair.size)
     val listSort = listPair.sortWith(_._2 > _._2)
     var mapParents:Map[Int,Set[Int]] = Map() // cache child
     var mapChilds:Map[Int,Set[Int]] = Map()
@@ -235,16 +233,13 @@ object KledGraph {
       val bFlag = isLoopGraph(topic1, topic2, mapParents)
       val inCnt = if(mapParents.contains(topic2)) mapParents(topic2).size else 0
       val outCnt = if(mapChilds.contains(topic1)) mapChilds(topic1).size else 0
-      println("the flag is:" + bFlag+"and map len is:"+mapParents.size)
       if(!bFlag && inCnt < inDreege && outCnt < outDreege ){
         initPair = initPair. +: (topic1, topic2)
-        if(mapParents.contains(topic2)){
-          mapParents(topic2).add(topic1) // add topic1
+        if(mapParents.contains(topic2)){ mapParents(topic2).add(topic1) // add topic1
         }else{
           mapParents += ((topic2 -> Set(topic1)))
         }
-        if(mapChilds.contains(topic1)){
-          mapChilds(topic1).add(topic2)
+        if(mapChilds.contains(topic1)){ mapChilds(topic1).add(topic2)
         }else{
           mapChilds += ((topic1 -> Set(topic2)))
         }
@@ -554,7 +549,6 @@ object KledGraph {
     var mapIndex:Map[Int, Int] = mapTopic2Index(mapTopic)
     val matrixTopic = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex) // spare matrix
     staticTopicCPD(mapFactor, matrixTopic, mapIndex)
-
     println("the cpd factor len is:"+ mapFactor.size)
 
     val model = new BayesModel; mapFactor.foreach(x=>{model.addFactor(x._2)})
