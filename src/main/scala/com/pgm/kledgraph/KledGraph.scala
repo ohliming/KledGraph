@@ -252,29 +252,26 @@ object KledGraph {
   def makeTopicMatrix(listRecords: List[(Long, Int, Int)], mapQuestTopic:Map[Int,Set[Int]], mapIndex: Map[Int,Int]) = {
     var columns:Seq[Int] = Seq(); var rows:Seq[Int] = Seq() // row and column
     var values:Seq[Double] = Seq()
-    var rowCount = 0
-    var count = 0
-    listRecords.foreach(row => {
-      val questionId = row._2
-      val label = if( row._3 == 1 ) 1.0 else 0.0
+    var rowCnt = 0
+    listRecords.foreach(x => {
+      val questionId = x._2
+      val label = if( x._3 == 1 ) 1.0 else 0.0
       columns = columns :+ 0
-      rows = rows :+ rowCount
+      rows = rows :+ rowCnt
       values = values :+ label
 
-      if(count % 1000 == 0) {
-        println("the count is:"+ count)
+      if(rowCnt % 1000 == 0) {
+        println("the count is:"+ rowCnt)
       }
 
-      count += 1
       if(mapQuestTopic.contains(questionId)){
-        val setTopic = mapQuestTopic(questionId)
-        setTopic.foreach(topic => {
-          val colIndex = mapIndex(topic)
-          columns = columns :+ colIndex
-          rows = rows :+ rowCount
+        mapQuestTopic(questionId).foreach(topic => {
+          columns = columns :+ mapIndex(topic)
+          rows = rows :+ rowCnt
           values = values :+ 1.0
         })
-        rowCount += 1
+
+        rowCnt += 1
       }
     })
 
