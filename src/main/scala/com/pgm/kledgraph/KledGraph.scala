@@ -3,12 +3,14 @@ package com.pgm.kledgraph
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.hive.HiveContext
-import org.apache.spark.mllib.linalg.{Matrices, Matrix}
+import org.apache.spark.mllib.linalg.{Matrices, Matrix, Vector}
 
 import scala.collection.mutable.{ListBuffer, Map, Seq, Set}
 import scala.util.control.Breaks._
 import org.json4s._
 import org.json4s.native.JsonMethods._
+
+import scala.collection.mutable
 
 object KledGraph {
   val stageDict: Map[String, Int] = Map(
@@ -250,35 +252,39 @@ object KledGraph {
   }
 
   def makeTopicMatrix(listRecords: List[(Long, Int, Int)], mapQuestTopic:Map[Int,Set[Int]], mapIndex: Map[Int,Int]) = {
-    var columns:ListBuffer[Int] = ListBuffer(0);mapIndex.foreach(x=>{columns += 0})
+    var columns:ListBuffer[Int] = ListBuffer(0)
     var rows:List[Int] = List() // row and column
     var values:List[Double] = List()
-    var rowCnt = 0
-    listRecords.foreach(x => {
-      val questionId = x._2
-      val label = if( x._3 == 1 ) 1.0 else 0.0
-      if( mapQuestTopic.contains(questionId)){
-        columns.update(0, columns(0) +1)
-        rows = rows.+:(rowCnt)
-        values = values.+:(label)
 
-        mapQuestTopic(questionId).foreach(topic => {
-          if(mapIndex.contains(topic)){
-            val index = (mapIndex(topic))
+    val mapTopicIndex = mapIndex.map(x=> ((x._2 -> x._1)))
+    var rowCount = 0
+    for(index <- 0 to mapIndex.size){ // foreach column
+      var rowCnt = 0
+      listRecords.foreach(x =>{
+        val questionId = x._2
+        val label = if( x._3 == 1 ) 1.0 else 0.0
+        if( mapQuestTopic.contains(questionId)) {
+          if(index == 0){
             columns.update(index, columns(index) +1)
             rows = rows.+:(rowCnt)
-            values = values.+:(1.0)
+            values = values.+:(label)
+          }else{
+            val topic = mapTopicIndex(index)
+            if(mapQuestTopic(questionId).contains(topic)){
+              columns.update(index, columns(index) +1)
+              rows = rows.+:(rowCnt)
+              values = values.+:(1.0)
+            }
           }
-        })
+          rowCnt += 1
+          if(rowCnt > rowCount) {
+            rowCount = rowCnt
+          }
+        }
+      })
+    }
 
-        rowCnt += 1
-      }
-    })
-
-    println("done make the row and col!")
-    println("the columns last is:"+columns.last)
-    println("the value len is:"+values.size)
-    Matrices.sparse(rowCnt, mapIndex.size+1, columns.toArray, rows.toArray, values.toArray)
+    Matrices.sparse(rowCount, mapIndex.size+1, columns.toArray, rows.toArray, values.toArray)
   }
 
   def add(indSeq:Seq[Int]) = {
