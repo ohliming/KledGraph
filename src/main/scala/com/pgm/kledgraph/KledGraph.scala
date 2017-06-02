@@ -256,15 +256,17 @@ object KledGraph {
     listRecords.foreach(x => {
       val questionId = x._2
       val label = if( x._3 == 1 ) 1.0 else 0.0
-      if( mapQuestTopic.contains(questionId) ){
+      if( mapQuestTopic.contains(questionId)){
         columns = columns.+:(0)
         rows = rows.+:(rowCnt)
         values = values.+:(label)
 
         mapQuestTopic(questionId).foreach(topic => {
-          columns = columns.+:(mapIndex(topic))
-          rows = rows.+:(rowCnt)
-          values = values.+:(1.0)
+          if(mapIndex.contains(topic)){
+            columns = columns.+:(mapIndex(topic))
+            rows = rows.+:(rowCnt)
+            values = values.+:(1.0)
+          }
         })
 
         rowCnt += 1
