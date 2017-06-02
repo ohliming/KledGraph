@@ -250,23 +250,22 @@ object KledGraph {
   }
 
   def makeTopicMatrix(listRecords: List[(Long, Int, Int)], mapQuestTopic:Map[Int,Set[Int]], mapIndex: Map[Int,Int]) = {
-    var columns:List[Int] = List(); var rows:List[Int] = List() // row and column
+    var columns:ListBuffer[Int] = ListBuffer(0);mapIndex.foreach(x=>{columns += 0})
+    var rows:List[Int] = List() // row and column
     var values:List[Double] = List()
     var rowCnt = 0
     listRecords.foreach(x => {
       val questionId = x._2
       val label = if( x._3 == 1 ) 1.0 else 0.0
       if( mapQuestTopic.contains(questionId)){
-        columns = columns.+:(0)
+        columns.update(0, columns(0) +1)
         rows = rows.+:(rowCnt)
         values = values.+:(label)
 
         mapQuestTopic(questionId).foreach(topic => {
           if(mapIndex.contains(topic)){
-            if(mapIndex(topic) > 263){
-              println("the columns index:"+ mapIndex(topic))
-            }
-            columns = columns.+:(mapIndex(topic))
+            val index = (mapIndex(topic))
+            columns.update(index, columns(index) +1)
             rows = rows.+:(rowCnt)
             values = values.+:(1.0)
           }
@@ -277,10 +276,8 @@ object KledGraph {
     })
 
     println("done make the row and col!")
-    println("the columns len is:"+columns.size)
-    println("the row len is:"+rows.size)
+    println("the columns last is:"+columns.last)
     println("the value len is:"+values.size)
-
     Matrices.sparse(rowCnt, mapIndex.size+1, columns.toArray, rows.toArray, values.toArray)
   }
 
