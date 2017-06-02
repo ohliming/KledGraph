@@ -271,6 +271,7 @@ object KledGraph {
         rowCount += 1
       }
     })
+
     Matrices.sparse(listRecords.length, mapIndex.size, columns.toArray, rows.toArray, values.toArray)
   }
 
@@ -506,7 +507,7 @@ object KledGraph {
       pos += 1
     })
 
-    seqVariable.foreach(variable => { //loop the variables
+    seqVariable.foreach(variable => {// loop the variables
       val factor = sumProductEliminateVar(mapFactor, seqFactor, variable, target)
       seqFactor = seqFactor :+ factor
     })
@@ -518,7 +519,7 @@ object KledGraph {
     })
 
     val targetPos = getCPDPosition(seqIndex)
-    val p:Double = if(tag == 1) targetFactor._cpdPositive.apply(targetPos) else targetFactor._cpdNegative.apply(targetPos)
+    val p: Double = if(tag == 1) targetFactor._cpdPositive.apply(targetPos) else targetFactor._cpdNegative.apply(targetPos)
 
     p
   }
@@ -527,7 +528,7 @@ object KledGraph {
     val conf = new SparkConf().setAppName("KledGraph") // init the spark
     val sc = new SparkContext(conf)
     val sqlContext = new HiveContext(sc)
-    // sqlContext.sql("use neworiental_v3") //use databases
+    // sqlContext.sql("use neworiental_v3") // use databases
 
     val mapTopic = getTopic(stageDict("CZ"), subjectDict("cz_chemical"), sqlContext)
     val pair = getQuestionTopic(mapTopic, sqlContext)
@@ -548,10 +549,12 @@ object KledGraph {
 
     var mapIndex:Map[Int, Int] = mapTopic2Index(mapTopic)
     val matrixTopic = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex) // spare matrix
+    println("the matrix column:"+matrixTopic.numCols+"and rows:"+matrixTopic.numRows)
+
     staticTopicCPD(mapFactor, matrixTopic, mapIndex)
     println("the cpd factor len is:"+ mapFactor.size)
 
-    val model = new BayesModel; mapFactor.foreach(x=>{model.addFactor(x._2)})
+    val model = new BayesModel; mapFactor.foreach(x=>{ model.addFactor(x._2) })
     var setFactor:Set[BayesFactor] = Set() // factors set
     mapFactor.foreach(x=>{ setFactor.add(x._2) })
 
@@ -562,7 +565,7 @@ object KledGraph {
 
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
     val p = condSumProductVE(mapFactor,sequence, target, 1, mapEvidences)
-    println("the result is:"+p) // output p
+    println("the result is:" + p) // output p
 
     sc.stop
   }
