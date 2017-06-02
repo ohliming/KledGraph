@@ -255,16 +255,12 @@ object KledGraph {
     var rowCnt = 0
     listRecords.foreach(x => {
       val questionId = x._2
-      val label = if( x._3 == 1 ) 1.0 else 0.0
-      columns = columns :+ 0
-      rows = rows :+ rowCnt
-      values = values :+ label
-
-      if(rowCnt % 1000 == 0) {
-        println("the count is:"+ rowCnt)
-      }
-
       if(mapQuestTopic.contains(questionId)){
+        val label = if( x._3 == 1 ) 1.0 else 0.0
+        columns = columns :+ 0
+        rows = rows :+ rowCnt
+        values = values :+ label
+
         mapQuestTopic(questionId).foreach(topic => {
           columns = columns :+ mapIndex(topic)
           rows = rows :+ rowCnt
@@ -272,6 +268,9 @@ object KledGraph {
         })
 
         rowCnt += 1
+        if(rowCnt % 1000 == 0) {
+          println("the count is:"+ rowCnt)
+        }
       }
     })
 
@@ -284,7 +283,7 @@ object KledGraph {
       if(x == 0){
         indSeq.update(indSeq.indexOf(x), 1)
         break
-      }else{
+      }else {
         indSeq.update(indSeq.indexOf(x), 0)
       }
     })
