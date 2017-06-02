@@ -268,7 +268,7 @@ object KledGraph {
         })
 
         rowCnt += 1
-        if(rowCnt % 1000 == 0) {
+        if( rowCnt % 1000 == 0 ) {
           println("the count is:"+ rowCnt)
         }
       }
@@ -371,7 +371,7 @@ object KledGraph {
 
   def mapTopic2Index(mapTopic :Map[Int, String]):Map[Int, Int] = {
     var mapIndex:Map[Int, Int] = Map()
-    var index = 0
+    var index = 1
     mapTopic.foreach(topic => {
       mapIndex += ((topic._1->index))
       index += 1
