@@ -549,6 +549,8 @@ object KledGraph {
     println("the init factor len is:"+mapFactor.size)
 
     var mapIndex:Map[Int, Int] = mapTopic2Index(mapTopic)
+    println("the map index len is:"+mapIndex.size)
+
     val matrixTopic = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex) // spare matrix
     println("the matrix column:"+matrixTopic.numCols+"and rows:"+matrixTopic.numRows)
 
