@@ -263,7 +263,9 @@ object KledGraph {
 
         mapQuestTopic(questionId).foreach(topic => {
           if(mapIndex.contains(topic)){
-            println("the map index:"+ mapIndex(topic))
+            if(mapIndex(topic) > 263){
+              println("the columns index:"+ mapIndex(topic))
+            }
             columns = columns.+:(mapIndex(topic))
             rows = rows.+:(rowCnt)
             values = values.+:(1.0)
