@@ -263,6 +263,9 @@ object KledGraph {
 
         mapQuestTopic(questionId).foreach(topic => {
           if(mapIndex.contains(topic)){
+            if(mapIndex(topic) == 3130444){
+              println("the erroe topic:"+topic)
+            }
             columns = columns.+:(mapIndex(topic))
             rows = rows.+:(rowCnt)
             values = values.+:(1.0)
@@ -270,14 +273,11 @@ object KledGraph {
         })
 
         rowCnt += 1
-        if( rowCnt % 1000 == 0 ) {
-          println("the count is:"+ rowCnt)
-        }
       }
     })
 
     println("done make the row and col!")
-    Matrices.sparse(listRecords.length, mapIndex.size, columns.toArray, rows.toArray, values.toArray)
+    Matrices.sparse(rowCnt, mapIndex.size, columns.toArray, rows.toArray, values.toArray)
   }
 
   def add(indSeq:Seq[Int]) = {
