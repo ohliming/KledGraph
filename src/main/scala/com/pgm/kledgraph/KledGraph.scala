@@ -546,6 +546,7 @@ object KledGraph {
 
     var mapVal:Map[Int,BayesVar] = Map()
     var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor,initPair,mapVal)
+    println("the init factor len is:"+mapFactor.size)
 
     var mapIndex:Map[Int, Int] = mapTopic2Index(mapTopic)
     val matrixTopic = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex) // spare matrix
