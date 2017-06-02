@@ -263,6 +263,7 @@ object KledGraph {
 
         mapQuestTopic(questionId).foreach(topic => {
           if(mapIndex.contains(topic)){
+            println("the map index:"+ mapIndex(topic))
             columns = columns.+:(mapIndex(topic))
             rows = rows.+:(rowCnt)
             values = values.+:(1.0)
@@ -274,6 +275,10 @@ object KledGraph {
     })
 
     println("done make the row and col!")
+    println("the columns len is:"+columns.size)
+    println("the row len is:"+rows.size)
+    println("the value len is:"+values.size)
+
     Matrices.sparse(rowCnt, mapIndex.size+1, columns.toArray, rows.toArray, values.toArray)
   }
 
