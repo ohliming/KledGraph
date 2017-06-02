@@ -255,10 +255,10 @@ object KledGraph {
     var rowCount = 0
     listRecords.foreach(row => {
       val questionId = row._2
-      val label = if(row._3==1) 1 else 0
+      val label = if( row._3 == 1 ) 1.0 else 0.0
       columns = columns :+ 0
       rows = rows :+ rowCount
-      values = values :+ label.toDouble
+      values = values :+ label
 
       if(mapQuestTopic.contains(questionId)){
         val setTopic = mapQuestTopic(questionId)
@@ -272,6 +272,7 @@ object KledGraph {
       }
     })
 
+    println("done make the row and col!")
     Matrices.sparse(listRecords.length, mapIndex.size, columns.toArray, rows.toArray, values.toArray)
   }
 
