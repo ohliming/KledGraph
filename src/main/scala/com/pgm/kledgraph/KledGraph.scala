@@ -253,6 +253,7 @@ object KledGraph {
     var columns:Seq[Int] = Seq(); var rows:Seq[Int] = Seq() // row and column
     var values:Seq[Double] = Seq()
     var rowCount = 0
+    var count = 0
     listRecords.foreach(row => {
       val questionId = row._2
       val label = if( row._3 == 1 ) 1.0 else 0.0
@@ -260,6 +261,11 @@ object KledGraph {
       rows = rows :+ rowCount
       values = values :+ label
 
+      if(count % 1000 == 0) {
+        println("the count is:"+ count)
+      }
+
+      count += 1
       if(mapQuestTopic.contains(questionId)){
         val setTopic = mapQuestTopic(questionId)
         setTopic.foreach(topic => {
