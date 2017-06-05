@@ -291,14 +291,17 @@ object KledGraph {
   }
 
   def add(indSeq:Seq[Int]) = {
-    indSeq.foreach(x => {
-      if(x == 0){
-        indSeq.update(indSeq.indexOf(x), 1)
-        break
-      }else {
-        indSeq.update(indSeq.indexOf(x), 0)
-      }
-    })
+    val loop = new Breaks
+    loop.breakable {
+      indSeq.foreach(x => {
+        if(x == 0){
+          indSeq.update(indSeq.indexOf(x), 1)
+          loop.break
+        }else {
+          indSeq.update(indSeq.indexOf(x), 0)
+        }
+      })
+    }
   }
 
   def getCPDPosition(indSeq:Seq[Int]):Int = {
@@ -414,15 +417,18 @@ object KledGraph {
 
   def sumPositionsPro(cpds:Seq[Double], posMap:Map[Int,Int], len:Int) = {
     var p = 0.0; var count = 0
+    val loop = new Breaks
     cpds.foreach(pr1=>{
       val index = pos2Seq(count,len)
       var bFlag = true
-      posMap.foreach(pair => {
-        if(index(pair._1) != pair._2 ){
-          bFlag = false
-          break
-        }
-      })
+      loop.breakable {
+        posMap.foreach(pair => {
+          if(index(pair._1) != pair._2 ){
+            bFlag = false
+            loop.break
+          }
+        })
+      }
 
       if(bFlag) p += pr1
       count += 1
