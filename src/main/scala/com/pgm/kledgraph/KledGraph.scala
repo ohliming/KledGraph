@@ -7,6 +7,7 @@ import org.apache.spark.mllib.linalg.{Matrices, Matrix, Vectors}
 
 import scala.collection.mutable.{ListBuffer, Map, Seq, Set}
 import scala.util.control.Breaks._
+import scala.util.control.BreakControl
 import org.json4s._
 import org.json4s.native.JsonMethods._
 
