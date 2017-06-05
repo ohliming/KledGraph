@@ -318,7 +318,8 @@ object KledGraph {
   }
 
   def preConditionPro(matrixTopic:Matrix, start:Int, label:Int, variables:Seq[BayesVar], indSeq:Seq[Int], mapIndex:Map[Int,Int]):Double = {
-    var fenzi = 0; var fenmu = 0
+    var fenzi:Double = 0
+    var fenmu:Double = 0
     var index = 0; val rowsNum = matrixTopic.numRows
     while(index < rowsNum){
       for(i <- 0 until indSeq.size){
