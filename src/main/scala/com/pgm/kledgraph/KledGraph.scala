@@ -255,12 +255,12 @@ object KledGraph {
     var rows:List[Int] = List() // row and column
     var values:List[Double] = List()
 
-    val mapTopicIndex = mapIndex.map(x=> ((x._2 -> x._1)))
+    val mapTopicIndex = mapIndex.map( x=> ((x._2 -> x._1)) )
     var rowCount = 0
     for(index <- 0 to mapIndex.size){ // foreach column
       var rowCnt = 0
       if( index > 0 ){ columns += columns(index-1) }
-      println("the column and map count:+"+ mapTopicIndex.size +" index:"+index+"count:"+columns(index))
+      println("map count:+"+ mapTopicIndex.size +" index:"+index+" count:"+columns(index))
       listRecords.foreach(x => {
         val questionId = x._2
         val label = if( x._3 == 1 ) 1.0 else 0.0
