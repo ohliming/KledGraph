@@ -260,6 +260,7 @@ object KledGraph {
     for(index <- 0 to mapIndex.size + 1){ // foreach column
       var rowCnt = 0
       if( index > 0 ){ columns += columns(index-1) }
+      println("the index:"+index+" the count:"+columns(index))
       listRecords.foreach(x => {
         val questionId = x._2
         val label = if( x._3 == 1 ) 1.0 else 0.0
