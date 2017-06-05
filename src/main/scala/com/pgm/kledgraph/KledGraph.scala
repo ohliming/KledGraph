@@ -3,7 +3,7 @@ package com.pgm.kledgraph
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.hive.HiveContext
-import org.apache.spark.mllib.linalg.{Matrices, Matrix, Vector}
+import org.apache.spark.mllib.linalg.{Matrices, Matrix, Vectors}
 
 import scala.collection.mutable.{ListBuffer, Map, Seq, Set}
 import scala.util.control.Breaks._
@@ -260,7 +260,6 @@ object KledGraph {
     for(index <- 0 to mapIndex.size + 1){ // foreach column
       var rowCnt = 0
       if( index > 0 ){ columns += columns(index-1) }
-      println("map count:+"+ mapTopicIndex.size +" index:"+index+" count:"+columns(index))
       listRecords.foreach(x => {
         val questionId = x._2
         val label = if( x._3 == 1 ) 1.0 else 0.0
@@ -318,21 +317,16 @@ object KledGraph {
     var fenzi = 0; var fenmu = 0
     var index = 0; val rowsNum = matrixTopic.numRows
     while(index < rowsNum){
-      var isFlag:Boolean = true
       for(i <- 0 until indSeq.size){
         val v = matrixTopic.apply(index, mapIndex(variables(i)._v))
-        if(v != indSeq(i)){
-          isFlag = false
-          break
+        if( v == indSeq(i) ){
+          val value = matrixTopic.apply(index, start)
+          val tlabel = matrixTopic.apply(index, 0)
+          fenmu += 1
+          if( value == 1.0 && tlabel == label ){fenzi += 1}
         }
       }
 
-      if( isFlag ){
-        val v = matrixTopic.apply(index, start)
-        val lex = matrixTopic.apply(index, 0)
-        fenmu += 1
-        if( v== 1.0 && lex == label ){fenzi += 1}
-      }
       index += 1
     }
     val p = if(fenmu == 0 || fenzi > fenmu) 0.0 else fenzi / fenmu
@@ -345,8 +339,10 @@ object KledGraph {
       val bayes = factor._eliminate
       bayes._parents.foreach(parent => { x._2.addVariable(parent) })
       val variables = x._2.getVariables
-      var indSeq:Seq[Int] = Seq(); variables.foreach(x=>{ indSeq = indSeq :+ 0 })
-      var index = 0; val border = math.pow(2.0, variables.size)
+      var indSeq:Seq[Int] = Seq()
+      variables.foreach(x=>{ indSeq = indSeq :+ 0 })
+      var index = 0
+      val border = math.pow(2.0, variables.size)
       while( index < border ){
         val p1 = preConditionPro(matrixTopic, x._2._eliminate._v, 1, variables, indSeq, mapIndex)
         val p0 = preConditionPro(matrixTopic, x._2._eliminate._v, 0, variables, indSeq, mapIndex)
