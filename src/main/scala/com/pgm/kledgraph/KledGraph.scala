@@ -352,6 +352,7 @@ object KledGraph {
         while( index < border ){
           val p1 = preConditionPro(matrixTopic, topicIndex, 1, variables, indSeq, mapIndex)
           val p0 = preConditionPro(matrixTopic, topicIndex, 0, variables, indSeq, mapIndex)
+          println("the p1 is:"+p1+" and p0 is:"+p0)
 
           x._2._cpdPositive = x._2._cpdPositive :+ p1
           x._2._cpdNegative = x._2._cpdNegative :+ p0
@@ -574,7 +575,7 @@ object KledGraph {
     println("the map index len is:"+mapIndex.size)
 
     val matrixTopic = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex) // spare matrix
-    println("the matrix column:"+matrixTopic.numCols+"and rows:"+matrixTopic.numRows)
+    println("the matrix column:"+matrixTopic.numCols+" and rows:"+matrixTopic.numRows)
 
     staticTopicCPD(mapFactor, matrixTopic, mapIndex)
     println("the cpd factor len is:"+ mapFactor.size)
