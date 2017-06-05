@@ -257,7 +257,7 @@ object KledGraph {
 
     val mapTopicIndex = mapIndex.map( x=> ((x._2 -> x._1)) )
     var rowCount = 0
-    for(index <- 0 to mapIndex.size){ // foreach column
+    for(index <- 0 to mapIndex.size + 1){ // foreach column
       var rowCnt = 0
       if( index > 0 ){ columns += columns(index-1) }
       println("map count:+"+ mapTopicIndex.size +" index:"+index+" count:"+columns(index))
