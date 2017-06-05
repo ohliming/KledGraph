@@ -347,18 +347,22 @@ object KledGraph {
       variables.foreach(x=>{ indSeq = indSeq :+ 0 })
       var index = 0
       val border = math.pow(2.0, variables.size)
-      while( index < border ){
-        val p1 = preConditionPro(matrixTopic, x._2._eliminate._v, 1, variables, indSeq, mapIndex)
-        val p0 = preConditionPro(matrixTopic, x._2._eliminate._v, 0, variables, indSeq, mapIndex)
-        x._2._cpdPositive = x._2._cpdPositive :+ p1
-        x._2._cpdNegative = x._2._cpdNegative :+ p0
-        index += 1
-        add(indSeq)
+      if(mapIndex.contains(x._2._eliminate._v)){
+        val topicIndex = mapIndex(x._2._eliminate._v)
+        while( index < border ){
+          val p1 = preConditionPro(matrixTopic, topicIndex, 1, variables, indSeq, mapIndex)
+          val p0 = preConditionPro(matrixTopic, topicIndex, 0, variables, indSeq, mapIndex)
+
+          x._2._cpdPositive = x._2._cpdPositive :+ p1
+          x._2._cpdNegative = x._2._cpdNegative :+ p0
+          index += 1
+          add(indSeq)
+        }
       }
     })
   }
 
-  def makeMapFactor(mapFactor:Map[Int, BayesFactor],initPair:List[(Int,Int)],mapVal:Map[Int, BayesVar]):Unit = {
+  def makeMapFactor(mapFactor:Map[Int, BayesFactor], initPair:List[(Int,Int)], mapVal:Map[Int, BayesVar]):Unit = {
     initPair.foreach(x => {
       val start =  if(mapVal.contains(x._1)) mapVal(x._1) else new BayesVar(x._1)
       val end = if(mapVal.contains(x._2)) mapVal(x._2) else new BayesVar((x._2))
