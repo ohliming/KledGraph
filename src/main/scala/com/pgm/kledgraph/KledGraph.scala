@@ -10,7 +10,6 @@ import scala.util.control.Breaks._
 import org.json4s._
 import org.json4s.native.JsonMethods._
 
-import scala.collection.mutable
 
 object KledGraph {
   val stageDict: Map[String, Int] = Map(
@@ -258,24 +257,26 @@ object KledGraph {
 
     val mapTopicIndex = mapIndex.map(x=> ((x._2 -> x._1)))
     var rowCount = 0
-    for(index <- 0 to mapIndex.size){ // foreach column
+    for(index <- 0 until mapIndex.size){ // foreach column
       var rowCnt = 0
-      if(index > 0){ columns +=columns(index-1) }
+      if( index > 0 ){ columns += columns(index-1) }
       println("the column index:"+columns(index))
       listRecords.foreach(x =>{
         val questionId = x._2
         val label = if( x._3 == 1 ) 1.0 else 0.0
         if( mapQuestTopic.contains(questionId)) {
-          if(index == 0){
-            columns.update(index, columns(index) +1)
+          if( index == 0 ){
+            columns(index) += 1
             rows = rows.+:(rowCnt)
             values = values.+:(label)
           }else{
-            val topic = mapTopicIndex(index)
-            if(mapQuestTopic(questionId).contains(topic)){
-              columns.update(index, columns(index) +1)
-              rows = rows.+:(rowCnt)
-              values = values.+:(1.0)
+            if(mapTopicIndex.contains(index)){
+              val topic = mapTopicIndex(index)
+              if(mapQuestTopic(questionId).contains(topic)){
+                columns(index) += 1
+                rows = rows.+:(rowCnt)
+                values = values.+:(1.0)
+              }
             }
           }
           rowCnt += 1
