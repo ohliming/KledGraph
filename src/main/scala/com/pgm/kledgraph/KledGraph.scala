@@ -323,23 +323,24 @@ object KledGraph {
     val rowsNum = matrixTopic.numRows
     val loop  = new Breaks
     while(index < rowsNum){
-      fenmu += 1
-      var flag = true
+      var isFenmu = true
       loop.breakable {
-        for(i <- 0 until indSeq.size){
+        for(i <- 1 to indSeq.size){
           val v = matrixTopic.apply(index, mapIndex(variables(i)._v))
-          if( v == indSeq(i) ){
-            val value = matrixTopic.apply(index, start)
-            val tlabel = matrixTopic.apply(index, 0)
-            if( value != 1.0 || tlabel != label ){
-              flag = false
-              loop.break
-            }
+          if( v != indSeq(i) ){
+            isFenmu = false
+            loop.break
           }
         }
       }
 
-      if(flag) {fenzi += 1}
+      val value = matrixTopic.apply(index, start)
+      val tlabel = matrixTopic.apply(index, 0)
+      if( value == 1.0 && tlabel != label && isFenmu){
+        fenzi += 1
+      }
+
+      if(isFenmu) { fenmu += 1 }
       index += 1
     }
 
