@@ -260,7 +260,6 @@ object KledGraph {
     for(index <- 0 to mapIndex.size + 1){ // foreach column
       var rowCnt = 0
       if( index > 0 ){ columns += columns(index-1) }
-      println("the index:"+index+" the count:"+columns(index))
       listRecords.foreach(x => {
         val questionId = x._2
         val label = if( x._3 == 1 ) 1.0 else 0.0
@@ -360,6 +359,7 @@ object KledGraph {
           x._2._cpdNegative = x._2._cpdNegative :+ p0
           index += 1
           add(indSeq)
+          println("the indseq:"+indSeq)
         }
       }
     })
@@ -475,6 +475,7 @@ object KledGraph {
           posMap += ((i -> mapIndex(eliVariables(i))))
         }
       }
+
       val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
       val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
       p = p0 + p1
