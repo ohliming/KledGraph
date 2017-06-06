@@ -326,7 +326,9 @@ object KledGraph {
       var isFenmu = true
       loop.breakable {
         for(i <- 1 to indSeq.size){
+          println("the index:"+index+" and the column:"+mapIndex(variables(i)._v))
           val v = matrixTopic.apply(index, mapIndex(variables(i)._v))
+          println("the v="+v+" and indseq:"+indSeq(i))
           if( v != indSeq(i) ){
             isFenmu = false
             loop.break
