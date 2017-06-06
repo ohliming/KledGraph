@@ -354,24 +354,25 @@ object KledGraph {
 
   def staticTopicCPD(mapFactor:Map[Int, BayesFactor], matrixTopic:Matrix, mapIndex:Map[Int,Int]) = {
     mapFactor.foreach(x => { // cal CPD
-      val factor = x._2
-      val bayes = factor._eliminate
+      val bayes = x._2._eliminate
       bayes._parents.foreach(parent => { x._2.addVariable(parent) })
       val variables = x._2.getVariables
       var indSeq:Seq[Int] = Seq()
       variables.foreach(x=>{ indSeq = indSeq :+ 0 })
-      var index = 0
-      val border = math.pow(2.0, variables.size)
-      if(mapIndex.contains(x._2._eliminate._v)){
-        val topicIndex = mapIndex(x._2._eliminate._v)
-        while( index < border ){
-          val p1 = preConditionPro(matrixTopic, topicIndex, 1, variables, indSeq, mapIndex)
-          val p0 = preConditionPro(matrixTopic, topicIndex, 0, variables, indSeq, mapIndex)
+      if(variables.size > 0){
+        var index = 0
+        val border = math.pow(2.0, variables.size)
+        if(mapIndex.contains(x._2._eliminate._v)){
+          val topicIndex = mapIndex(x._2._eliminate._v)
+          while( index < border ){
+            val p1 = preConditionPro(matrixTopic, topicIndex, 1, variables, indSeq, mapIndex)
+            val p0 = preConditionPro(matrixTopic, topicIndex, 0, variables, indSeq, mapIndex)
 
-          x._2._cpdPositive = x._2._cpdPositive :+ p1
-          x._2._cpdNegative = x._2._cpdNegative :+ p0
-          index += 1
-          addSeq(indSeq)
+            x._2._cpdPositive = x._2._cpdPositive :+ p1
+            x._2._cpdNegative = x._2._cpdNegative :+ p0
+            index += 1
+            addSeq(indSeq)
+          }
         }
       }
     })
@@ -589,7 +590,7 @@ object KledGraph {
     println("the pair len is:" + initPair.length)
 
     var mapVal:Map[Int,BayesVar] = Map()
-    var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor,initPair,mapVal)
+    var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor, initPair, mapVal)
     println("the init factor len is:"+mapFactor.size)
 
     staticTopicCPD(mapFactor, matrixTopic, mapIndex)
