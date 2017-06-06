@@ -322,13 +322,14 @@ object KledGraph {
     var index = 0
     val rowsNum = matrixTopic.numRows
     val loop  = new Breaks
+    println("the indSeq:"+ indSeq)
     while(index < rowsNum){
       var isFenmu = true
       loop.breakable {
         for(i <- 1 to indSeq.size){
-          println("the index:"+index+" and the column:"+mapIndex(variables(i)._v))
+          println("the index:"+index+" and the column:"+variables(i)._v)
+          println("the map index:"+ mapIndex(variables(i)._v))
           val v = matrixTopic.apply(index, mapIndex(variables(i)._v))
-          println("the v="+v+" and indseq:"+indSeq(i))
           if( v != indSeq(i) ){
             isFenmu = false
             loop.break
