@@ -132,7 +132,7 @@ object KledGraph {
         if(intersection.size > 0){setStart.add(studentId)}
         if(setTopic.contains(endTopic)){setEnd.add(studentId)}
 
-        if( mapStudent.contains(studentId)){
+        if( mapStudent.contains(studentId) ){
           val count = mapStudent(studentId)
           mapStudent.update(studentId, count + 1)
         }else{
@@ -566,18 +566,18 @@ object KledGraph {
     val listRecords = getStudRecords(mapQuestTopic, mapTopic, sqlContext, subjectDict("cz_chemical"), stageDict("CZ"))
     println("the record len is:" + listRecords.length)
 
+    var mapIndex:Map[Int, Int] = mapTopic2Index(mapTopic)
+    println("the map index len is:"+mapIndex.size)
+
+    val matrixTopic = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex) // spare matrix
+    println("the matrix column:"+matrixTopic.numCols+" and rows:"+matrixTopic.numRows)
+
     val initPair = structGrahpList(listRecords, mapTopic, mapQuestTopic, mapTopicQuest)
     println("the pair len is:" + initPair.length)
 
     var mapVal:Map[Int,BayesVar] = Map()
     var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor,initPair,mapVal)
     println("the init factor len is:"+mapFactor.size)
-
-    var mapIndex:Map[Int, Int] = mapTopic2Index(mapTopic)
-    println("the map index len is:"+mapIndex.size)
-
-    val matrixTopic = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex) // spare matrix
-    println("the matrix column:"+matrixTopic.numCols+" and rows:"+matrixTopic.numRows)
 
     staticTopicCPD(mapFactor, matrixTopic, mapIndex)
     println("the cpd factor len is:"+ mapFactor.size)
