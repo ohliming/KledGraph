@@ -319,7 +319,8 @@ object KledGraph {
   def preConditionPro(matrixTopic:Matrix, start:Int, label:Int, variables:Seq[BayesVar], indSeq:Seq[Int], mapIndex:Map[Int,Int]):Double = {
     var fenzi:Double = 0
     var fenmu:Double = 0
-    var index = 0; val rowsNum = matrixTopic.numRows
+    var index = 0
+    val rowsNum = matrixTopic.numRows
     while(index < rowsNum){
       for(i <- 0 until indSeq.size){
         val v = matrixTopic.apply(index, mapIndex(variables(i)._v))
@@ -333,6 +334,8 @@ object KledGraph {
 
       index += 1
     }
+
+    println("fenzi="+fenzi+" and fenmu="+fenmu)
     val p = if(fenmu == 0 || fenzi > fenmu) 0.0 else fenzi / fenmu
     p
   }
@@ -352,10 +355,9 @@ object KledGraph {
         while( index < border ){
           val p1 = preConditionPro(matrixTopic, topicIndex, 1, variables, indSeq, mapIndex)
           val p0 = preConditionPro(matrixTopic, topicIndex, 0, variables, indSeq, mapIndex)
-          if(p1 >0 ){
+          if(p1 > 0 ){
             println("the p1="+p1)
           }
-          println("the p1 is:"+p1)
 
           x._2._cpdPositive = x._2._cpdPositive :+ p1
           x._2._cpdNegative = x._2._cpdNegative :+ p0
