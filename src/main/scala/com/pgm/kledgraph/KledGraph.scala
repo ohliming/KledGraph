@@ -203,7 +203,7 @@ object KledGraph {
   }
 
   def structGrahpList(listRecords:List[(Long,Int,Int)], mapTopic:Map[Int, String], mapQuestTopic:Map[Int,Set[Int]],
-                      mapTopicQuest:Map[Int,Set[Int]],throld: Int = 30, inDreege:Int = 3, outDreege:Int = 4) = {
+                      mapTopicQuest:Map[Int,Set[Int]],throld: Int = 30, inDreege:Int = 5, outDreege:Int = 4) = {
     var listPair:List[((Int,Int),Int)] = List()
     mapTopic.foreach(topic1 => {
       mapTopic.foreach(topic2 => {
@@ -347,13 +347,15 @@ object KledGraph {
       variables.foreach(x=>{ indSeq = indSeq :+ 0 })
       var index = 0
       val border = math.pow(2.0, variables.size)
-      println("the boder len is:" + border)
       if(mapIndex.contains(x._2._eliminate._v)){
         val topicIndex = mapIndex(x._2._eliminate._v)
         while( index < border ){
           val p1 = preConditionPro(matrixTopic, topicIndex, 1, variables, indSeq, mapIndex)
           val p0 = preConditionPro(matrixTopic, topicIndex, 0, variables, indSeq, mapIndex)
-          println("the p1 is:"+p1+" and p0 is:"+p0)
+          if(p1 >0 ){
+            println("the p1="+p1)
+          }
+          println("the p1 is:"+p1)
 
           x._2._cpdPositive = x._2._cpdPositive :+ p1
           x._2._cpdNegative = x._2._cpdNegative :+ p0
