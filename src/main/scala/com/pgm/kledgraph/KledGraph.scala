@@ -269,7 +269,6 @@ object KledGraph {
             columns(index) += 1
             rows = rows.+:(rowCnt)
             values = values.+:(label)
-            if(label == 1.0) println("the label"+label)
           }else{
             if(mapTopicIndex.contains(index)){
               val topic = mapTopicIndex(index)
@@ -349,12 +348,13 @@ object KledGraph {
       variables.foreach(x=>{ indSeq = indSeq :+ 0 })
       var index = 0
       val border = math.pow(2.0, variables.size)
+      println("the boder len is:" + border)
       if(mapIndex.contains(x._2._eliminate._v)){
         val topicIndex = mapIndex(x._2._eliminate._v)
         while( index < border ){
           val p1 = preConditionPro(matrixTopic, topicIndex, 1, variables, indSeq, mapIndex)
           val p0 = preConditionPro(matrixTopic, topicIndex, 0, variables, indSeq, mapIndex)
-          //println("the p1 is:"+p1+" and p0 is:"+p0)
+          println("the p1 is:"+p1+" and p0 is:"+p0)
 
           x._2._cpdPositive = x._2._cpdPositive :+ p1
           x._2._cpdNegative = x._2._cpdNegative :+ p0
