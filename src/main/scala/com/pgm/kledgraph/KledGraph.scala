@@ -107,7 +107,6 @@ object KledGraph {
           }
 
           if(res > 0) { //normal record add the list
-            if(res == 1){println("the res:"+res)}
             listRecords = listRecords.+:(studentId, questionId, res)
           }
         }
@@ -270,6 +269,7 @@ object KledGraph {
             columns(index) += 1
             rows = rows.+:(rowCnt)
             values = values.+:(label)
+            if(label == 1.0) println("the label"+label)
           }else{
             if(mapTopicIndex.contains(index)){
               val topic = mapTopicIndex(index)
@@ -354,7 +354,7 @@ object KledGraph {
         while( index < border ){
           val p1 = preConditionPro(matrixTopic, topicIndex, 1, variables, indSeq, mapIndex)
           val p0 = preConditionPro(matrixTopic, topicIndex, 0, variables, indSeq, mapIndex)
-          println("the p1 is:"+p1+" and p0 is:"+p0)
+          //println("the p1 is:"+p1+" and p0 is:"+p0)
 
           x._2._cpdPositive = x._2._cpdPositive :+ p1
           x._2._cpdNegative = x._2._cpdNegative :+ p0
