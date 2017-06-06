@@ -328,6 +328,7 @@ object KledGraph {
           val value = matrixTopic.apply(index, start)
           val tlabel = matrixTopic.apply(index, 0)
           fenmu += 1
+          println("the tlabel:"+tlabel)
           if( value == 1.0 && tlabel == label ){fenzi += 1}
         }
       }
@@ -591,7 +592,7 @@ object KledGraph {
     val target = sequence(pos); sequence.drop(pos)
 
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
-    val p = condSumProductVE(mapFactor,sequence, target, 1, mapEvidences)
+    val p = condSumProductVE(mapFactor, sequence, target, 1, mapEvidences)
     println("the result is:" + p) // output p
 
     sc.stop
