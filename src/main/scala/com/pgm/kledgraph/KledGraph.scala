@@ -289,17 +289,17 @@ object KledGraph {
     Matrices.sparse(rowCount, mapIndex.size+1, columns.toArray, rows.toArray, values.toArray)
   }
 
-  def add(indSeq:Seq[Int]) = {
+  def addSeq(indSeq:Seq[Int]) = {
     val loop = new Breaks
     loop.breakable {
-      indSeq.foreach(x => {
-        if(x == 0){
-          indSeq.update(indSeq.indexOf(x), 1)
+      for(pos <- 0 until indSeq.size){
+        if(indSeq(pos) == 0){
+          indSeq.update(pos, 1)
           loop.break
-        }else {
-          indSeq.update(indSeq.indexOf(x), 0)
+        }else{
+          indSeq.update(pos, 0)
         }
-      })
+      }
     }
   }
 
@@ -358,8 +358,7 @@ object KledGraph {
           x._2._cpdPositive = x._2._cpdPositive :+ p1
           x._2._cpdNegative = x._2._cpdNegative :+ p0
           index += 1
-          add(indSeq)
-          println("the indseq:"+indSeq)
+          addSeq(indSeq)
         }
       }
     })
@@ -515,7 +514,7 @@ object KledGraph {
 
       factor._cpds = factor._cpds :+ p
       index += 1
-      add(indexSeq)
+      addSeq(indexSeq)
     }
 
     factor
