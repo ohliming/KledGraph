@@ -326,7 +326,7 @@ object KledGraph {
     while(index < rowsNum){
       var isFenmu = true
       loop.breakable {
-        for(i <- 1 to indSeq.size){
+        for(i <- 0 until indSeq.size){
           println("the index:"+index+" and the column:"+variables(i)._v)
           println("the map index:"+ mapIndex(variables(i)._v))
           val v = matrixTopic.apply(index, mapIndex(variables(i)._v))
