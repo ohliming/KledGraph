@@ -321,17 +321,25 @@ object KledGraph {
     var fenmu:Double = 0
     var index = 0
     val rowsNum = matrixTopic.numRows
+    val loop  = new Breaks
     while(index < rowsNum){
-      for(i <- 0 until indSeq.size){
-        val v = matrixTopic.apply(index, mapIndex(variables(i)._v))
-        if( v == indSeq(i) ){
-          val value = matrixTopic.apply(index, start)
-          val tlabel = matrixTopic.apply(index, 0)
-          fenmu += 1
-          if( value == 1.0 && tlabel == label ){fenzi += 1}
+      fenmu += 1
+      var flag = true
+      loop.breakable {
+        for(i <- 0 until indSeq.size){
+          val v = matrixTopic.apply(index, mapIndex(variables(i)._v))
+          if( v == indSeq(i) ){
+            val value = matrixTopic.apply(index, start)
+            val tlabel = matrixTopic.apply(index, 0)
+            if( value != 1.0 || tlabel != label ){
+              flag = false
+              loop.break
+            }
+          }
         }
       }
 
+      if(flag) {fenzi += 1}
       index += 1
     }
 
