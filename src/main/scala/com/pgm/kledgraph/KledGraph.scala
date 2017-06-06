@@ -107,6 +107,7 @@ object KledGraph {
           }
 
           if(res > 0) { //normal record add the list
+            if(res == 1){println("the res:"+res)}
             listRecords = listRecords.+:(studentId, questionId, res)
           }
         }
@@ -328,7 +329,6 @@ object KledGraph {
           val value = matrixTopic.apply(index, start)
           val tlabel = matrixTopic.apply(index, 0)
           fenmu += 1
-          println("the tlabel:"+tlabel)
           if( value == 1.0 && tlabel == label ){fenzi += 1}
         }
       }
