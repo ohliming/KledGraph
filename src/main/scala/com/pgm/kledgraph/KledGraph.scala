@@ -79,7 +79,8 @@ object KledGraph {
   // cache the exceries records
   def getStudRecords(mapQuestTopic: Map[Int, Set[Int]], mapTopic: Map[Int, String], sqlContext: HiveContext,subjectId:Int,stageId:Int) = {
     var listRecords:List[(Long, Int, Int)] = List() // records object
-    var sql = "select a.student_id,a.question_id,a.result from entity_student_exercise a where a.result !=\"\""
+    var sql = "select a.student_id,a.question_id,a.result from entity_student_exercise as a join link_question_topic as b on " +
+      "(b.question_id=a.question_id) join entity_topic as c on (c.id = b.topic_id) where c.subject_id="+subjectId+" and c.stage_id ="+stageId
     val rows = sqlContext.sql(sql).collect()
     val setKeyTopic = mapTopic.map(x=>x._1).toSet
     val regex="""^\d+$""".r  //process effective records
@@ -95,7 +96,7 @@ object KledGraph {
         if (setMerge.size > 0) {
           if (regex.findFirstMatchIn(result) != None) {
             res = result.toInt
-          } else if (!result.equals("NULL") && !result.eq(None)) {
+          } else if (!result.equals("NULL") && !result.equals("") && !result.eq(None)) {
             val t = parse(result.replace("]","").replace("[",""))
             val mapJson = t.values.asInstanceOf[scala.collection.immutable.Map[String,_]]
             if(mapJson.contains("result")){
