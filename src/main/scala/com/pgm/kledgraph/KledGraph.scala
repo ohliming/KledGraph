@@ -265,8 +265,7 @@ object KledGraph {
         val topics = mapQuestTopic(questionId)
         topics.foreach(topic =>{
           if(mapTopicIndex.contains(topic)){
-            val index = mapTopicIndex(topic)
-            posArr += index
+            posArr += mapTopicIndex(topic)
             valArr += 1.0
           }
         })
