@@ -314,21 +314,21 @@ object KledGraph {
       loop.breakable {
         for(i<- 0 until variables.size){
           val v = mapIndex(variables(i)._v)
+          println("the v ="+v+" and indseq="+indSeq(i))
           if( v != indSeq(i)){
             isFenmu = false
             loop.break
           }
         }
 
-        if(isFenmu){fenmu += 1}
+        if(isFenmu){ fenmu += 1 }
         val value  = record.apply(start)
         val rlabel = record.apply(0)
-        if( value == 1.0 && rlabel != label && isFenmu){
+        if( value == 1.0 && rlabel == label && isFenmu){
           fenzi += 1
         }
       }
     })
-
 
     println("fenzi="+fenzi+" and fenmu="+fenmu)
     val p = if(fenmu > 0 && fenzi < fenmu) fenzi / fenmu else 0.0
