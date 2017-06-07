@@ -322,6 +322,7 @@ object KledGraph {
     var index = 0
     val rowsNum = matrixTopic.numRows
     val loop  = new Breaks
+    println("the indseq:"+ indSeq)
     while( index < rowsNum ){
       var isFenmu = true
       loop.breakable {
@@ -345,12 +346,12 @@ object KledGraph {
     }
 
     println("fenzi="+fenzi+" and fenmu="+fenmu)
-    val p = if(fenmu == 0 || fenzi > fenmu) 0.0 else fenzi / fenmu
+    val p = if(fenmu > 0 && fenzi < fenmu) fenzi / fenmu else 0.0
     p
   }
 
   def staticTopicCPD(mapFactor:Map[Int, BayesFactor], matrixTopic:Matrix, mapIndex:Map[Int,Int]) = {
-    mapFactor.foreach(x => { // cal CPD
+    mapFactor.foreach(x => { // cal cpd
       val bayes = x._2._eliminate
       bayes._parents.foreach(parent => { x._2.addVariable(parent) })
       val variables = x._2.getVariables
