@@ -224,7 +224,6 @@ object KledGraph {
     listSort.foreach(x => {
       var (topic1, topic2) = x._1
       val (p0,p1) = staticConditionPro(listRecords,mapQuestTopic,Set(topic1), topic2, 1)
-
       if(p1 > p0){
         val temp = topic1
         topic1 = topic2
@@ -240,6 +239,7 @@ object KledGraph {
         }else{
           mapParents += ((topic2 -> Set(topic1)))
         }
+
         if(mapChilds.contains(topic1)){ mapChilds(topic1).add(topic2)
         }else{
           mapChilds += ((topic1 -> Set(topic2)))
@@ -314,7 +314,7 @@ object KledGraph {
         for(i<- 0 until variables.size){
           val v = vecRecords.apply(mapIndex(variables(i)._v))
           println("the v ="+v+" and indseq="+indSeq(i))
-          if( v != indSeq(i)){
+          if( v != indSeq(i) ){
             isFenmu = false
             loop.break
           }
@@ -322,8 +322,8 @@ object KledGraph {
 
         if(isFenmu){ fenmu += 1 }
         val value  = record.apply(start)
-        val rlabel = record.apply(0)
-        if( value == 1.0 && rlabel == label && isFenmu){
+        val compare = record.apply(0)
+        if( value == 1.0 && compare == label && isFenmu){
           fenzi += 1
         }
       }
