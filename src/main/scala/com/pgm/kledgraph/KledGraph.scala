@@ -3,7 +3,7 @@ package com.pgm.kledgraph
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.hive.HiveContext
-import org.apache.spark.mllib.linalg.{Matrices, Matrix, Vectors}
+import org.apache.spark.mllib.linalg.{Vectors,Vector}
 
 import scala.collection.mutable.{ListBuffer, Map, Seq, Set}
 import scala.util.control._
@@ -251,42 +251,29 @@ object KledGraph {
   }
 
   def makeTopicMatrix(listRecords: List[(Long, Int, Int)], mapQuestTopic:Map[Int,Set[Int]], mapIndex: Map[Int,Int]) = {
-    var columns:ListBuffer[Int] = ListBuffer(0)
-    var rows:List[Int] = List() // row and column
-    var values:List[Double] = List()
+    var resVectors:Seq[Vector ] = Seq()
 
     val mapTopicIndex = mapIndex.map( x=> ((x._2 -> x._1)) )
-    var rowCount = 0
-    for(index <- 0 to mapIndex.size + 1){ // foreach column
-      var rowCnt = 0
-      if( index > 0 ){ columns += columns(index-1) }
-      listRecords.foreach(x => {
-        val questionId = x._2
-        val label = if( x._3 == 1 ) 1.0 else 0.0
-        if( mapQuestTopic.contains(questionId)) {
-          if( index == 0 ){
-            columns(index) += 1
-            rows = rows.+:(rowCnt)
-            values = values.+:(label)
-          }else{
-            if(mapTopicIndex.contains(index)){
-              val topic = mapTopicIndex(index)
-              if(mapQuestTopic(questionId).contains(topic)){
-                columns(index) += 1
-                rows = rows.+:(rowCnt)
-                values = values.+:(1.0)
-              }
-            }
-          }
-          rowCnt += 1
-          if(rowCnt > rowCount) {
-            rowCount = rowCnt
-          }
-        }
-      })
-    }
+    listRecords.foreach(x=>{
+      val questionId = x._2
+      val label = if( x._3 == 1 ) 1.0 else 0.0
+      if(mapQuestTopic.contains(questionId)){
+        var posArr:ListBuffer[Int] = new ListBuffer()
+        var valArr:ListBuffer[Double] = new ListBuffer()
 
-    Matrices.sparse(rowCount, mapIndex.size+1, columns.toArray, rows.toArray, values.toArray)
+        posArr += 0; valArr += label // process label
+        val topics = mapQuestTopic(questionId)
+        topics.foreach(topic =>{
+          val index = mapTopicIndex(topic)
+          posArr += index
+          valArr += 1.0
+        })
+
+        resVectors = resVectors :+ Vectors.sparse(1+mapIndex.size, posArr.toArray, valArr.toArray)
+      }
+
+    })
+    resVectors
   }
 
   def addSeq(indSeq:Seq[Int]) = {
@@ -316,42 +303,37 @@ object KledGraph {
     pos
   }
 
-  def preConditionPro(matrixTopic:Matrix, start:Int, label:Int, variables:Seq[BayesVar], indSeq:Seq[Int], mapIndex:Map[Int,Int]):Double = {
+  def preConditionPro(vecRecords:Seq[Vector], start:Int, label:Int, variables:Seq[BayesVar], indSeq:Seq[Int], mapIndex:Map[Int,Int]):Double = {
     var fenzi:Double = 0
     var fenmu:Double = 0
-    var index = 0
-    val rowsNum = matrixTopic.numRows
     val loop  = new Breaks
-    println("the indseq:"+ indSeq)
-    while( index < rowsNum ){
+    vecRecords.foreach(record => {
       var isFenmu = true
       loop.breakable {
-        for(i <- 0 until indSeq.size){
-          val v = matrixTopic.apply(index, mapIndex(variables(i)._v))
-          println("the v = "+v+" and the inSeq="+indSeq(i))
-          if( v != indSeq(i) ){
+        for(i<- 0 until variables.size){
+          val v = mapIndex(variables(i)._v)
+          if( v != indSeq(i)){
             isFenmu = false
             loop.break
           }
         }
-      }
 
-      val value = matrixTopic.apply(index, start)
-      val tlabel = matrixTopic.apply(index, 0)
-      if( value == 1.0 && tlabel != label && isFenmu){
-        fenzi += 1
+        if(isFenmu){fenmu += 1}
+        val value = record.apply(start)
+        val rlabel = record.apply(0)
+        if( value == 1.0 && rlabel != label && isFenmu){
+          fenzi += 1
+        }
       }
+    })
 
-      if(isFenmu) { fenmu += 1 }
-      index += 1
-    }
 
     println("fenzi="+fenzi+" and fenmu="+fenmu)
     val p = if(fenmu > 0 && fenzi < fenmu) fenzi / fenmu else 0.0
     p
   }
 
-  def staticTopicCPD(mapFactor:Map[Int, BayesFactor], matrixTopic:Matrix, mapIndex:Map[Int,Int]) = {
+  def staticTopicCPD(mapFactor:Map[Int, BayesFactor], vecRecords:Seq[Vector], mapIndex:Map[Int,Int]) = {
     mapFactor.foreach(x => { // cal cpd
       val bayes = x._2._eliminate
       bayes._parents.foreach(parent => { x._2.addVariable(parent) })
@@ -364,8 +346,8 @@ object KledGraph {
         if(mapIndex.contains(x._2._eliminate._v)){
           val topicIndex = mapIndex(x._2._eliminate._v)
           while( index < border ){
-            val p1 = preConditionPro(matrixTopic, topicIndex, 1, variables, indSeq, mapIndex)
-            val p0 = preConditionPro(matrixTopic, topicIndex, 0, variables, indSeq, mapIndex)
+            val p1 = preConditionPro(vecRecords, topicIndex, 1, variables, indSeq, mapIndex)
+            val p0 = preConditionPro(vecRecords, topicIndex, 0, variables, indSeq, mapIndex)
 
             x._2._cpdPositive = x._2._cpdPositive :+ p1
             x._2._cpdNegative = x._2._cpdNegative :+ p0
@@ -582,8 +564,8 @@ object KledGraph {
     var mapIndex:Map[Int, Int] = mapTopic2Index(mapTopic)
     println("the map index len is:"+mapIndex.size)
 
-    val matrixTopic = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex) // spare matrix
-    println("the matrix column:"+matrixTopic.numCols+" and rows:"+matrixTopic.numRows)
+    val vecRecords = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex) // spare matrix
+    println("the vec size:"+vecRecords.size)
 
     val initPair = structGrahpList(listRecords, mapTopic, mapQuestTopic, mapTopicQuest)
     println("the pair len is:" + initPair.length)
@@ -592,7 +574,7 @@ object KledGraph {
     var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor, initPair, mapVal)
     println("the init factor len is:"+mapFactor.size)
 
-    staticTopicCPD(mapFactor, matrixTopic, mapIndex)
+    staticTopicCPD(mapFactor, vecRecords, mapIndex)
     println("the cpd factor len is:"+ mapFactor.size)
 
     val model = new BayesModel; mapFactor.foreach(x=>{ model.addFactor(x._2) })
