@@ -264,9 +264,11 @@ object KledGraph {
         posArr += 0; valArr += label // process label
         val topics = mapQuestTopic(questionId)
         topics.foreach(topic =>{
-          val index = mapTopicIndex(topic)
-          posArr += index
-          valArr += 1.0
+          if(mapTopicIndex.contains(topic)){
+            val index = mapTopicIndex(topic)
+            posArr += index
+            valArr += 1.0
+          }
         })
 
         resVectors = resVectors :+ Vectors.sparse(1+mapIndex.size, posArr.toArray, valArr.toArray)
@@ -319,7 +321,7 @@ object KledGraph {
         }
 
         if(isFenmu){fenmu += 1}
-        val value = record.apply(start)
+        val value  = record.apply(start)
         val rlabel = record.apply(0)
         if( value == 1.0 && rlabel != label && isFenmu){
           fenzi += 1
