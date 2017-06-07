@@ -565,11 +565,11 @@ object KledGraph {
     var mapIndex:Map[Int, Int] = mapTopic2Index(mapTopic)
     println("the map index len is:"+mapIndex.size)
 
-    val vecRecords = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex) // spare matrix
-    println("the vec size:"+vecRecords.size)
-
     val initPair = structGrahpList(listRecords, mapTopic, mapQuestTopic, mapTopicQuest)
     println("the pair len is:" + initPair.length)
+
+    val vecRecords = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex) // spare matrix
+    println("the vec size:"+vecRecords.size)
 
     var mapVal:Map[Int,BayesVar] = Map()
     var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor, initPair, mapVal)
