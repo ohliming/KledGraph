@@ -417,8 +417,9 @@ object KledGraph {
 
   def pos2Seq(x:Int, len:Int) = {
     var indSeq:Seq[Int] = Seq()
-    var posLen = len; var position = x
-    while(posLen > 0){
+    var posLen = len-1
+    var position = x
+    while(posLen >= 0){
       val v = math.pow(2.0, posLen).toInt
       if(position >= v) {
         position = position - v
