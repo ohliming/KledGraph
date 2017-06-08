@@ -272,7 +272,6 @@ object KledGraph {
 
         resVectors = resVectors :+ Vectors.sparse(1+mapIndex.size, posArr.toArray, valArr.toArray)
       }
-
     })
     resVectors
   }
