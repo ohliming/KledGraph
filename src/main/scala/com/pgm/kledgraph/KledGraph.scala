@@ -311,7 +311,7 @@ object KledGraph {
       var isFenmu = true
       loop.breakable {
         for(i<- 0 until variables.size){
-          val v = vecRecords.apply(mapIndex(variables(i)._v))
+          val v = record.apply(mapIndex(variables(i)._v))
           if( v != indSeq(i) ){
             isFenmu = false
             loop.break
@@ -321,7 +321,7 @@ object KledGraph {
         if(isFenmu){ fenmu += 1 }
         val value  = record.apply(start)
         val compare = record.apply(0)
-        if( value == 1.0 && compare == label && isFenmu){
+        if( value == 1.0 && compare == label && isFenmu) {
           fenzi += 1
         }
       }
