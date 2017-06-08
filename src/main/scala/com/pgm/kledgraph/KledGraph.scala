@@ -252,10 +252,12 @@ object KledGraph {
 
   def makeTopicMatrix(listRecords: List[(Long, Int, Int)], mapQuestTopic:Map[Int,Set[Int]], mapIndex: Map[Int,Int]) = {
     var resVectors:Seq[Vector ] = Seq()
-
+    var mapRowStudent:Map[Int, Long] = Map()
+    var index = 0
     val mapTopicIndex = mapIndex.map( x=> ((x._2 -> x._1)) )
     listRecords.foreach(x=>{
       val questionId = x._2
+      val studentId = x._1
       val label = if( x._3 == 1 ) 1.0 else 0.0
       if(mapQuestTopic.contains(questionId)){
         var posArr:ListBuffer[Int] = new ListBuffer()
@@ -270,11 +272,11 @@ object KledGraph {
           }
         })
 
-        println("the valArr len:"+valArr.size)
+        mapRowStudent += ((index -> studentId))
         resVectors = resVectors :+ Vectors.sparse(1+mapIndex.size, posArr.toArray, valArr.toArray)
       }
     })
-    resVectors
+    (resVectors, mapRowStudent)
   }
 
   def addSeq(indSeq:Seq[Int]) = {
@@ -304,36 +306,45 @@ object KledGraph {
     pos
   }
 
-  def preConditionPro(vecRecords:Seq[Vector], start:Int, label:Int, variables:Seq[BayesVar], indSeq:Seq[Int], mapIndex:Map[Int,Int]):Double = {
+  def preConditionPro(vecRecords:Seq[Vector], mapRowStudent:Map[Int,Long], start:Int, label:Int, variables:Seq[BayesVar], indSeq:Seq[Int], mapIndex:Map[Int,Int]):Double = {
     var fenzi:Double = 0
     var fenmu:Double = 0
     val loop  = new Breaks
+    var index = 0
+    var setFenmu:Set[Long] = Set()
     vecRecords.foreach(record => {
-      var isFenmu = true
-      loop.breakable {
-        for(i<- 0 until variables.size){
-          val v = record.apply(mapIndex(variables(i)._v))
-          if( v != indSeq(i) ){
-            isFenmu = false
-            loop.break
+      if(mapRowStudent.contains(index)){
+        var isFenmu = true
+        val studentId = mapRowStudent(index)
+        loop.breakable {
+          for(i<- 0 until variables.size){
+            val v = record.apply(mapIndex(variables(i)._v))
+            if( v != indSeq(i) ){
+              isFenmu = false
+              loop.break
+            }
           }
-        }
 
-        if(isFenmu){ fenmu += 1 }
-        val value  = record.apply(start)
-        val compare = record.apply(0)
-        if( value == 1.0) {
-          fenzi += 1
+          if(isFenmu){
+            fenmu += 1
+            setFenmu.add(studentId)
+          }
+
+          val value  = record.apply(start)
+          val compare = record.apply(0)
+          if( value == 1.0 && compare == label && setFenmu.contains(studentId)) {
+            fenzi += 1
+          }
         }
       }
     })
 
-    if(fenzi > 0) {println("the start:"+start +" the fenzi="+fenzi)}
+    println("the start:"+start+" and fenzi:"+fenzi +" and fenmu:"+fenmu)
     val p = if(fenmu > 0 && fenzi < fenmu) fenzi / fenmu else 0.0
     p
   }
 
-  def staticTopicCPD(mapFactor:Map[Int, BayesFactor], vecRecords:Seq[Vector], mapIndex:Map[Int,Int]) = {
+  def staticTopicCPD(mapFactor:Map[Int, BayesFactor], vecRecords:Seq[Vector],mapRowStudent:Map[Int, Long], mapIndex:Map[Int,Int]) = {
     mapFactor.foreach(x => { // cal cpd
       val bayes = x._2._eliminate
       bayes._parents.foreach(parent => { x._2.addVariable(parent) })
@@ -346,8 +357,8 @@ object KledGraph {
         if(mapIndex.contains(x._2._eliminate._v)){
           val topicIndex = mapIndex(x._2._eliminate._v)
           while( index < border ){
-            val p1 = preConditionPro(vecRecords, topicIndex, 1, variables, indSeq, mapIndex)
-            val p0 = preConditionPro(vecRecords, topicIndex, 0, variables, indSeq, mapIndex)
+            val p1 = preConditionPro(vecRecords, mapRowStudent, topicIndex, 1, variables, indSeq, mapIndex)
+            val p0 = preConditionPro(vecRecords, mapRowStudent, topicIndex, 0, variables, indSeq, mapIndex)
 
             x._2._cpdPositive = x._2._cpdPositive :+ p1
             x._2._cpdNegative = x._2._cpdNegative :+ p0
@@ -572,14 +583,14 @@ object KledGraph {
     val initPair = structGrahpList(listRecords, mapTopic, mapQuestTopic, mapTopicQuest)
     println("the pair len is:" + initPair.length)
 
-    val vecRecords = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex) // spare matrix
+    val (vecRecords, mapRowStudent) = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex) // spare matrix
     println("the vec size:"+vecRecords.size)
 
     var mapVal:Map[Int,BayesVar] = Map()
     var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor, initPair, mapVal)
     println("the init factor len is:"+mapFactor.size)
 
-    staticTopicCPD(mapFactor, vecRecords, mapIndex)
+    staticTopicCPD(mapFactor, vecRecords, mapRowStudent, mapIndex)
     println("the cpd factor len is:"+ mapFactor.size)
 
     val model = new BayesModel; mapFactor.foreach(x=>{ model.addFactor(x._2) })
