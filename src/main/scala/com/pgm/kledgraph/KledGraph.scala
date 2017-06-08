@@ -354,6 +354,7 @@ object KledGraph {
       val variables = x._2.getVariables
       var indSeq:Seq[Int] = Seq()
       variables.foreach(x=>{ indSeq = indSeq :+ 0 })
+      addSeq(indSeq)
       if(variables.size > 0){
         var index = 0
         val border = math.pow(2.0, variables.size)
