@@ -321,7 +321,6 @@ object KledGraph {
 
         if(isFenmu){ fenmu += 1 }
         val value  = record.apply(start)
-        println("the start:"+start+" and the value:"+value)
         val compare = record.apply(0)
         if( value == 1.0) {
           fenzi += 1
@@ -329,7 +328,7 @@ object KledGraph {
       }
     })
 
-    println("the fenzi:"+ fenzi)
+    if(fenzi > 0) {println("the start:"+start +" the fenzi="+fenzi)}
     val p = if(fenmu > 0 && fenzi < fenmu) fenzi / fenmu else 0.0
     p
   }
