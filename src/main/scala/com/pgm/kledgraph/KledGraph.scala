@@ -313,7 +313,6 @@ object KledGraph {
       loop.breakable {
         for(i<- 0 until variables.size){
           val v = vecRecords.apply(mapIndex(variables(i)._v))
-          println("the v ="+v+" and indseq="+indSeq(i))
           if( v != indSeq(i) ){
             isFenmu = false
             loop.break
