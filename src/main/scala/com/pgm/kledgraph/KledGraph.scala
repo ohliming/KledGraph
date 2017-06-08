@@ -307,6 +307,7 @@ object KledGraph {
     var fenzi:Double = 0
     var fenmu:Double = 0
     val loop  = new Breaks
+    var count = 0
     vecRecords.foreach(record => {
       var isFenmu = true
       loop.breakable {
@@ -328,10 +329,14 @@ object KledGraph {
         if( value == 1.0 && compare == label && isFenmu) {
           fenzi += 1
         }
+        if(compare == 1.0){
+          count += 1
+        }
       }
     })
 
     println("fenzi="+fenzi+" and fenmu="+fenmu)
+    println("the lable == 1 count:"+count)
     val p = if(fenmu > 0 && fenzi < fenmu) fenzi / fenmu else 0.0
     p
   }
