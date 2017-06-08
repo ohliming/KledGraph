@@ -339,9 +339,9 @@ object KledGraph {
       }
     })
 
-    if(fenzi > 0){
-      println("the indseq:"+indSeq+" and fenzi:"+fenzi +" and fenmu:"+fenmu)
-    }
+    //if(fenzi > 0){
+    //  println("the indseq:"+indSeq+" and fenzi:"+fenzi +" and fenmu:"+fenmu)
+    //}
 
     val p = if(fenmu > 0 && fenzi < fenmu) fenzi / fenmu else 0.0
     p
@@ -355,6 +355,7 @@ object KledGraph {
       var indSeq:Seq[Int] = Seq()
       variables.foreach(x=>{ indSeq = indSeq :+ 0 })
       addSeq(indSeq)
+      println("the indseq:"+indSeq)
       if(variables.size > 0){
         var index = 0
         val border = math.pow(2.0, variables.size)
