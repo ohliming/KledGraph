@@ -339,7 +339,10 @@ object KledGraph {
       }
     })
 
-    println("the start:"+start+" and fenzi:"+fenzi +" and fenmu:"+fenmu)
+    if(fenzi > 0){
+      println("the indseq:"+indSeq+" and fenzi:"+fenzi +" and fenmu:"+fenmu)
+    }
+
     val p = if(fenmu > 0 && fenzi < fenmu) fenzi / fenmu else 0.0
     p
   }
@@ -359,8 +362,6 @@ object KledGraph {
           while( index < border ){
             val p1 = preConditionPro(vecRecords, mapRowStudent, topicIndex, 1, variables, indSeq, mapIndex)
             val p0 = preConditionPro(vecRecords, mapRowStudent, topicIndex, 0, variables, indSeq, mapIndex)
-
-            println("the p1 is ="+p1+" and p2 is = "+p0)
 
             x._2._cpdPositive = x._2._cpdPositive :+ p1
             x._2._cpdNegative = x._2._cpdNegative :+ p0
