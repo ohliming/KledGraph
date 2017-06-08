@@ -80,7 +80,7 @@ object KledGraph {
   def getStudRecords(mapQuestTopic: Map[Int, Set[Int]], mapTopic: Map[Int, String], sqlContext: HiveContext,subjectId:Int,stageId:Int) = {
     var listRecords:List[(Long, Int, Int)] = List() // records object
     var sql = "select a.student_id,a.question_id,a.result from entity_student_exercise as a join link_question_topic as b on " +
-      "(b.question_id=a.question_id) join entity_topic as c on (c.id = b.topic_id) where c.subject_id="+subjectId+" and c.stage_id ="+stageId
+      "(b.question_id=a.question_id) join entity_topic as c on (c.id = b.topic_id) where c.subject_id="+subjectId+" and c.stage_id ="+stageId +" limit 10000"
     val rows = sqlContext.sql(sql).collect()
     val setKeyTopic = mapTopic.map(x=>x._1).toSet
     val regex="""^\d+$""".r  //process effective records
@@ -539,7 +539,12 @@ object KledGraph {
     })
 
     val targetPos = getCPDPosition(seqIndex)
-    val p: Double = if(tag == 1) targetFactor._cpdPositive.apply(targetPos) else targetFactor._cpdNegative.apply(targetPos)
+    var p:Double = 0.0
+    if(tag == 1){
+      p =  targetFactor._cpdPositive.apply(targetPos)
+    }else{
+      p = targetFactor._cpdNegative.apply(targetPos)
+    }
 
     p
   }
