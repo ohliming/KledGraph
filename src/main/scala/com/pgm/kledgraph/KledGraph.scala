@@ -319,10 +319,6 @@ object KledGraph {
         loop.breakable {
           for(i<- 0 until variables.size){
             val v = record.apply(mapIndex(variables(i)._v))
-            if(v == 1.0){
-              println("the v="+v+" and indseq:"+indSeq(i))
-            }
-
             if( v != indSeq(i) ){
               isFenmu = false
               loop.break
@@ -343,7 +339,7 @@ object KledGraph {
       }
     })
 
-    if(fenzi > 0){
+    if(fenmu > 0){
       println("the indseq:"+indSeq+" and fenzi:"+fenzi +" and fenmu:"+fenmu)
     }
 
