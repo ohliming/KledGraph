@@ -321,6 +321,7 @@ object KledGraph {
 
         if(isFenmu){ fenmu += 1 }
         val value  = record.apply(start)
+        println("the start:"+start+" and the value:"+value)
         val compare = record.apply(0)
         if( value == 1.0) {
           fenzi += 1
