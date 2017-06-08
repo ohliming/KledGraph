@@ -360,6 +360,8 @@ object KledGraph {
             val p1 = preConditionPro(vecRecords, mapRowStudent, topicIndex, 1, variables, indSeq, mapIndex)
             val p0 = preConditionPro(vecRecords, mapRowStudent, topicIndex, 0, variables, indSeq, mapIndex)
 
+            println("the p1 is ="+p1+" and p2 is = "+p0)
+
             x._2._cpdPositive = x._2._cpdPositive :+ p1
             x._2._cpdNegative = x._2._cpdNegative :+ p0
             index += 1
