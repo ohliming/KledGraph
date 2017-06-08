@@ -270,6 +270,7 @@ object KledGraph {
           }
         })
 
+        println("the valArr len:"+valArr.size)
         resVectors = resVectors :+ Vectors.sparse(1+mapIndex.size, posArr.toArray, valArr.toArray)
       }
     })
@@ -321,10 +322,6 @@ object KledGraph {
 
         if(isFenmu){ fenmu += 1 }
         val value  = record.apply(start)
-        if(fenmu > 0){
-          println("the value is:" + value+" and the position:"+start)
-        }
-
         val compare = record.apply(0)
         if( value == 1.0 && compare == label && isFenmu) {
           fenzi += 1
@@ -335,8 +332,6 @@ object KledGraph {
       }
     })
 
-    println("fenzi="+fenzi+" and fenmu="+fenmu)
-    println("the lable == 1 count:"+count)
     val p = if(fenmu > 0 && fenzi < fenmu) fenzi / fenmu else 0.0
     p
   }
