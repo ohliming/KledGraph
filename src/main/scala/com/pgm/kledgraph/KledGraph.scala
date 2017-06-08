@@ -355,7 +355,7 @@ object KledGraph {
       var indSeq:Seq[Int] = Seq()
       variables.foreach(x=>{ indSeq = indSeq :+ 0 })
       if(variables.size > 0){
-        var index = 0
+        var index = 1
         addSeq(indSeq)
         val border = math.pow(2.0, variables.size)
         if(mapIndex.contains(x._2._eliminate._v)){
