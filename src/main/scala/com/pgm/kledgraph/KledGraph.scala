@@ -319,6 +319,10 @@ object KledGraph {
         loop.breakable {
           for(i<- 0 until variables.size){
             val v = record.apply(mapIndex(variables(i)._v))
+            if(v == 1.0){
+              println("the v="+v+" and indseq:"+indSeq(i))
+            }
+
             if( v != indSeq(i) ){
               isFenmu = false
               loop.break
@@ -361,7 +365,6 @@ object KledGraph {
         if(mapIndex.contains(x._2._eliminate._v)){
           val topicIndex = mapIndex(x._2._eliminate._v)
           while( index < border ){
-            println("the indSeq="+ indSeq)
             val p1 = preConditionPro(vecRecords, mapRowStudent, topicIndex, 1, variables, indSeq, mapIndex)
             val p0 = preConditionPro(vecRecords, mapRowStudent, topicIndex, 0, variables, indSeq, mapIndex)
 
