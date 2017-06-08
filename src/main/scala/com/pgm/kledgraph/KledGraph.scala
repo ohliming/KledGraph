@@ -435,7 +435,6 @@ object KledGraph {
   def sumPositionsPro(cpds:Seq[Double], posMap:Map[Int,Int], len:Int) = {
     var p = 0.0; var count = 0
     val loop = new Breaks
-    println("the len is:"+cpds.length)
     cpds.foreach(pr1=>{
       val index = pos2Seq(count, len)
       var bFlag = true
@@ -601,7 +600,11 @@ object KledGraph {
 
     val model = new BayesModel; mapFactor.foreach(x=>{ model.addFactor(x._2) })
     var setFactor:Set[BayesFactor] = Set() // factors set
-    mapFactor.foreach(x=>{ setFactor.add(x._2) })
+    mapFactor.foreach(x=>{
+      setFactor.add(x._2);
+      println("the neg cpd len is:" + x._2._cpdNegative.length)
+      println("the pos cpd len is:" + x._2._cpdPositive.length)
+    })
 
     val sequence = getSequence(setFactor)
     println("the sequence len is:"+ sequence.size)
