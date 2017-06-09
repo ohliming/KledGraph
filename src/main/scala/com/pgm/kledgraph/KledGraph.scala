@@ -334,8 +334,10 @@ object KledGraph {
           if( value == 1.0 && compare == label && setFenmu.contains(studentId)) {
             fenzi += 1
           }
+
         }
       }
+      index += 1
     })
 
     if(fenzi >0 ) { println("the fenzi ="+fenzi + " and fenmu = "+ fenmu)}
