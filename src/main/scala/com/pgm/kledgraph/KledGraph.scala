@@ -436,6 +436,7 @@ object KledGraph {
       var bFlag = true
       loop.breakable {
         println("the posMap len:"+posMap.size+" and index len:"+index.length)
+        println(posMap)
         posMap.foreach(pair => {
           if(index(pair._1) != pair._2 ){
             bFlag = false
@@ -502,6 +503,7 @@ object KledGraph {
           val childFactor = mapFactor(x._v)
           var cp1 = 0.0
           val pos = childFactor._variables.indexOf(x)
+          println("the pos is:"+pos)
           if(mapIndex(x) == 1){
             cp1 = sumPositionsPro(childFactor._cpdPositive, Map(pos-> 1), childFactor._variables.size)
           }else{
