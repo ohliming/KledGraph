@@ -315,6 +315,7 @@ object KledGraph {
       if(mapRowStudent.contains(index)){
         var isFenmu = true
         val studentId = mapRowStudent(index)
+        println("The sutdent = " + studentId)
         loop.breakable {
           for(i<- 0 until variables.size){
             val v = record.apply(mapIndex(variables(i)._v))
@@ -334,7 +335,6 @@ object KledGraph {
           if( value == 1.0 && compare == label && setFenmu.contains(studentId)) {
             fenzi += 1
           }
-
         }
       }
       index += 1
@@ -597,7 +597,7 @@ object KledGraph {
     println("the pair len is:" + initPair.length)
 
     val (vecRecords, mapRowStudent) = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex) // spare matrix
-    println("the vec size:"+vecRecords.size)
+    println("the vec size:"+vecRecords.size + " and mapRowstudent len is" + mapRowStudent.size)
 
     var mapVal:Map[Int,BayesVar] = Map()
     var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor, initPair, mapVal)
