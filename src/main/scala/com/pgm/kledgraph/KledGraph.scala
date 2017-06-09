@@ -10,7 +10,6 @@ import scala.util.control._
 import org.json4s._
 import org.json4s.native.JsonMethods._
 
-
 object KledGraph {
   val stageDict: Map[String, Int] = Map(
     "CZ"->1,
@@ -359,6 +358,7 @@ object KledGraph {
           while( index < border ){
             val p1 = preConditionPro(vecRecords, mapRowStudent, topicIndex, 1, variables, indSeq, mapIndex)
             val p0 = preConditionPro(vecRecords, mapRowStudent, topicIndex, 0, variables, indSeq, mapIndex)
+            println("the p1 = "+p1 + "and p0 = "+ p0)
 
             x._2._cpdPositive = x._2._cpdPositive :+ p1
             x._2._cpdNegative = x._2._cpdNegative :+ p0
@@ -573,6 +573,7 @@ object KledGraph {
   def main(args: Array[String]): Unit = {
     val conf = new SparkConf().setAppName("KledGraph") // init the spark
     val sc = new SparkContext(conf)
+    println("the applications id is " + sc.applicationId)
     val sqlContext = new HiveContext(sc)
     // sqlContext.sql("use neworiental_v3") // use databases
 
