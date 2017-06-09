@@ -476,12 +476,13 @@ object KledGraph {
     var index = 0; val border = math.pow(2.0, items.size)
     val eliVariables = delFactor.getVariables
     var indexSeq:Seq[Int] = Seq()
-    eliVariables.foreach(x=>{ indexSeq = indexSeq :+ 0})
+    items.foreach(x=>{ indexSeq = indexSeq :+ 0})
     addSeq(indexSeq)
 
     while( index < border ){
       var mapIndex:Map[BayesVar,Int] = Map()
-      for(pos <- 0 until indexSeq.size){ mapIndex += ((items(pos) -> indexSeq(pos))) }
+      for(pos <- 0 until items.size){ mapIndex += ((items(pos) -> indexSeq(pos))) }
+
       if( eliVariables.size > 0 ){ // parent variable
         var posMap:Map[Int,Int] = Map()
         for(i <- 0 until  eliVariables.size){
