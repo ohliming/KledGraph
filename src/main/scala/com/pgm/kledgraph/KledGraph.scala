@@ -502,15 +502,20 @@ object KledGraph {
         if(mapIndex.contains(x)){
           val childFactor = mapFactor(x._v)
           var cp1 = 0.0
-          val pos = childFactor._variables.indexOf(x)
-          println("the pos is:"+pos)
-          if(mapIndex(x) == 1){
-            cp1 = sumPositionsPro(childFactor._cpdPositive, Map(pos-> 1), childFactor._variables.size)
-          }else{
-            cp1 = sumPositionsPro(childFactor._cpdNegative, Map(pos-> 0), childFactor._variables.size)
+          var posMap:Map[Int,Int] = Map()
+          for(i <- 0 until  childFactor._variables.size){
+            posMap += ((i -> mapIndex(childFactor._variables(i))))
           }
-          if(cp1 > 0.0) {
-            p= p*cp1
+
+          if(posMap.size > 0){
+            if(mapIndex(x) == 1){
+              cp1 = sumPositionsPro(childFactor._cpdPositive, posMap, childFactor._variables.size)
+            }else{
+              cp1 = sumPositionsPro(childFactor._cpdNegative, posMap, childFactor._variables.size)
+            }
+            if(cp1 > 0.0) {
+              p= p*cp1
+            }
           }
         }
       })
