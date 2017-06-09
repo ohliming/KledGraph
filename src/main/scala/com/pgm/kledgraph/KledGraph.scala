@@ -435,8 +435,8 @@ object KledGraph {
       val index = pos2Seq(count, len)
       var bFlag = true
       loop.breakable {
+        println("the posMap len:"+posMap.size+" and index len:"+index.length)
         posMap.foreach(pair => {
-          println("the pair:"+pair._1+" and index len:"+index.length)
           if(index(pair._1) != pair._2 ){
             bFlag = false
             loop.break
