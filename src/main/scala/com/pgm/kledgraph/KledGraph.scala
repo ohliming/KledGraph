@@ -315,7 +315,6 @@ object KledGraph {
       if(mapRowStudent.contains(index)){
         var isFenmu = true
         val studentId = mapRowStudent(index)
-        println("The sutdent = " + studentId)
         loop.breakable {
           for(i<- 0 until variables.size){
             val v = record.apply(mapIndex(variables(i)._v))
