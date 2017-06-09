@@ -488,7 +488,8 @@ object KledGraph {
       var mapIndex:Map[BayesVar,Int] = Map()
       for(pos <- 0 until indexSeq.size){ mapIndex += ((items(pos) -> indexSeq(pos))) }
 
-      if(eliVariables.size > 0){
+      if( eliVariables.size > 0 ){
+        println("the parentset len:"+parentSet.size+" and elivariables len:" + eliVariables.size)
         var posMap:Map[Int,Int] = Map()
         for(i <- 0 until  eliVariables.size){
           if(parentSet.contains(eliVariables(i))){
