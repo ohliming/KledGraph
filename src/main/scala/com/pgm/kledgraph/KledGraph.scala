@@ -461,35 +461,45 @@ object KledGraph {
     var delFactor = mapFactor(bayes._v)
 
     var parentSet:Set[BayesVar] = Set()
-    val parents = bayes._parents;  parents.foreach(x=>{
+    val parents = bayes._parents
+    parents.foreach(x=>{
       if(!setBayesVal.contains(x)){
         factor.addVariable(x)
         parentSet.add(x)
       }
     })
 
-    val childs = bayes._childs; childs.foreach(x=>{if(!setBayesVal.contains(x)){factor.addVariable(x)}})
+    val childs = bayes._childs
+    childs.foreach(x=>{
+      if(!setBayesVal.contains(x)) {
+        factor.addVariable(x)
+      }
+    })
+
     val items = factor.getVariables
-    var indexSeq:Seq[Int] = Seq();items.foreach(x=>{ indexSeq = indexSeq :+ 0})
+    var indexSeq:Seq[Int] = Seq()
+    items.foreach(x=>{ indexSeq = indexSeq :+ 0})
+    addSeq(indexSeq)
     var p:Double  = 1.0
     var index = 0; val border = math.pow(2.0, items.size)
+
     val eliVariables = delFactor.getVariables
     while( index < border ){ // parent variable
       var mapIndex:Map[BayesVar,Int] = Map()
-      for(pos <- 0 until indexSeq.size){
-        mapIndex += ((items(pos), indexSeq(pos)))
-      }
+      for(pos <- 0 until indexSeq.size){ mapIndex += ((items(pos) -> indexSeq(pos))) }
 
-      var posMap:Map[Int,Int] = Map()
-      for(i <- 0 until  eliVariables.size){
-        if(parentSet.contains(eliVariables(i))){
-          posMap += ((i -> mapIndex(eliVariables(i))))
+      if(eliVariables.size > 0){
+        var posMap:Map[Int,Int] = Map()
+        for(i <- 0 until  eliVariables.size){
+          if(parentSet.contains(eliVariables(i))){
+            posMap += ((i -> mapIndex(eliVariables(i))))
+          }
         }
-      }
 
-      val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
-      val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
-      p = p0 + p1
+        val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
+        val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
+        p = p0 + p1
+      }
 
       childs.foreach(x=>{ // childs variables
         if(mapIndex.contains(x)){
