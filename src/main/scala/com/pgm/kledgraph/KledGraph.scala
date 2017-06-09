@@ -339,10 +339,6 @@ object KledGraph {
       }
     })
 
-    if(fenmu > 0){
-      println("the indseq:"+indSeq+" and fenzi:"+fenzi +" and fenmu:"+fenmu)
-    }
-
     val p = if(fenmu > 0 && fenzi < fenmu) fenzi / fenmu else 0.0
     p
   }
