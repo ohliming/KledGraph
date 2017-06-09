@@ -440,6 +440,7 @@ object KledGraph {
       var bFlag = true
       loop.breakable {
         posMap.foreach(pair => {
+          println("the pair:"+pair._1+" and index len:"+index.length)
           if(index(pair._1) != pair._2 ){
             bFlag = false
             loop.break
@@ -600,11 +601,7 @@ object KledGraph {
 
     val model = new BayesModel; mapFactor.foreach(x=>{ model.addFactor(x._2) })
     var setFactor:Set[BayesFactor] = Set() // factors set
-    mapFactor.foreach(x=>{
-      setFactor.add(x._2);
-      println("the neg cpd len is:" + x._2._cpdNegative.length)
-      println("the pos cpd len is:" + x._2._cpdPositive.length)
-    })
+    mapFactor.foreach(x=>{ setFactor.add(x._2) })
 
     val sequence = getSequence(setFactor)
     println("the sequence len is:"+ sequence.size)
