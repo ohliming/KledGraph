@@ -24,7 +24,7 @@ class BayesVar(v:Int) {
 
 class BayesFactor(e:BayesVar){
   val _eliminate = e
-  var _variables:Seq[BayesVar] = mutable.Seq()
+  var _variables:Seq[BayesVar] = Seq()
   var _cpdPositive:Seq[Double] = Seq(0.0) // positive
   var _cpdNegative:Seq[Double] = Seq(0.0) // negative
   var _cpds:Seq[Double] = Seq() // merge table
