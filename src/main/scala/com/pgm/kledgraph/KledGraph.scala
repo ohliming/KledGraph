@@ -435,8 +435,6 @@ object KledGraph {
       val index = pos2Seq(count, len)
       var bFlag = true
       loop.breakable {
-        println("the posMap len:"+posMap.size+" and index len:"+index.length)
-        println(posMap)
         posMap.foreach(pair => {
           if(index(pair._1) != pair._2 ){
             bFlag = false
@@ -474,18 +472,17 @@ object KledGraph {
     })
 
     val items = factor.getVariables
-    var indexSeq:Seq[Int] = Seq()
-    items.foreach(x=>{ indexSeq = indexSeq :+ 0})
-    addSeq(indexSeq)
-    var p:Double  = 1.0
+    var p:Double  = 1.0 // result
     var index = 0; val border = math.pow(2.0, items.size)
-
     val eliVariables = delFactor.getVariables
-    while( index < border ){ // parent variable
+    var indexSeq:Seq[Int] = Seq()
+    eliVariables.foreach(x=>{ indexSeq = indexSeq :+ 0})
+    addSeq(indexSeq)
+
+    while( index < border ){
       var mapIndex:Map[BayesVar,Int] = Map()
       for(pos <- 0 until indexSeq.size){ mapIndex += ((items(pos) -> indexSeq(pos))) }
-      if( eliVariables.size > 0 ){
-
+      if( eliVariables.size > 0 ){ // parent variable
         var posMap:Map[Int,Int] = Map()
         for(i <- 0 until  eliVariables.size){
           if(parentSet.contains(eliVariables(i))){
@@ -502,20 +499,13 @@ object KledGraph {
         if(mapIndex.contains(x)){
           val childFactor = mapFactor(x._v)
           var cp1 = 0.0
-          var posMap:Map[Int,Int] = Map()
-          for(i <- 0 until  childFactor._variables.size){
-            posMap += ((i -> mapIndex(childFactor._variables(i))))
+          if(mapIndex(x) == 1){
+            childFactor._cpdPositive.foreach(positive =>{ cp1 += positive})
+          }else{
+            childFactor._cpdNegative.foreach(negative =>{ cp1 += negative})
           }
-
-          if(posMap.size > 0){
-            if(mapIndex(x) == 1){
-              cp1 = sumPositionsPro(childFactor._cpdPositive, posMap, childFactor._variables.size)
-            }else{
-              cp1 = sumPositionsPro(childFactor._cpdNegative, posMap, childFactor._variables.size)
-            }
-            if(cp1 > 0.0) {
-              p= p*cp1
-            }
+          if(cp1 > 0.0) {
+            p= p*cp1
           }
         }
       })
