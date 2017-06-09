@@ -483,7 +483,6 @@ object KledGraph {
     while( index < border ){ // parent variable
       var mapIndex:Map[BayesVar,Int] = Map()
       for(pos <- 0 until indexSeq.size){ mapIndex += ((items(pos) -> indexSeq(pos))) }
-      println("the parentset len:"+parentSet.size+" and elivariables len:" + eliVariables.size)
       if( eliVariables.size > 0 ){
 
         var posMap:Map[Int,Int] = Map()
@@ -504,9 +503,9 @@ object KledGraph {
           var cp1 = 0.0
           val pos = childFactor._variables.indexOf(x)
           if(mapIndex(x) == 1){
-            cp1 = sumPositionsPro(childFactor._cpdPositive, Map((pos-> 1)), childFactor._variables.size)
+            cp1 = sumPositionsPro(childFactor._cpdPositive, Map(pos-> 1), childFactor._variables.size)
           }else{
-            cp1 = sumPositionsPro(childFactor._cpdNegative, Map((pos-> 0)), childFactor._variables.size)
+            cp1 = sumPositionsPro(childFactor._cpdNegative, Map(pos-> 0), childFactor._variables.size)
           }
           if(cp1 > 0.0) {
             p= p*cp1
