@@ -3,12 +3,14 @@ package com.pgm.kledgraph
 import org.apache.spark.SparkConf
 import org.apache.spark.SparkContext
 import org.apache.spark.sql.hive.HiveContext
-import org.apache.spark.mllib.linalg.{Vectors,Vector}
+import org.apache.spark.mllib.linalg.{Vector, Vectors}
 
 import scala.collection.mutable.{ListBuffer, Map, Seq, Set}
 import scala.util.control._
 import org.json4s._
 import org.json4s.native.JsonMethods._
+
+import scala.collection.mutable
 
 object KledGraph {
   val stageDict: Map[String, Int] = Map(
@@ -307,11 +309,13 @@ object KledGraph {
   }
 
   def preConditionPro(vecRecords:Seq[Vector], mapRowStudent:Map[Int, Long], start:Int, label:Int, variables:Seq[BayesVar], indSeq:Seq[Int], mapIndex:Map[Int,Int]):Double = {
-    var fenzi:Double = 0
     var fenmu:Double = 0
     val loop  = new Breaks
     var index = 0
     var setFenmu:Set[Long] = Set()
+    var seqFenzi:Seq[Long] = Seq()
+    var countMap:mutable.Map[Long,Int] = Map()
+
     vecRecords.foreach(record => {
       if(mapRowStudent.contains(index)){
         var isFenmu = true
@@ -324,23 +328,30 @@ object KledGraph {
               loop.break
             }
           }
+        }
 
-          if(isFenmu){
-            fenmu += 1
-            setFenmu.add(studentId)
-          }
+        if(isFenmu){
+          fenmu += 1
+          setFenmu.add(studentId)
+        }
 
-          val value  = record.apply(start)
-          val compare = record.apply(0)
-          if( value == 1.0 && compare == label && setFenmu.contains(studentId) ) {
-            fenzi += 1
-          }
+        val value  = record.apply(start)
+        val compare = record.apply(0)
+        if( value == 1.0 && compare == label ) {
+          seqFenzi = seqFenzi :+ studentId
         }
       }
       index += 1
     })
 
-    if(fenzi >0 ) { println("the fenzi ="+fenzi + " and fenmu = "+ fenmu)}
+    var fenzi:Double = 0
+    seqFenzi.foreach(x=>{
+      if(setFenmu.contains(x)) {
+        fenzi += 1
+      }
+    })
+    println("the fenzi seq is ="+fenzi)
+    if( fenzi >0 ) { println("the fenzi ="+fenzi + " and fenmu = "+ fenmu)}
     val p = if(fenmu > 0 && fenzi < fenmu) fenzi / fenmu else 0.0
     p
   }
