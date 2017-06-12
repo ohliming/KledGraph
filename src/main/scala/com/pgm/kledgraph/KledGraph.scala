@@ -308,7 +308,8 @@ object KledGraph {
     pos
   }
 
-  def preConditionPro(vecRecords:Seq[Vector], mapRowStudent:Map[Int, Long], start:Int, label:Int, variables:Seq[BayesVar], indSeq:Seq[Int], mapIndex:Map[Int,Int]):Double = {
+  def preConditionPro(vecRecords:Seq[Vector], mapRowStudent:Map[Int, Long], start:Int, label:Int, variables:Seq[BayesVar],
+                      indSeq:Seq[Int], mapIndex:Map[Int,Int],mapTopic:mutable.Map[Int,String]):Double = {
     var fenmu:Double = 0
     val loop  = new Breaks
     var index = 0
@@ -351,7 +352,12 @@ object KledGraph {
       }
     })
 
-    println("the fenzi seq is ="+seqFenzi.size + " and fenmu set is:"+setFenmu.size)
+    var topicName = mapTopic(start)
+    var strWords = ""
+    for(i <- 0 until variables.size){
+      strWords += mapTopic(variables(i)._v) + ":"+indSeq(i)+","
+    }
+    println("the"+topicName+":"+label +"seq is ="+seqFenzi.size + " and "+strWords +" set is:"+setFenmu.size)
     if( fenzi >0 ) { println("the fenzi ="+fenzi + " and fenmu = "+ fenmu)}
     var p:Double = 0.0
     if(fenmu > 0){
@@ -360,7 +366,7 @@ object KledGraph {
     p
   }
 
-  def staticTopicCPD(mapFactor:Map[Int, BayesFactor], vecRecords:Seq[Vector],mapRowStudent:Map[Int, Long], mapIndex:Map[Int,Int]) = {
+  def staticTopicCPD(mapFactor:Map[Int, BayesFactor], vecRecords:Seq[Vector],mapRowStudent:Map[Int, Long], mapIndex:Map[Int,Int],mapTopic:Map[Int,String]) = {
     mapFactor.foreach(x => { // cal cpd
       val bayes = x._2._eliminate
       bayes._parents.foreach(parent => { x._2.addVariable(parent) })
@@ -374,8 +380,8 @@ object KledGraph {
         if(mapIndex.contains(x._2._eliminate._v)){
           val topicIndex = mapIndex(x._2._eliminate._v)
           while( index < border ){
-            val p1 = preConditionPro(vecRecords, mapRowStudent, topicIndex, 1, variables, indSeq, mapIndex)
-            val p0 = preConditionPro(vecRecords, mapRowStudent, topicIndex, 0, variables, indSeq, mapIndex)
+            val p1 = preConditionPro(vecRecords, mapRowStudent, topicIndex, 1, variables, indSeq, mapIndex,mapTopic)
+            val p0 = preConditionPro(vecRecords, mapRowStudent, topicIndex, 0, variables, indSeq, mapIndex,mapTopic)
 
             x._2._cpdPositive = x._2._cpdPositive :+ p1
             x._2._cpdNegative = x._2._cpdNegative :+ p0
@@ -617,7 +623,7 @@ object KledGraph {
     var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor, initPair, mapVal)
     println("the init factor len is:"+mapFactor.size)
 
-    staticTopicCPD(mapFactor, vecRecords, mapRowStudent, mapIndex)
+    staticTopicCPD(mapFactor, vecRecords, mapRowStudent, mapIndex, mapTopic)
     println("the cpd factor len is:"+ mapFactor.size)
 
     val model = new BayesModel; mapFactor.foreach(x=>{ model.addFactor(x._2) })
