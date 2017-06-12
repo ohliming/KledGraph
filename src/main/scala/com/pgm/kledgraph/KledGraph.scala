@@ -350,7 +350,7 @@ object KledGraph {
         fenzi += 1
       }
     })
-    println("the fenzi seq is ="+fenzi)
+    println("the fenzi seq is ="+seqFenzi.size)
     if( fenzi >0 ) { println("the fenzi ="+fenzi + " and fenmu = "+ fenmu)}
     val p = if(fenmu > 0 && fenzi < fenmu) fenzi / fenmu else 0.0
     p
