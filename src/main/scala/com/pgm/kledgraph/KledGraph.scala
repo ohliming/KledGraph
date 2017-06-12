@@ -272,6 +272,7 @@ object KledGraph {
         })
 
         mapRowStudent += ((index -> studentId))
+        index += 1
         resVectors = resVectors :+ Vectors.sparse(1+mapIndex.size, posArr.toArray, valArr.toArray)
       }
     })
@@ -305,7 +306,7 @@ object KledGraph {
     pos
   }
 
-  def preConditionPro(vecRecords:Seq[Vector], mapRowStudent:Map[Int,Long], start:Int, label:Int, variables:Seq[BayesVar], indSeq:Seq[Int], mapIndex:Map[Int,Int]):Double = {
+  def preConditionPro(vecRecords:Seq[Vector], mapRowStudent:Map[Int, Long], start:Int, label:Int, variables:Seq[BayesVar], indSeq:Seq[Int], mapIndex:Map[Int,Int]):Double = {
     var fenzi:Double = 0
     var fenmu:Double = 0
     val loop  = new Breaks
@@ -331,7 +332,7 @@ object KledGraph {
 
           val value  = record.apply(start)
           val compare = record.apply(0)
-          if( value == 1.0 && compare == label && setFenmu.contains(studentId)) {
+          if( value == 1.0 && compare == label && setFenmu.contains(studentId) ) {
             fenzi += 1
           }
         }
