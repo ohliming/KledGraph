@@ -597,7 +597,7 @@ object KledGraph {
     println("the pair len is:" + initPair.length)
 
     val (vecRecords, mapRowStudent) = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex) // spare matrix
-    println("the vec size:"+vecRecords.size + " and mapRowstudent len is" + mapRowStudent.size)
+    println("the vec size:"+vecRecords.size + " and mapRowstudent len is:" + mapRowStudent.size)
 
     var mapVal:Map[Int,BayesVar] = Map()
     var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor, initPair, mapVal)
