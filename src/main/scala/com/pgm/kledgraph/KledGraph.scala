@@ -330,7 +330,7 @@ object KledGraph {
           }
         }
 
-        if(isFenmu){
+        if( isFenmu ){
           fenmu += 1
           setFenmu.add(studentId)
         }
@@ -350,7 +350,8 @@ object KledGraph {
         fenzi += 1
       }
     })
-    println("the fenzi seq is ="+seqFenzi.size)
+
+    println("the fenzi seq is ="+seqFenzi.size + " and fenmu set is:"+setFenmu.size)
     if( fenzi >0 ) { println("the fenzi ="+fenzi + " and fenmu = "+ fenmu)}
     val p = if(fenmu > 0 && fenzi < fenmu) fenzi / fenmu else 0.0
     p
@@ -575,11 +576,10 @@ object KledGraph {
     val targetPos = getCPDPosition(seqIndex)
     var p:Double = 0.0
     if(tag == 1){
-      p =  targetFactor._cpdPositive.apply(targetPos)
+      p = targetFactor._cpdPositive.apply(targetPos)
     }else{
       p = targetFactor._cpdNegative.apply(targetPos)
     }
-
     p
   }
 
@@ -629,7 +629,6 @@ object KledGraph {
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
     val p = condSumProductVE(mapFactor, sequence, target, 1, mapEvidences)
     println("the result p=" + p) // output p
-
     sc.stop
   }
 }
