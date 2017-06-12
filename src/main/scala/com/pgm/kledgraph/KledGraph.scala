@@ -357,8 +357,8 @@ object KledGraph {
     for(i <- 0 until variables.size){
       strWords += mapTopic(variables(i)._v) + ":"+indSeq(i)+","
     }
-    println("the"+topicName+":"+label +"seq is ="+seqFenzi.size + " and "+strWords +" set is:"+setFenmu.size)
-    if( fenzi >0 ) { println("the fenzi ="+fenzi + " and fenmu = "+ fenmu)}
+
+    if( fenzi >0 ) { println("the"+topicName+":"+label +" fenzi ="+ fenzi + " and "+strWords +" fenmu is:"+ fenmu) }
     var p:Double = 0.0
     if(fenmu > 0){
       p = if(fenzi < fenmu) fenzi/fenmu else 1.0
