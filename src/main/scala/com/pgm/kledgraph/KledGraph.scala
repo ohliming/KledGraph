@@ -194,10 +194,10 @@ object KledGraph {
       topic = listStack.last
       listStack = listStack.init
       if( mapParents.contains(topic) && !setPop.contains(topic) ){
-        val childs = mapParents(topic)
-        childs.foreach(x => { listStack +=  x; setMiss.add(x) })
-        setPop.add(topic)
+          mapParents(topic).foreach(x => { listStack +=  x; setMiss.add(x) })
       }
+
+      setPop.add(topic)
     }
 
     false
@@ -238,12 +238,14 @@ object KledGraph {
       val outCnt = if(mapChilds.contains(topic1)) mapChilds(topic1).size else 0
       if(!bFlag && inCnt < inDreege && outCnt < outDreege ){
         initPair = initPair. +: (topic1, topic2)
-        if(mapParents.contains(topic2)){ mapParents(topic2).add(topic1) // add topic1
+        if(mapParents.contains(topic2)){
+          mapParents(topic2).add(topic1) // add topic1
         }else{
           mapParents += ((topic2 -> Set(topic1)))
         }
 
-        if(mapChilds.contains(topic1)){ mapChilds(topic1).add(topic2)
+        if(mapChilds.contains(topic1)){
+          mapChilds(topic1).add(topic2)
         }else{
           mapChilds += ((topic1 -> Set(topic2)))
         }
