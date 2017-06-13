@@ -225,8 +225,6 @@ object KledGraph {
     listSort.foreach(x => {
       var (topic1, topic2) = x._1
       val (p0,p1) = staticConditionPro(listRecords,mapQuestTopic,Set(topic1), topic2, 1)
-      println("P("+mapTopic(topic2)+"|"+mapTopic(topic1)+") is :"+ p0)
-      println("P("+mapTopic(topic1)+"|"+mapTopic(topic2)+") is :"+ p1)
       if(p1 > p0){
         val temp = topic1
         topic1 = topic2
@@ -237,6 +235,8 @@ object KledGraph {
       val inCnt = if(mapParents.contains(topic2)) mapParents(topic2).size else 0
       val outCnt = if(mapChilds.contains(topic1)) mapChilds(topic1).size else 0
       if(!bFlag && inCnt < inDreege && outCnt < outDreege ){
+        println("P("+mapTopic(topic2)+"|"+mapTopic(topic1)+") is :"+ p0)
+        println("P("+mapTopic(topic1)+"|"+mapTopic(topic2)+") is :"+ p1)
         initPair = initPair. +: (topic1, topic2)
         if(mapParents.contains(topic2)){
           mapParents(topic2).add(topic1) // add topic1

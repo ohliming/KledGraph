@@ -33,7 +33,7 @@ class BayesFactor(e:BayesVar){
   def getVariables = this._variables
   def setUsed = _isUsed = true
   def num = this._variables.size
-  def addVariable(v:BayesVar) = this._variables = this._variables :+ v
+  def addVariable(v:BayesVar) = {this._variables = this._variables :+ v}
 }
 
 class BayesModel {
