@@ -238,6 +238,7 @@ object KledGraph {
       val bFlag = isLoopGraph(topic1, topic2, mapParents)
       val inCnt = if(mapParents.contains(topic2)) mapParents(topic2).size else 0
       val outCnt = if(mapChilds.contains(topic1)) mapChilds(topic1).size else 0
+      println("the bFlag="+ bFlag)
       if(!bFlag && inCnt < inDreege && outCnt < outDreege ){
         println("P("+mapTopic(topic2)+"|"+mapTopic(topic1)+") is :"+ p0)
         println("P("+mapTopic(topic1)+"|"+mapTopic(topic2)+") is :"+ p1)
