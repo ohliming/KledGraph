@@ -181,16 +181,12 @@ object KledGraph {
     (p0, p1)
   }
 
-  def isLoopGraph(topic1:Int,topic2:Int, mapParents:Map[Int,Set[Int]]):Boolean = {
+  def isLoopGraph(topic1:Int, topic2:Int, mapParents:Map[Int,Set[Int]]):Boolean = {
     var listStack:ListBuffer[Int] = ListBuffer(topic1) // stack
     var setMiss:Set[Int] = Set()
     var setPop:Set[Int] = Set()
     var topic = 0
     while( listStack.size > 0 ){
-      if(setMiss.contains(topic2)){
-        return true
-      }
-
       topic = listStack.last
       setMiss.add(topic)
       listStack = listStack.init
@@ -201,7 +197,14 @@ object KledGraph {
       setPop.add(topic)
     }
 
-    false
+    val isLoop = if(setMiss.contains(topic2)) true else false
+    if(mapParents.contains(topic2)){
+      mapParents(topic2).add(topic1) // add topic1
+    }else{
+      mapParents += ((topic2 -> Set(topic1)))
+    }
+
+    isLoop
   }
 
   def structGrahpList(listRecords:List[(Long,Int,Int)], mapTopic:Map[Int, String], mapQuestTopic:Map[Int,Set[Int]],
@@ -239,12 +242,6 @@ object KledGraph {
         println("P("+mapTopic(topic2)+"|"+mapTopic(topic1)+") is :"+ p0)
         println("P("+mapTopic(topic1)+"|"+mapTopic(topic2)+") is :"+ p1)
         initPair = initPair. +: (topic1, topic2)
-        if(mapParents.contains(topic2)){
-          mapParents(topic2).add(topic1) // add topic1
-        }else{
-          mapParents += ((topic2 -> Set(topic1)))
-        }
-
         if(mapChilds.contains(topic1)){
           mapChilds(topic1).add(topic2)
         }else{
