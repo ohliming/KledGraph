@@ -182,6 +182,12 @@ object KledGraph {
   }
 
   def isLoopGraph(topic1:Int, topic2:Int, mapParents:Map[Int,Set[Int]]):Boolean = {
+    if( mapParents.contains(topic2) ){ // repetition
+      if(mapParents(topic2).contains(topic1)){
+        return  true
+      }
+    }
+
     var listStack:ListBuffer[Int] = ListBuffer(topic1) // stack
     var setMiss:Set[Int] = Set()
     var setPop:Set[Int] = Set()
@@ -198,12 +204,6 @@ object KledGraph {
     }
 
     val isLoop = if(setMiss.contains(topic2)) true else false
-    if(mapParents.contains(topic2)){
-      mapParents(topic2).add(topic1) // add topic1
-    }else{
-      mapParents += ((topic2 -> Set(topic1)))
-    }
-
     isLoop
   }
 
@@ -242,6 +242,12 @@ object KledGraph {
       if(!bFlag && inCnt < inDreege && outCnt < outDreege ){
         println("P("+mapTopic(topic2)+"|"+mapTopic(topic1)+") is :"+ math.max(p0,p1))
         initPair = initPair. +: (topic1, topic2)
+        if(mapParents.contains(topic2)){
+          mapParents(topic2).add(topic1)
+        }else{
+          mapParents += ((topic2 -> Set(topic1)))
+        }
+
         if(mapChilds.contains(topic1)){
           mapChilds(topic1).add(topic2)
         }else{
