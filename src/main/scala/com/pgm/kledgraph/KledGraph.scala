@@ -310,6 +310,7 @@ object KledGraph {
 
   def preConditionPro(vecRecords:Seq[Vector], mapRowStudent:Map[Int, Long], start:Int, label:Int, variables:Seq[BayesVar],
                       indSeq:Seq[Int], mapIndex:Map[Int,Int],mapTopic:mutable.Map[Int,String]):Double = {
+
     var fenmu:Double = 0
     val loop  = new Breaks
     var index = 0
@@ -366,7 +367,7 @@ object KledGraph {
     p
   }
 
-  def staticTopicCPD(mapFactor:Map[Int, BayesFactor], vecRecords:Seq[Vector],mapRowStudent:Map[Int, Long], mapIndex:Map[Int,Int],mapTopic:Map[Int,String]) = {
+  def staticTopicCPD(mapFactor:Map[Int, BayesFactor], vecRecords:Seq[Vector],mapRowStudent:Map[Int, Long], mapIndex:Map[Int,Int], mapTopic:Map[Int,String]) = {
     mapFactor.foreach(x => { // cal cpd
       val bayes = x._2._eliminate
       bayes._parents.foreach(parent => { x._2.addVariable(parent) })
@@ -420,7 +421,7 @@ object KledGraph {
     var mapIndex:Map[Int, Int] = Map()
     var index = 1
     mapTopic.foreach(topic => {
-      mapIndex += ((topic._1->index))
+      mapIndex += (( topic._1-> index ))
       index += 1
     })
     mapIndex
@@ -613,6 +614,13 @@ object KledGraph {
     var mapIndex:Map[Int, Int] = mapTopic2Index(mapTopic)
     println("the map index len is:"+mapIndex.size)
 
+    mapIndex.foreach(x=>{
+      if(mapTopic.contains(x._2)){
+        println("the index not topic is:"+x._2)
+      }
+    })
+
+    /*
     val initPair = structGrahpList(listRecords, mapTopic, mapQuestTopic, mapTopicQuest)
     println("the pair len is:" + initPair.length)
 
@@ -638,6 +646,7 @@ object KledGraph {
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
     val p = condSumProductVE(mapFactor, sequence, target, 1, mapEvidences)
     println("the result p=" + p) // output p
+    */
     sc.stop
   }
 }
