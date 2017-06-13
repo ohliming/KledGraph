@@ -615,8 +615,8 @@ object KledGraph {
     println("the map index len is:"+mapIndex.size)
 
     mapIndex.foreach(x=>{
-      if(!mapTopic.contains(x._2)){
-        println("the index not topic is:"+x._2)
+      if(!mapTopic.contains(x._1)){
+        println("the index not topic is:"+x._1)
       }
     })
 
