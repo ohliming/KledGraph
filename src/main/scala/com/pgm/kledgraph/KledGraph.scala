@@ -192,9 +192,10 @@ object KledGraph {
       }
 
       topic = listStack.last
+      setMiss.add(topic)
       listStack = listStack.init
       if( mapParents.contains(topic) && !setPop.contains(topic) ){
-          mapParents(topic).foreach(x => { listStack +=  x; setMiss.add(x) })
+          mapParents(topic).foreach(x => { listStack +=  x })
       }
 
       setPop.add(topic)
