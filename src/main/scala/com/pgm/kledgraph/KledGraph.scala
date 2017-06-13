@@ -225,6 +225,8 @@ object KledGraph {
     listSort.foreach(x => {
       var (topic1, topic2) = x._1
       val (p0,p1) = staticConditionPro(listRecords,mapQuestTopic,Set(topic1), topic2, 1)
+      println(mapTopic(topic2)+"|"+mapTopic(topic1)+" is :"+ p0)
+      println(mapTopic(topic1)+"|"+mapTopic(topic2)+" is :"+ p1)
       if(p1 > p0){
         val temp = topic1
         topic1 = topic2
@@ -394,12 +396,13 @@ object KledGraph {
     })
   }
 
-  def makeMapFactor(mapFactor:Map[Int, BayesFactor], initPair:List[(Int,Int)], mapVal:Map[Int, BayesVar]):Unit = {
+  def makeMapFactor(mapFactor:Map[Int, BayesFactor], initPair:List[(Int,Int)]):Unit = {
+    var mapVal:Map[Int, BayesVar] = Map()
     initPair.foreach(x => {
       val start =  if(mapVal.contains(x._1)) mapVal(x._1) else new BayesVar(x._1)
       val end = if(mapVal.contains(x._2)) mapVal(x._2) else new BayesVar((x._2))
 
-      if(!mapFactor.contains(x._1)) {
+      if( !mapFactor.contains(x._1) ) {
         start.addChild(end)
         mapFactor += ((x._1-> new BayesFactor(start)))
       }else{
@@ -460,7 +463,7 @@ object KledGraph {
       var bFlag = true
       loop.breakable {
         posMap.foreach(pair => {
-          if(index(pair._1) != pair._2 ){
+          if(index(pair._1) != pair._2 ) {
             bFlag = false
             loop.break
           }
@@ -514,7 +517,6 @@ object KledGraph {
             posMap += ((i -> mapIndex(eliVariables(i))))
           }
         }
-
         val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
         val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
         p = p0 + p1
@@ -620,8 +622,7 @@ object KledGraph {
     val (vecRecords, mapRowStudent) = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex) // spare matrix
     println("the vec size:"+vecRecords.size + " and mapRowstudent len is:" + mapRowStudent.size)
 
-    var mapVal:Map[Int,BayesVar] = Map()
-    var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor, initPair, mapVal)
+    var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor, initPair)
     println("the init factor len is:"+mapFactor.size)
 
     staticTopicCPD(mapFactor, vecRecords, mapRowStudent, mapIndex, mapTopic)
