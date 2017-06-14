@@ -328,8 +328,10 @@ object KledGraph {
           }
         }
 
-        fenmu += 1
-        setFenmu.add(studentId)
+        if(isFenmu){
+          fenmu += 1
+          setFenmu.add(studentId)
+        }
 
         val value  = record.apply(position)
         val target = record.apply(0)
