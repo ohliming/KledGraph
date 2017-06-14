@@ -241,6 +241,7 @@ object KledGraph {
     var index = 0
     var count = 0
     var name = ""
+    val loop = new Breaks
     listRecords.foreach(x=>{
       val questionId = x._2
       val studentId = x._1
@@ -254,16 +255,18 @@ object KledGraph {
         val topics = mapQuestTopic(questionId)
         val intopics = topics & setPair
         if(intopics.size > 0) {
-          intopics.foreach(topic =>{
-            if(mapIndex.contains(topic)){
-              if( mapIndex(topic) == 18){
-                count += 1
+          loop.breakable{
+            intopics.foreach(topic =>{
+              if(mapIndex.contains(topic)){
+                posArr += mapIndex(topic)
+                valArr += 1.0
+                if( mapIndex(topic) == 18){
+                  count += 1.0
+                  loop.break
+                }
               }
-
-              posArr += mapIndex(topic)
-              valArr += 1.0
-            }
-          })
+            })
+          }
 
           mapRowStudent += ((index -> studentId))
           index += 1
@@ -387,7 +390,6 @@ object KledGraph {
         if(mapIndex.contains(x._2._eliminate._v)){
           val topicIndex = mapIndex(x._1)
           while( index < border ){
-            println("the index is =" + indSeq)
             val p1 = preConditionPro(vecRecords, mapRowStudent, x._1, topicIndex, 1, variables, indSeq, mapIndex, mapTopic)
             val p0 = preConditionPro(vecRecords, mapRowStudent, x._1, topicIndex, 0, variables, indSeq, mapIndex, mapTopic)
             x._2._cpdPositive = x._2._cpdPositive :+ p1
