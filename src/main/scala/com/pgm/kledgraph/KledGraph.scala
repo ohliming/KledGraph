@@ -118,67 +118,47 @@ object KledGraph {
   }
 
   def staticConditionPro(listRecords: List[(Long, Int, Int)], mapQuestTopic: Map[Int,Set[Int]], startTopicSet:Set[Int], endTopic:Int, label:Int) = {
-    var setStart:Set[Long] = Set() // start student set
-    var setEnd:Set[Long] = Set() // end student set
-    var mapStudent: Map[Long, Int] = Map() // student set
+    var fenmu:Double = 0.0
+    var setFenmu:Set[Long] = Set()
+    var seqFenzi:Seq[Long] = Seq()
 
     listRecords.foreach( x => {
       val studentId = x._1
       val questionId = x._2
       val result = x._3
-      if(result == label && mapQuestTopic.contains(questionId)){
-        val setTopic = mapQuestTopic(questionId)
-        val intersection = setTopic & startTopicSet
+      if(mapQuestTopic.contains(questionId)){
+        if(result == label){
+          val setTopic = mapQuestTopic(questionId)
+          val intersection = setTopic & startTopicSet
 
-        if(intersection.size > 0){setStart.add(studentId)}
-        if(setTopic.contains(endTopic)){setEnd.add(studentId)}
+          if( intersection.size > 0 ){
+            fenmu += 1
+            setFenmu.add(studentId)
+          }
 
-        if( mapStudent.contains(studentId) ){
-          val count = mapStudent(studentId)
-          mapStudent.update(studentId, count + 1)
-        }else{
-          mapStudent += ((studentId -> 1))
+          if(setTopic.contains(endTopic)){
+            seqFenzi = seqFenzi :+ studentId
+          }
         }
       }
     })
 
-    var p0:Double = 0.0
-    var fenzi:Double = 0
-    var fenmu:Double = 0
-    setStart.foreach(x => {
-      if(mapStudent.contains(x)){
-        fenmu += mapStudent(x)
-        if(setEnd.contains(x)){
-          fenzi += mapStudent(x)
-        }
+    var fenzi:Double = 0.0
+    seqFenzi.foreach(x=>{
+      if(setFenmu.contains(x)){
+        fenzi += 1
       }
     })
 
-    if(fenmu > 0 && fenzi < fenmu){
-      p0 = fenzi / fenmu
-    }else{
-      p0 = 0.0
+    var p = 0.0
+    if(fenmu > 0){
+      if(fenzi < fenmu){
+        p = fenzi / fenmu
+      }else{
+        p = 1.0
+      }
     }
-
-    var p1:Double =0.0
-    var rfenzi:Double  = 0
-    var rfenmu:Double  = 0
-    setEnd.foreach(x =>{
-      if(mapStudent.contains(x)){
-        rfenmu += mapStudent(x)
-        if(setStart.contains(x)){
-          rfenzi += mapStudent(x)
-        }
-      }
-    })
-
-    if(rfenmu > 0 && rfenmu > rfenzi){
-      p1 = rfenzi / rfenmu
-    }else{
-      p1 = 0.0
-    }
-
-    (p0, p1)
+    p
   }
 
   def isLoopGraph(topic1:Int, topic2:Int, mapParents:Map[Int,Set[Int]]):Boolean = {
@@ -228,7 +208,8 @@ object KledGraph {
     var initPair:List[(Int,Int)]= List()
     listSort.foreach(x => {
       var (topic1, topic2) = x._1
-      val (p0,p1) = staticConditionPro(listRecords,mapQuestTopic,Set(topic1), topic2, 1)
+      val p0 = staticConditionPro(listRecords,mapQuestTopic,Set(topic1), topic2, 1)
+      val p1 = staticConditionPro(listRecords,mapQuestTopic,Set(topic2), topic1, 1)
       if(p1 > p0){
         val temp = topic1
         topic1 = topic2
