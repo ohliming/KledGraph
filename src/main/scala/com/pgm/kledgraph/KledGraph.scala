@@ -235,7 +235,7 @@ object KledGraph {
     initPair
   }
 
-  def makeTopicMatrix(listRecords: List[(Long, Int, Int)], mapQuestTopic:Map[Int,Set[Int]], mapIndex: Map[Int,Int]) = {
+  def makeTopicMatrix(listRecords: List[(Long, Int, Int)], mapQuestTopic:Map[Int,Set[Int]], mapIndex: Map[Int,Int], setPair:Set[Int]) = {
     var resVectors:Seq[Vector ] = Seq()
     var mapRowStudent:Map[Int, Long] = Map()
     var index = 0
@@ -251,16 +251,19 @@ object KledGraph {
         posArr += 0
         valArr += label // process label
         val topics = mapQuestTopic(questionId)
-        topics.foreach(topic =>{
-          if(mapTopicIndex.contains(topic)){
-            posArr += mapTopicIndex(topic)
-            valArr += 1.0
-          }
-        })
+        val intopics = topics & setPair
+        if(intopics.size > 0) {
+          intopics.foreach(topic =>{
+            if(mapTopicIndex.contains(topic)){
+              posArr += mapTopicIndex(topic)
+              valArr += 1.0
+            }
+          })
 
-        mapRowStudent += ((index -> studentId))
-        index += 1
-        resVectors = resVectors :+ Vectors.sparse(1+mapIndex.size, posArr.toArray, valArr.toArray)
+          mapRowStudent += ((index -> studentId))
+          index += 1
+          resVectors = resVectors :+ Vectors.sparse(1+mapIndex.size, posArr.toArray, valArr.toArray)
+        }
       }
     })
     (resVectors, mapRowStudent)
@@ -301,7 +304,6 @@ object KledGraph {
     var index = 0
     var setFenmu:Set[Long] = Set()
     var seqFenzi:Seq[Long] = Seq()
-    var countMap:mutable.Map[Long,Int] = Map()
 
     vecRecords.foreach(record => {
       if(mapRowStudent.contains(index)){
@@ -317,14 +319,14 @@ object KledGraph {
           }
         }
 
-        if( isFenmu ){
+        if( isFenmu ) {
           fenmu += 1
           setFenmu.add(studentId)
         }
 
         val value  = record.apply(position)
-        val compare = record.apply(0)
-        if( value == 1.0 && compare == label ) {
+        val target = record.apply(0)
+        if( value == 1.0 && target == label ) {
           seqFenzi = seqFenzi :+ studentId
         }
       }
@@ -363,6 +365,7 @@ object KledGraph {
         indSeq = indSeq :+ 0
         strV += " "+mapTopic(x._v)
       })
+
       if(variables.size > 0){
         println(strV)
         var index = 1
@@ -607,7 +610,13 @@ object KledGraph {
     val initPair = structGrahpList(listRecords, mapTopic, mapQuestTopic, mapTopicQuest)
     println("the pair len is:" + initPair.length)
 
-    val (vecRecords, mapRowStudent) = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex) // spare matrix
+    var setPair:Set[Int] = Set()
+    initPair.foreach(x => {
+      setPair.add(x._1)
+      setPair.add(x._2)
+    })
+
+    val (vecRecords, mapRowStudent) = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex, setPair) // spare matrix
     println("the vec size:"+vecRecords.size + " and mapRowstudent len is:" + mapRowStudent.size)
 
     var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor, initPair)
