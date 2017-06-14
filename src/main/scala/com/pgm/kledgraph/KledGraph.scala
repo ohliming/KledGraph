@@ -258,7 +258,6 @@ object KledGraph {
             if(mapIndex.contains(topic)){
               if( mapIndex(topic) == 18){
                 count += 1
-                name = mapIndex(topic).toString
               }
 
               posArr += mapIndex(topic)
@@ -268,7 +267,7 @@ object KledGraph {
 
           mapRowStudent += ((index -> studentId))
           index += 1
-          resVectors = resVectors :+ Vectors.sparse(1+mapIndex.size, posArr.toArray, valArr.toArray)
+          resVectors = resVectors :+ Vectors.sparse(mapIndex.size, posArr.toArray, valArr.toArray)
         }
       }
     })
@@ -360,7 +359,7 @@ object KledGraph {
       strWords += mapTopic(variables(i)._v) + ":"+indSeq(i)+","
     }
 
-    println("the"+topicName+":"+label +" fenzi ="+ fenzi + " and "+strWords +" fenmu is:"+ fenmu + " and count:"+ count + " and "+position +"value:"+ a)
+    //println("the"+topicName+":"+label +" fenzi ="+ fenzi + " and "+strWords +" fenmu is:"+ fenmu)
     var p:Double = 0.0
     if( fenmu > 0 ){
       p = if(fenzi < fenmu) fenzi/fenmu else 1.0
@@ -629,8 +628,6 @@ object KledGraph {
       setPair.add(x._1)
       setPair.add(x._2)
     })
-
-
 
     val (vecRecords, mapRowStudent) = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex, setPair, mapTopic) // spare matrix
     println("the vec size:"+vecRecords.size + " and mapRowstudent len is:" + mapRowStudent.size)
