@@ -301,6 +301,7 @@ object KledGraph {
     var fenmu:Double = 0
     val loop  = new Breaks
     var index = 0
+    var count = 0
     var setFenmu:Set[Long] = Set()
     var seqFenzi:Seq[Long] = Seq()
 
@@ -323,6 +324,9 @@ object KledGraph {
 
         val value  = record.apply(position)
         val target = record.apply(0)
+        if(target == 1) {
+          count += 1
+        }
         if( value == 1.0 && target == label ) {
           seqFenzi = seqFenzi :+ studentId
         }
@@ -343,7 +347,7 @@ object KledGraph {
       strWords += mapTopic(variables(i)._v) + ":"+indSeq(i)+","
     }
 
-    println("the"+topicName+":"+label +" fenzi ="+ fenzi + " and "+strWords +" fenmu is:"+ fenmu)
+    println("the"+topicName+":"+label +" fenzi ="+ fenzi + " and "+strWords +" fenmu is:"+ fenmu + " and count:"+ count)
     var p:Double = 0.0
     if( fenmu > 0 ){
       p = if(fenzi < fenmu) fenzi/fenmu else 1.0
