@@ -239,7 +239,7 @@ object KledGraph {
     var resVectors:Seq[Vector ] = Seq()
     var mapRowStudent:Map[Int, Long] = Map()
     var index = 0
-    val mapTopicIndex = mapIndex.map( x=> ((x._2 -> x._1)) )
+    val mapTopicIndex = mapIndex.map( x=> ((x._2 -> x._1)) ).toMap
     var count = 0
     var name = ""
     listRecords.foreach(x=>{
