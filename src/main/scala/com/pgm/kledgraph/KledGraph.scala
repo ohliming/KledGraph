@@ -241,6 +241,7 @@ object KledGraph {
     var index = 0
     val mapTopicIndex = mapIndex.map( x=> ((x._2 -> x._1)) )
     var count = 0
+    var name = ""
     listRecords.foreach(x=>{
       val questionId = x._2
       val studentId = x._1
@@ -256,8 +257,9 @@ object KledGraph {
         if(intopics.size > 0) {
           intopics.foreach(topic =>{
             if(mapTopicIndex.contains(topic)){
-              if( (mapTopic(topic) == "水的组成和电解")  && (mapTopicIndex(topic) == 18)){
+              if( (mapTopic(topic) == "水的组成和电解")){
                 count += 1
+                name = mapTopicIndex(topic).toString
               }
 
               posArr += mapTopicIndex(topic)
@@ -272,7 +274,7 @@ object KledGraph {
       }
     })
 
-    println("水的组成和电解 == 1 is"+ count)
+    println("水的组成和电解 == 1 is"+ count +" and index is"+name)
     (resVectors, mapRowStudent)
   }
 
