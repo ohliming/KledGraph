@@ -256,9 +256,10 @@ object KledGraph {
         if(intopics.size > 0) {
           intopics.foreach(topic =>{
             if(mapTopicIndex.contains(topic)){
-              if(mapTopic(topic) == "水的组成和电解"){
+              if( (mapTopic(topic) == "水的组成和电解")  && (mapTopicIndex(topic) == 18)){
                 count += 1
               }
+
               posArr += mapTopicIndex(topic)
               valArr += 1.0
             }
@@ -630,7 +631,7 @@ object KledGraph {
     println("the vec size:"+vecRecords.size + " and mapRowstudent len is:" + mapRowStudent.size)
     var c = 0
     vecRecords.foreach(x=>{
-      if(x.apply(18) == 0){
+      if(x.apply(18) == 1){
         c += 1
       }
     })
