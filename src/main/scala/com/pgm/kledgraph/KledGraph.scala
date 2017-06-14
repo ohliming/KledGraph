@@ -256,7 +256,7 @@ object KledGraph {
         if(intopics.size > 0) {
           intopics.foreach(topic =>{
             if(mapIndex.contains(topic)){
-              if( (mapTopic(topic) == "水的组成和电解")){
+              if( mapIndex(topic) == 18){
                 count += 1
                 name = mapIndex(topic).toString
               }
