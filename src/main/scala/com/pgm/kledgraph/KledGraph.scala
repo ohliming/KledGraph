@@ -298,7 +298,6 @@ object KledGraph {
 
   def preConditionPro(vecRecords:Seq[Vector], mapRowStudent:Map[Int, Long], topic:Int, position:Int, label:Int, variables:Seq[BayesVar],
                       indSeq:Seq[Int], mapIndex:Map[Int,Int],mapTopic:mutable.Map[Int,String]):Double = {
-
     var fenmu:Double = 0
     val loop  = new Breaks
     var index = 0
@@ -319,10 +318,8 @@ object KledGraph {
           }
         }
 
-        if( isFenmu ) {
-          fenmu += 1
-          setFenmu.add(studentId)
-        }
+        fenmu += 1
+        setFenmu.add(studentId)
 
         val value  = record.apply(position)
         val target = record.apply(0)
