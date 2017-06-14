@@ -261,7 +261,7 @@ object KledGraph {
                 posArr += mapIndex(topic)
                 valArr += 1.0
                 if( mapIndex(topic) == 18){
-                  count += 1.0
+                  count += 1
                   loop.break
                 }
               }
@@ -270,7 +270,7 @@ object KledGraph {
 
           mapRowStudent += ((index -> studentId))
           index += 1
-          resVectors = resVectors :+ Vectors.sparse(mapIndex.size, posArr.toArray, valArr.toArray)
+          resVectors = resVectors :+ Vectors.sparse(mapIndex.size+1, posArr.toArray, valArr.toArray)
         }
       }
     })
