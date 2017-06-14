@@ -152,11 +152,7 @@ object KledGraph {
 
     var p = 0.0
     if(fenmu > 0){
-      if(fenzi < fenmu){
-        p = fenzi / fenmu
-      }else{
-        p = 1.0
-      }
+      p = if(fenzi < fenmu) fenzi / fenmu else 1.0
     }
     p
   }
@@ -252,7 +248,8 @@ object KledGraph {
         var posArr:ListBuffer[Int] = new ListBuffer()
         var valArr:ListBuffer[Double] = new ListBuffer()
 
-        posArr += 0; valArr += label // process label
+        posArr += 0
+        valArr += label // process label
         val topics = mapQuestTopic(questionId)
         topics.foreach(topic =>{
           if(mapTopicIndex.contains(topic)){
@@ -347,9 +344,9 @@ object KledGraph {
       strWords += mapTopic(variables(i)._v) + ":"+indSeq(i)+","
     }
 
-    if( fenzi >0 ) { println("the"+topicName+":"+label +" fenzi ="+ fenzi + " and "+strWords +" fenmu is:"+ fenmu) }
+    println("the"+topicName+":"+label +" fenzi ="+ fenzi + " and "+strWords +" fenmu is:"+ fenmu)
     var p:Double = 0.0
-    if(fenmu > 0){
+    if( fenmu > 0 ){
       p = if(fenzi < fenmu) fenzi/fenmu else 1.0
     }
     p
@@ -374,9 +371,9 @@ object KledGraph {
         if(mapIndex.contains(x._2._eliminate._v)){
           val topicIndex = mapIndex(x._1)
           while( index < border ){
+            println("the index is =" + indSeq)
             val p1 = preConditionPro(vecRecords, mapRowStudent, x._1, topicIndex, 1, variables, indSeq, mapIndex, mapTopic)
             val p0 = preConditionPro(vecRecords, mapRowStudent, x._1, topicIndex, 0, variables, indSeq, mapIndex, mapTopic)
-
             x._2._cpdPositive = x._2._cpdPositive :+ p1
             x._2._cpdNegative = x._2._cpdNegative :+ p0
             index += 1
