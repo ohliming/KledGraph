@@ -239,6 +239,7 @@ object KledGraph {
       val inCnt = if(mapParents.contains(topic2)) mapParents(topic2).size else 0
       val outCnt = if(mapChilds.contains(topic1)) mapChilds(topic1).size else 0
       if(!bFlag && inCnt < inDreege && outCnt < outDreege ){
+        println("P("+mapTopic(topic2)+"|"+mapTopic(topic1)+") =" + math.max(p0,p1))
         initPair = initPair. +: (topic1, topic2)
         if(mapParents.contains(topic2)){
           mapParents(topic2).add(topic1)
@@ -361,7 +362,7 @@ object KledGraph {
 
     var topicName = mapTopic(topic)
     var strWords = ""
-    for(i <- 0 until variables.size){
+    for(i <- 0 until variables.size) {
       strWords += mapTopic(variables(i)._v) + ":"+indSeq(i)+","
     }
 
@@ -379,8 +380,13 @@ object KledGraph {
       bayes._parents.foreach(parent => { x._2.addVariable(parent) })
       val variables = x._2.getVariables
       var indSeq:Seq[Int] = Seq()
-      variables.foreach(x=>{ indSeq = indSeq :+ 0 })
+      var strV = mapTopic(bayes._v) +"|"
+      variables.foreach(x=>{
+        indSeq = indSeq :+ 0
+        strV += " "+mapTopic(x._v)
+      })
       if(variables.size > 0){
+        println(strV)
         var index = 1
         addSeq(indSeq)
         val border = math.pow(2.0, variables.size)
