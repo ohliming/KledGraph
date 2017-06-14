@@ -235,11 +235,12 @@ object KledGraph {
     initPair
   }
 
-  def makeTopicMatrix(listRecords: List[(Long, Int, Int)], mapQuestTopic:Map[Int,Set[Int]], mapIndex: Map[Int,Int], setPair:Set[Int]) = {
+  def makeTopicMatrix(listRecords: List[(Long, Int, Int)], mapQuestTopic:Map[Int,Set[Int]], mapIndex: Map[Int,Int], setPair:Set[Int], mapTopic:Map[Int,String]) = {
     var resVectors:Seq[Vector ] = Seq()
     var mapRowStudent:Map[Int, Long] = Map()
     var index = 0
     val mapTopicIndex = mapIndex.map( x=> ((x._2 -> x._1)) )
+    var count = 0
     listRecords.foreach(x=>{
       val questionId = x._2
       val studentId = x._1
@@ -255,6 +256,9 @@ object KledGraph {
         if(intopics.size > 0) {
           intopics.foreach(topic =>{
             if(mapTopicIndex.contains(topic)){
+              if(mapTopic(topic) == "水的组成和电解"){
+                count += 1
+              }
               posArr += mapTopicIndex(topic)
               valArr += 1.0
             }
@@ -266,6 +270,8 @@ object KledGraph {
         }
       }
     })
+
+    println("水的组成和电解 == 1 is"+ count)
     (resVectors, mapRowStudent)
   }
 
