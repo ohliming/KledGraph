@@ -326,6 +326,7 @@ object KledGraph {
         val value  = record.apply(position)
         val target = record.apply(0)
         if(value == 1.0) a += 1
+
         if(target == 1) {
           count += 1
         }
@@ -349,7 +350,7 @@ object KledGraph {
       strWords += mapTopic(variables(i)._v) + ":"+indSeq(i)+","
     }
 
-    println("the"+topicName+":"+label +" fenzi ="+ fenzi + " and "+strWords +" fenmu is:"+ fenmu + " and count:"+ count + " and value:"+ a)
+    println("the"+topicName+":"+label +" fenzi ="+ fenzi + " and "+strWords +" fenmu is:"+ fenmu + " and count:"+ count + " and "+position +"value:"+ a)
     var p:Double = 0.0
     if( fenmu > 0 ){
       p = if(fenzi < fenmu) fenzi/fenmu else 1.0
@@ -621,13 +622,6 @@ object KledGraph {
 
     val (vecRecords, mapRowStudent) = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex, setPair) // spare matrix
     println("the vec size:"+vecRecords.size + " and mapRowstudent len is:" + mapRowStudent.size)
-
-    var count = 0
-    vecRecords.foreach(x=>{
-      if(x.apply(0) == 1.0) count +=1
-    })
-
-    println("The count is:"+ count)
 
     var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor, initPair)
     println("the init factor len is:"+mapFactor.size)
