@@ -255,25 +255,31 @@ object KledGraph {
         val topics = mapQuestTopic(questionId)
         val intopics = topics & setPair
         if(intopics.size > 0) {
-          loop.breakable{
-            intopics.foreach(topic =>{
-              if(mapIndex.contains(topic)){
-                posArr += mapIndex(topic)
-                valArr += 1.0
-                if( mapIndex(topic) == 18){
-                  count += 1
-                  loop.break
-                }
+          intopics.foreach(topic =>{
+            if(mapIndex.contains(topic)){
+              posArr += mapIndex(topic)
+              valArr += 1.0
+              if( mapIndex(topic) == 18){
+                count += 1
               }
-            })
-          }
+            }
+          })
 
           mapRowStudent += ((index -> studentId))
           index += 1
-          resVectors = resVectors :+ Vectors.sparse(mapIndex.size+1, posArr.toArray, valArr.toArray)
+          resVectors = resVectors :+ Vectors.sparse(mapIndex.size, posArr.toArray, valArr.toArray)
         }
       }
     })
+
+    var c = 0
+    resVectors.foreach(x=>{
+      if(x.apply(18) == 1){
+        c += 1
+      }
+    })
+
+    println("the 18 count is = "+c)
 
     println("水的组成和电解 == 1 is"+ count +" and index is"+name)
     (resVectors, mapRowStudent)
