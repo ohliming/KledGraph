@@ -304,6 +304,7 @@ object KledGraph {
     var count = 0
     var setFenmu:Set[Long] = Set()
     var seqFenzi:Seq[Long] = Seq()
+    var a = 0
 
     vecRecords.foreach(record => {
       if(mapRowStudent.contains(index)){
@@ -324,6 +325,7 @@ object KledGraph {
 
         val value  = record.apply(position)
         val target = record.apply(0)
+        if(value == 1.0) a += 1
         if(target == 1) {
           count += 1
         }
@@ -347,7 +349,7 @@ object KledGraph {
       strWords += mapTopic(variables(i)._v) + ":"+indSeq(i)+","
     }
 
-    println("the"+topicName+":"+label +" fenzi ="+ fenzi + " and "+strWords +" fenmu is:"+ fenmu + " and count:"+ count)
+    println("the"+topicName+":"+label +" fenzi ="+ fenzi + " and "+strWords +" fenmu is:"+ fenmu + " and count:"+ count + " and value:"+ a)
     var p:Double = 0.0
     if( fenmu > 0 ){
       p = if(fenzi < fenmu) fenzi/fenmu else 1.0
