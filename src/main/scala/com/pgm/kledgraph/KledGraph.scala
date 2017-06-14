@@ -197,7 +197,7 @@ object KledGraph {
           val setQuest1 = mapTopicQuest(topic1._1)
           val setQuest2 = mapTopicQuest(topic2._1)
           val lem = (setQuest1 & setQuest2).size
-          if( lem > throld && mapTopic(topic2._1) == "水的组成和电解" ){ listPair = listPair. +: ((topic1._1, topic2._1), lem)}
+          if( lem > throld &&(mapTopic(topic1._1) == "水的组成和电解" || mapTopic(topic2._1) == "水的组成和电解")){ listPair = listPair. +: ((topic1._1, topic2._1), lem)}
         }
       })
     })
