@@ -239,7 +239,6 @@ object KledGraph {
     var resVectors:Seq[Vector ] = Seq()
     var mapRowStudent:Map[Int, Long] = Map()
     var index = 0
-    val mapTopicIndex = mapIndex.map( x=> ((x._2 -> x._1)) ).toMap
     var count = 0
     var name = ""
     listRecords.foreach(x=>{
@@ -256,13 +255,13 @@ object KledGraph {
         val intopics = topics & setPair
         if(intopics.size > 0) {
           intopics.foreach(topic =>{
-            if(mapTopicIndex.contains(topic)){
+            if(mapIndex.contains(topic)){
               if( (mapTopic(topic) == "水的组成和电解")){
                 count += 1
-                name = mapTopicIndex(topic).toString
+                name = mapIndex(topic).toString
               }
 
-              posArr += mapTopicIndex(topic)
+              posArr += mapIndex(topic)
               valArr += 1.0
             }
           })
@@ -628,6 +627,8 @@ object KledGraph {
       setPair.add(x._1)
       setPair.add(x._2)
     })
+
+
 
     val (vecRecords, mapRowStudent) = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex, setPair, mapTopic) // spare matrix
     println("the vec size:"+vecRecords.size + " and mapRowstudent len is:" + mapRowStudent.size)
