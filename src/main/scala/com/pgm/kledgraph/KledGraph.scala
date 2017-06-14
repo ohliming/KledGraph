@@ -373,7 +373,7 @@ object KledGraph {
       var strV = mapTopic(bayes._v) +"|"
       variables.foreach(x=>{
         indSeq = indSeq :+ 0
-        strV += " "+mapTopic(x._v)
+        strV += " " + mapTopic(x._v)
       })
 
       if(variables.size > 0){
@@ -628,6 +628,14 @@ object KledGraph {
 
     val (vecRecords, mapRowStudent) = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex, setPair, mapTopic) // spare matrix
     println("the vec size:"+vecRecords.size + " and mapRowstudent len is:" + mapRowStudent.size)
+    var c = 0
+    vecRecords.foreach(x=>{
+      if(x.apply(18) == 0){
+        c += 1
+      }
+    })
+
+    println("the 18 count is = "+c)
 
     var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor, initPair)
     println("the init factor len is:"+mapFactor.size)
