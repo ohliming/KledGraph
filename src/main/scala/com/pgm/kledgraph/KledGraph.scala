@@ -252,7 +252,6 @@ object KledGraph {
 
         posArr += 0
         valArr += label // process label
-        count += 1
         val topics = mapQuestTopic(questionId)
         val intopics = topics & setPair
         if(intopics.size > 0) {
@@ -265,6 +264,7 @@ object KledGraph {
 
           mapRowStudent += ((index -> studentId))
           index += 1
+          if(label == 1){count += 1}
           resVectors = resVectors :+ Vectors.sparse(mapIndex.size, posArr.toArray, valArr.toArray)
         }
       }
@@ -278,7 +278,7 @@ object KledGraph {
     })
 
     println("the 18 count is = "+c)
-    println(name+" == 1 is"+ count +" and index is 18")
+    println("label == 1 is"+ count +" and index is 18")
     (resVectors, mapRowStudent)
   }
 
