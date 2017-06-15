@@ -252,6 +252,7 @@ object KledGraph {
 
         posArr += 0
         valArr += label // process label
+        count += 1
         val topics = mapQuestTopic(questionId)
         val intopics = topics & setPair
         if(intopics.size > 0) {
@@ -259,10 +260,6 @@ object KledGraph {
             if(mapIndex.contains(topic)){
               posArr += mapIndex(topic)
               valArr += 1.0
-              if( mapIndex(topic) == 18){
-                count += 1
-                name = mapTopic(topic)
-              }
             }
           })
 
@@ -275,13 +272,12 @@ object KledGraph {
 
     var c = 0
     resVectors.foreach(x=>{
-      if(x.apply(18) == 1){
+      if(x.apply(0) == 1){
         c += 1
       }
     })
 
     println("the 18 count is = "+c)
-
     println(name+" == 1 is"+ count +" and index is 18")
     (resVectors, mapRowStudent)
   }
@@ -640,14 +636,6 @@ object KledGraph {
 
     val (vecRecords, mapRowStudent) = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex, setPair, mapTopic) // spare matrix
     println("the vec size:"+vecRecords.size + " and mapRowstudent len is:" + mapRowStudent.size)
-    var c = 0
-    vecRecords.foreach(x=>{
-      if(x.apply(18) == 1){
-        c += 1
-      }
-    })
-
-    println("the 18 count is = "+c)
 
     var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor, initPair)
     println("the init factor len is:"+mapFactor.size)
