@@ -193,7 +193,7 @@ object KledGraph {
           val setQuest1 = mapTopicQuest(topic1._1)
           val setQuest2 = mapTopicQuest(topic2._1)
           val lem = (setQuest1 & setQuest2).size
-          if( lem > throld &&(mapTopic(topic1._1) == "水的组成和电解" || mapTopic(topic2._1) == "水的组成和电解")){ listPair = listPair. +: ((topic1._1, topic2._1), lem)}
+          if( lem > throld ){ listPair = listPair. +: ((topic1._1, topic2._1), lem)}
         }
       })
     })
@@ -235,11 +235,10 @@ object KledGraph {
     initPair
   }
 
-  def makeTopicMatrix(listRecords: List[(Long, Int, Int)], mapQuestTopic:Map[Int,Set[Int]], mapIndex: Map[Int,Int], setPair:Set[Int], mapTopic:Map[Int,String]) = {
+  def makeTopicMatrix(listRecords: List[(Long, Int, Int)], mapQuestTopic:Map[Int,Set[Int]], mapIndex: Map[Int,Int], mapTopic:Map[Int,String]) = {
     var resVectors:Seq[Vector ] = Seq()
     var mapRowStudent:Map[Int, Long] = Map()
     var index = 0
-    var count = 0
     listRecords.foreach(record =>{
       val questionId = record._2
       val studentId  = record._1
@@ -250,7 +249,7 @@ object KledGraph {
 
         posArr += 0
         valArr += label
-        val topics = mapQuestTopic(questionId) & setPair
+        val topics = mapQuestTopic(questionId)
         if(topics.size > 0){
           topics.foreach(topic => {
             if(mapIndex.contains(topic)){
@@ -261,26 +260,11 @@ object KledGraph {
 
           mapRowStudent += ((index -> studentId ))
           index += 1
-          if(posArr.contains(72)){
-            count += 1
-          }
           resVectors = resVectors :+ Vectors.sparse(mapIndex.size+1, posArr.sortWith(_<_).toArray, valArr.toArray)
         }
       }
     })
 
-    setPair.foreach(t =>{
-      var c = 0
-      resVectors.foreach(x=>{
-        if(x.apply(mapIndex(t)) == 1){
-          c += 1
-        }
-      })
-
-      println(mapTopic(t)+":"+mapIndex(t)+" count is = "+c)
-    })
-
-    println("the 72 == 1 is"+ count + "and index is:"+index)
     (resVectors, mapRowStudent)
   }
 
@@ -316,10 +300,8 @@ object KledGraph {
     var fenmu:Double = 0
     val loop  = new Breaks
     var index = 0
-    var count = 0
     var setFenmu:Set[Long] = Set()
     var seqFenzi:Seq[Long] = Seq()
-    var a = 0
 
     vecRecords.foreach(record => {
       if(mapRowStudent.contains(index)){
@@ -342,11 +324,7 @@ object KledGraph {
 
         val value  = record.apply(position)
         val target = record.apply(0)
-        if(value == 1.0) a += 1
 
-        if(target == 1) {
-          count += 1
-        }
         if( value == 1.0 && target == label ) {
           seqFenzi = seqFenzi :+ studentId
         }
@@ -367,7 +345,7 @@ object KledGraph {
       strWords += mapTopic(variables(i)._v) + ":"+indSeq(i)+","
     }
 
-    //println("the"+topicName+":"+label +" fenzi ="+ fenzi + " and "+strWords +" fenmu is:"+ fenmu)
+    if(fenzi >0) { println("the"+topicName+":"+label +" fenzi ="+ fenzi + " and "+strWords +" fenmu is:"+ fenmu) }
     var p:Double = 0.0
     if( fenmu > 0 ){
       p = if(fenzi < fenmu) fenzi/fenmu else 1.0
@@ -630,13 +608,7 @@ object KledGraph {
     val initPair = structGrahpList(listRecords, mapTopic, mapQuestTopic, mapTopicQuest)
     println("the pair len is:" + initPair.length)
 
-    var setPair:Set[Int] = Set()
-    initPair.foreach(x => {
-      setPair.add(x._1)
-      setPair.add(x._2)
-    })
-
-    val (vecRecords, mapRowStudent) = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex, setPair, mapTopic) // spare matrix
+    val (vecRecords, mapRowStudent) = makeTopicMatrix(listRecords, mapQuestTopic, mapIndex, mapTopic) // spare matrix
     println("the vec size:"+vecRecords.size + " and mapRowstudent len is:" + mapRowStudent.size)
 
     var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor, initPair)
