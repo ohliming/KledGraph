@@ -240,34 +240,28 @@ object KledGraph {
     var mapRowStudent:Map[Int, Long] = Map()
     var index = 0
     var count = 0
-    var name = ""
-    listRecords.foreach(x=>{
-      val questionId = x._2
-      val studentId = x._1
-      val label = if( x._3 == 1 ) 1.0 else 0.0
+    listRecords.foreach(record =>{
+      val questionId = record._2
+      val studentId  = record._1
+      val label =  if(record._3 ==1) 1.0 else 0.0
       if(mapQuestTopic.contains(questionId)){
         var posArr:ListBuffer[Int] = new ListBuffer()
         var valArr:ListBuffer[Double] = new ListBuffer()
 
         posArr += 0
-        valArr += label // process label
-        val topics = mapQuestTopic(questionId)
-        val intopics = topics & setPair
-        if(intopics.size > 0) {
-          intopics.foreach(topic =>{
+        valArr += label
+        val topics = mapQuestTopic(questionId) & setPair
+        if(topics.size > 0){
+          topics.foreach(topic => {
             if(mapIndex.contains(topic)){
               posArr += mapIndex(topic)
               valArr += 1.0
             }
           })
 
-          mapRowStudent += ((index -> studentId))
+          mapRowStudent += ((index -> studentId ))
           index += 1
-
-          if(posArr.contains(72)){
-            println(index+":"+posArr+valArr)
-            count += 1
-          }
+          if(posArr.contains(72)){count += 1}
           resVectors = resVectors :+ Vectors.sparse(mapIndex.size+1, posArr.toArray, valArr.toArray)
         }
       }
@@ -284,7 +278,7 @@ object KledGraph {
       println(mapTopic(t)+":"+mapIndex(t)+" count is = "+c)
     })
 
-    println("the 51 == 1 is"+ count + "and index is:"+index)
+    println("the 72 == 1 is"+ count + "and index is:"+index)
     (resVectors, mapRowStudent)
   }
 
