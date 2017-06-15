@@ -284,7 +284,7 @@ object KledGraph {
       println(mapTopic(t)+":"+mapIndex(t)+" count is = "+c)
     })
 
-    println("the 51 == 1 is"+ count)
+    println("the 51 == 1 is"+ count + "and index is:"+index)
     (resVectors, mapRowStudent)
   }
 
