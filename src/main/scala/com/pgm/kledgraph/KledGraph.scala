@@ -259,38 +259,25 @@ object KledGraph {
             if(mapIndex.contains(topic)){
               posArr += mapIndex(topic)
               valArr += 1.0
-              if(mapIndex(topic) == 18){
-                count += 1
-                name = mapTopic(topic)
-              }
             }
           })
 
           mapRowStudent += ((index -> studentId))
           index += 1
+          if(posArr.contains(18)){count += 1}
           resVectors = resVectors :+ Vectors.sparse(mapIndex.size, posArr.toArray, valArr.toArray)
         }
       }
     })
 
     var c = 0
-    var c1  =0
-    var c2 = 0
     resVectors.foreach(x=>{
       if(x.apply(18) == 1){
         c += 1
       }
-      if(x.apply(17) == 1){
-        c1 += 1
-      }
-      if(x.apply(19) == 1){
-        c2 += 1
-      }
     })
 
     println("the 18 count is = "+c)
-    println("the 17 count is ="+ c1)
-    println("the 19 count is ="+ c2)
     println(name +" == 1 is"+ count)
     (resVectors, mapRowStudent)
   }
