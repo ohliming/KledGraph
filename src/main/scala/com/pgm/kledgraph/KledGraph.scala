@@ -261,6 +261,7 @@ object KledGraph {
               valArr += 1.0
               if( mapIndex(topic) == 18){
                 count += 1
+                name = mapTopic(topic)
               }
             }
           })
@@ -281,7 +282,7 @@ object KledGraph {
 
     println("the 18 count is = "+c)
 
-    println("水的组成和电解 == 1 is"+ count +" and index is"+name)
+    println(name+" == 1 is"+ count +" and index is 18")
     (resVectors, mapRowStudent)
   }
 
