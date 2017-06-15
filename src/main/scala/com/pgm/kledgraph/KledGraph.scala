@@ -261,7 +261,10 @@ object KledGraph {
 
           mapRowStudent += ((index -> studentId ))
           index += 1
-          if(posArr.contains(72)){count += 1}
+          if(posArr.contains(72)){
+            println(index+":"+posArr)
+            count += 1
+          }
           resVectors = resVectors :+ Vectors.sparse(mapIndex.size+1, posArr.toArray, valArr.toArray)
         }
       }
