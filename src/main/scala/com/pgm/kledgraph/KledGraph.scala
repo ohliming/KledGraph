@@ -259,12 +259,14 @@ object KledGraph {
             if(mapIndex.contains(topic)){
               posArr += mapIndex(topic)
               valArr += 1.0
+              if(mapIndex(topic) == 1){
+                count += 1
+              }
             }
           })
 
           mapRowStudent += ((index -> studentId))
           index += 1
-          if(label == 1){count += 1}
           resVectors = resVectors :+ Vectors.sparse(mapIndex.size, posArr.toArray, valArr.toArray)
         }
       }
@@ -272,7 +274,7 @@ object KledGraph {
 
     var c = 0
     resVectors.foreach(x=>{
-      if(x.apply(0) == 1){
+      if(x.apply(1) == 1){
         c += 1
       }
     })
