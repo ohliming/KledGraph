@@ -259,7 +259,7 @@ object KledGraph {
             if(mapIndex.contains(topic)){
               posArr += mapIndex(topic)
               valArr += 1.0
-              if(mapIndex(topic) == 2){
+              if(mapIndex(topic) == 18){
                 count += 1
                 name = mapTopic(topic)
               }
@@ -275,12 +275,12 @@ object KledGraph {
 
     var c = 0
     resVectors.foreach(x=>{
-      if(x.apply(1) == 1){
+      if(x.apply(1) == 18){
         c += 1
       }
     })
 
-    println("the 2 count is = "+c)
+    println("the 18 count is = "+c)
     println(name +" == 1 is"+ count)
     (resVectors, mapRowStudent)
   }
