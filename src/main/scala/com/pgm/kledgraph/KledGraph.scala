@@ -259,8 +259,9 @@ object KledGraph {
             if(mapIndex.contains(topic)){
               posArr += mapIndex(topic)
               valArr += 1.0
-              if(mapIndex(topic) == 1){
+              if(mapIndex(topic) == 2){
                 count += 1
+                name = mapTopic(topic)
               }
             }
           })
@@ -279,8 +280,8 @@ object KledGraph {
       }
     })
 
-    println("the 18 count is = "+c)
-    println("label == 1 is"+ count +" and index is 18")
+    println("the 2 count is = "+c)
+    println(name +" == 1 is"+ count)
     (resVectors, mapRowStudent)
   }
 
