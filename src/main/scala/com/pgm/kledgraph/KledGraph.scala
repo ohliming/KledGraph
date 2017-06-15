@@ -274,13 +274,23 @@ object KledGraph {
     })
 
     var c = 0
+    var c1  =0
+    var c2 = 0
     resVectors.foreach(x=>{
-      if(x.apply(1) == 18){
+      if(x.apply(18) == 1){
         c += 1
+      }
+      if(x.apply(17) == 1){
+        c1 += 1
+      }
+      if(x.apply(19) == 1){
+        c2 += 1
       }
     })
 
     println("the 18 count is = "+c)
+    println("the 17 count is ="+ c1)
+    println("the 19 count is ="+ c2)
     println(name +" == 1 is"+ count)
     (resVectors, mapRowStudent)
   }
