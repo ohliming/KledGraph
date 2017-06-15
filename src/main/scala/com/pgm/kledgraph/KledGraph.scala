@@ -265,7 +265,7 @@ object KledGraph {
             println(index+":"+posArr)
             count += 1
           }
-          resVectors = resVectors :+ Vectors.sparse(mapIndex.size+1, posArr.toArray, valArr.toArray)
+          resVectors = resVectors :+ Vectors.sparse(mapIndex.size+1, posArr.sortWith(_<_).toArray, valArr.toArray)
         }
       }
     })
