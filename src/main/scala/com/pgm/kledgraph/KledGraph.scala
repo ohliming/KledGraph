@@ -265,7 +265,7 @@ object KledGraph {
           index += 1
 
           if(posArr.contains(51)){
-            println(index+":"+posArr)
+            println(index+":"+posArr+valArr)
             count += 1
           }
           resVectors = resVectors :+ Vectors.sparse(mapIndex.size+1, posArr.toArray, valArr.toArray)
