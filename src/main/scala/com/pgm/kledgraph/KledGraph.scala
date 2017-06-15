@@ -241,7 +241,6 @@ object KledGraph {
     var index = 0
     var count = 0
     var name = ""
-    val loop = new Breaks
     listRecords.foreach(x=>{
       val questionId = x._2
       val studentId = x._1
@@ -265,19 +264,22 @@ object KledGraph {
           mapRowStudent += ((index -> studentId))
           index += 1
           if(posArr.contains(18)){count += 1}
-          resVectors = resVectors :+ Vectors.sparse(mapIndex.size, posArr.toArray, valArr.toArray)
+          resVectors = resVectors :+ Vectors.sparse(mapIndex.size+1, posArr.toArray, valArr.toArray)
         }
       }
     })
 
-    var c = 0
-    resVectors.foreach(x=>{
-      if(x.apply(18) == 1){
-        c += 1
-      }
+    setPair.foreach(t =>{
+      var c = 0
+      resVectors.foreach(x=>{
+        if(x.apply(mapIndex(t)) == 1){
+          c += 1
+        }
+      })
+
+      println(mapTopic(t)+":"+t+" count is = "+c)
     })
 
-    println("the 18 count is = "+c)
     println(name +" == 1 is"+ count)
     (resVectors, mapRowStudent)
   }
@@ -433,7 +435,7 @@ object KledGraph {
     var mapIndex:Map[Int, Int] = Map()
     var index = 1
     mapTopic.foreach(topic => {
-      mapIndex += (( topic._1-> index ))
+      mapIndex += (( topic._1 -> index ))
       index += 1
     })
     mapIndex
