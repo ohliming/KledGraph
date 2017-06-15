@@ -263,7 +263,7 @@ object KledGraph {
 
           mapRowStudent += ((index -> studentId))
           index += 1
-          if(posArr.contains(18)){count += 1}
+          if(posArr.contains(51)){count += 1}
           resVectors = resVectors :+ Vectors.sparse(mapIndex.size+1, posArr.toArray, valArr.toArray)
         }
       }
@@ -280,7 +280,7 @@ object KledGraph {
       println(mapTopic(t)+":"+mapIndex(t)+" count is = "+c)
     })
 
-    println(name +" == 1 is"+ count)
+    println("the 51 == 1 is"+ count)
     (resVectors, mapRowStudent)
   }
 
