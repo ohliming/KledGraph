@@ -277,7 +277,7 @@ object KledGraph {
         }
       })
 
-      println(mapTopic(t)+":"+t+" count is = "+c)
+      println(mapTopic(t)+":"+mapIndex(t)+" count is = "+c)
     })
 
     println(name +" == 1 is"+ count)
