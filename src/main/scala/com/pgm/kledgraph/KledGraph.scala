@@ -324,10 +324,11 @@ object KledGraph {
 
         val value  = record.apply(position)
         val target = record.apply(0)
-        if( value == 1.0 && target == label ) {
+        if( value == 1.0 && target == label && isFenmu ) {
           seqFenzi = seqFenzi :+ studentId
         }
       }
+
       index += 1
     })
 
@@ -500,26 +501,36 @@ object KledGraph {
         }
         val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
         val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
-        p = p0 + p1
+        p = p0*p1 // factor 1-0
       }
-      println("the stage 1 p is ="+p)
 
       childs.foreach(x=>{ // childs variables
         if(mapIndex.contains(x)){
           val childFactor = mapFactor(x._v)
           var cp1 = 0.0
-          if(mapIndex(x) == 1){
-            childFactor._cpdPositive.foreach(positive =>{ cp1 += positive})
-          }else{
-            childFactor._cpdNegative.foreach(negative =>{ cp1 += negative})
+          var bayeV = 0.0
+          for(i<- 0 until childFactor._variables.size){
+            if(mapIndex(x) == 1){
+              if(childFactor._variables(i).eq(bayes)){
+                bayeV = childFactor._cpdPositive(i)
+              }else{
+                cp1 += childFactor._cpdPositive(i)
+              }
+            }else{
+              if(childFactor._variables(i).eq(bayes)){
+                bayeV = childFactor._cpdNegative(i)
+              }else{
+                cp1 += childFactor._cpdNegative(i)
+              }
+            }
           }
+
+          cp1 = bayeV * cp1
           if(cp1 > 0.0) {
             p= p*cp1
           }
         }
       })
-
-      println("the stage 2 p is ="+p)
 
       val variableSet = items.toSet // factors
       seqFactor.foreach(x=> {
@@ -538,7 +549,6 @@ object KledGraph {
         }
       })
 
-      println("the stage 3 p is ="+p)
       factor._cpds = factor._cpds :+ p
       index += 1
       addSeq(indexSeq)
@@ -547,9 +557,8 @@ object KledGraph {
     factor
   }
 
-  // conditional probability
   def condSumProductVE(mapFactor:Map[Int,BayesFactor], seqVariable:Seq[BayesFactor], target: BayesFactor,
-                       tag:Int /*0~1~-1*/, mapEvidences:Map[BayesVar, Int]) = {
+                       tag:Int /*0~1~-1*/, mapEvidences:Map[BayesVar, Int]) = {  // conditional probability
     var seqFactor:Seq[BayesFactor] = Seq()
     var pos = 0; val evidSet = mapEvidences.map(x=>{ mapFactor(x._1._v)}).toSet
     seqVariable.foreach(x=>{// cut evidences
