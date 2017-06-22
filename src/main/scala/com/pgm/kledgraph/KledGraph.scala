@@ -549,6 +549,7 @@ object KledGraph {
         }
       })
 
+      println("the factor p is ="+p)
       factor._cpds = factor._cpds :+ p
       index += 1
       addSeq(indexSeq)
