@@ -81,7 +81,7 @@ object KledGraph {
   def getStudRecords(mapQuestTopic: Map[Int, Set[Int]], mapTopic: Map[Int, String], sqlContext: HiveContext,subjectId:Int,stageId:Int) = {
     var listRecords:List[(Long, Int, Int)] = List() // records object
     var sql = "select a.student_id,a.question_id,a.result from entity_student_exercise as a join link_question_topic as b on " +
-      "(b.question_id=a.question_id) join entity_topic as c on (c.id = b.topic_id) where c.subject_id="+subjectId+" and c.stage_id ="+stageId + " limit 1000000 "
+      "(b.question_id=a.question_id) join entity_topic as c on (c.id = b.topic_id) where c.subject_id="+subjectId+" and c.stage_id ="+stageId + " limit 100000"
     val rows = sqlContext.sql(sql).collect()
     val setKeyTopic = mapTopic.map(x=>x._1).toSet
     val regex="""^\d+$""".r  //process effective records
@@ -107,7 +107,7 @@ object KledGraph {
             }
           }
 
-          if(res > 0) { //normal record add the list
+          if(res > 0) { //　normal record add the list
             listRecords = listRecords.+:(studentId, questionId, res)
           }
         }
@@ -359,7 +359,6 @@ object KledGraph {
       })
 
       if(variables.size > 0) {
-        println(strV)
         var index = 1
         addSeq(indSeq)
         val border = math.pow(2.0, variables.size)
@@ -368,6 +367,7 @@ object KledGraph {
           while( index < border ){
             val p1 = preConditionPro(vecRecords, mapRowStudent, x._1, topicIndex, 1, variables, indSeq, mapIndex)
             val p0 = preConditionPro(vecRecords, mapRowStudent, x._1, topicIndex, 0, variables, indSeq, mapIndex)
+            println(strV +":"+indSeq+" and the p1 ="+p1 + " and p0 = "+p0)
             x._2._cpdPositive = x._2._cpdPositive :+ p1
             x._2._cpdNegative = x._2._cpdNegative :+ p0
             index += 1
