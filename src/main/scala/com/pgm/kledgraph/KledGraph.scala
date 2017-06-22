@@ -81,7 +81,7 @@ object KledGraph {
   def getStudRecords(mapQuestTopic: Map[Int, Set[Int]], mapTopic: Map[Int, String], sqlContext: HiveContext,subjectId:Int,stageId:Int) = {
     var listRecords:List[(Long, Int, Int)] = List() // records object
     var sql = "select a.student_id,a.question_id,a.result from entity_student_exercise as a join link_question_topic as b on " +
-      "(b.question_id=a.question_id) join entity_topic as c on (c.id = b.topic_id) where c.subject_id="+subjectId+" and c.stage_id ="+stageId
+      "(b.question_id=a.question_id) join entity_topic as c on (c.id = b.topic_id) where c.subject_id="+subjectId+" and c.stage_id ="+stageId + " limit 1000000 "
     val rows = sqlContext.sql(sql).collect()
     val setKeyTopic = mapTopic.map(x=>x._1).toSet
     val regex="""^\d+$""".r  //process effective records
@@ -474,7 +474,7 @@ object KledGraph {
     })
 
     val childs = bayes._childs
-    childs.foreach(x=>{
+    childs.foreach( x=> {
       if(!setBayesVal.contains(x)) {
         factor.addVariable(x)
       }
@@ -488,7 +488,7 @@ object KledGraph {
     items.foreach(x=>{ indexSeq = indexSeq :+ 0})
     addSeq(indexSeq)
 
-    while( index < border ){
+    while( index < border ) {
       var mapIndex:Map[BayesVar,Int] = Map()
       for(pos <- 0 until items.size){ mapIndex += ((items(pos) -> indexSeq(pos))) }
 
@@ -633,7 +633,7 @@ object KledGraph {
 
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
     val p = condSumProductVE(mapFactor, sequence, target, 1, mapEvidences)
-    println("the result p=" + p) // output p
+    println("the result p=" + p)  // output p
 
     sc.stop
   }
