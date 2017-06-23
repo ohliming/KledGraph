@@ -294,15 +294,16 @@ object KledGraph {
     pos
   }
 
-  def randomSeq(n:Int, maxIndex:Int)={
-    var resultList:List[Int]=Nil
-    while(resultList.length<n){
+  def randomSet(n:Int, maxIndex:Int)={
+    var resultSet:Set[Int]= Set()
+    while(resultSet.size < n){
       val randomNum=(new Random).nextInt(maxIndex:Int)
-      if(!resultList.exists(s=> s==randomNum )){
-        resultList=resultList:::List(randomNum)
+      if(!resultSet.contains(randomNum)){
+        resultSet.add(randomNum)
       }
+
     }
-    resultList
+    resultSet
   }
 
   def preConditionPro(vecRecords:Seq[Vector], mapRowStudent:Map[Int, Long], topic:Int, position:Int, label:Int, variables:Seq[BayesVar],
@@ -352,18 +353,18 @@ object KledGraph {
     if( fenmu > 0 ){
       p = if(fenzi < fenmu) fenzi/fenmu else 1.0
     }
-    /*
+
     if( p < threshold && p > 0 ){ // do something
       val pi = (1-p)*fenmu
-      val posSeq = randomSeq(pi.toInt, seqFenzi.size)
-      posSeq.foreach(pos => {
+      val posSet = randomSet(pi.toInt, seqFenzi.size)
+      posSet.foreach(pos => {
         if(setFenmu.contains(seqFenzi(pos))){
           fenzi += 1
         }
       })
 
       p = fenzi / fenmu
-    }*/
+    }
 
     p
   }
