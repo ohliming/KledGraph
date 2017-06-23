@@ -7,10 +7,10 @@ import org.apache.spark.mllib.linalg.{Vector, Vectors}
 
 import scala.collection.mutable.{ListBuffer, Map, Seq, Set}
 import scala.util.control._
+import scala.util.Random
 import org.json4s._
 import org.json4s.native.JsonMethods._
 
-import scala.collection.mutable
 
 object KledGraph {
   val stageDict: Map[String, Int] = Map(
@@ -81,7 +81,7 @@ object KledGraph {
   def getStudRecords(mapQuestTopic: Map[Int, Set[Int]], mapTopic: Map[Int, String], sqlContext: HiveContext,subjectId:Int,stageId:Int) = {
     var listRecords:List[(Long, Int, Int)] = List() // records object
     var sql = "select a.student_id,a.question_id,a.result from entity_student_exercise as a join link_question_topic as b on " +
-      "(b.question_id=a.question_id) join entity_topic as c on (c.id = b.topic_id) where c.subject_id="+subjectId+" and c.stage_id ="+stageId + " limit 100000"
+      "(b.question_id=a.question_id) join entity_topic as c on (c.id = b.topic_id) where c.subject_id="+subjectId+" and c.stage_id ="+stageId + " and ret_num > 0 limit 100000"
     val rows = sqlContext.sql(sql).collect()
     val setKeyTopic = mapTopic.map(x=>x._1).toSet
     val regex="""^\d+$""".r  //process effective records
@@ -295,14 +295,26 @@ object KledGraph {
     pos
   }
 
+  def randomSeq(n:Int, maxIndex:Int)={
+    var resultList:List[Int]=Nil
+    while(resultList.length<n){
+      val randomNum=(new Random).nextInt(maxIndex:Int)
+      if(!resultList.exists(s=> s==randomNum )){
+        resultList=resultList:::List(randomNum)
+      }
+    }
+    resultList
+  }
+
   def preConditionPro(vecRecords:Seq[Vector], mapRowStudent:Map[Int, Long], topic:Int, position:Int, label:Int, variables:Seq[BayesVar],
-                      indSeq:Seq[Int], mapIndex:Map[Int,Int]):Double = {
-    var fenmu:Double = 0
+                      indSeq:Seq[Int], mapIndex:Map[Int,Int], threshold:Double = 0.2):Double = {
     val loop  = new Breaks
     var index = 0
     var setFenmu:Set[Long] = Set()
     var seqFenzi:Seq[Long] = Seq()
 
+    var fenmu:Double = 0
+    var fenzi:Double = 0
     vecRecords.foreach(record => {
       if(mapRowStudent.contains(index)){
         var isFenmu = true
@@ -324,7 +336,11 @@ object KledGraph {
 
         val value  = record.apply(position)
         val target = record.apply(0)
-        if( value == 1.0 && target == label && isFenmu ) {
+        val bFlag:Boolean = (value == 1.0 && target == label)
+
+        if( bFlag && isFenmu ) {
+          fenzi += 1
+        }else if(bFlag){
           seqFenzi = seqFenzi :+ studentId
         }
       }
@@ -332,17 +348,23 @@ object KledGraph {
       index += 1
     })
 
-    var fenzi:Double = 0
-    seqFenzi.foreach(x=>{
-      if(setFenmu.contains(x)) {
-        fenzi += 1
-      }
-    })
-
     var p:Double = 0.0
     if( fenmu > 0 ){
       p = if(fenzi < fenmu) fenzi/fenmu else 1.0
     }
+
+    if( p < threshold && p > 0 ){ // do something
+      val pi = (1-p)*fenmu
+      val posSeq = randomSeq(pi.toInt, seqFenzi.size)
+      posSeq.foreach(pos => {
+        if(setFenmu.contains(seqFenzi(pos))){
+          fenzi += 1
+        }
+      })
+
+      p = fenzi / fenmu
+    }
+
     p
   }
 
