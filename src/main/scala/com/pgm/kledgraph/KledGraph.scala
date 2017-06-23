@@ -336,12 +336,11 @@ object KledGraph {
 
         val value  = record.apply(position)
         val target = record.apply(0)
-        val bFlag:Boolean = (value == 1.0 && target == label)
 
-        if( bFlag && isFenmu ) {
-          fenzi += 1
-        }else if(bFlag){
+        if(value == 1.0 && target == label){
           seqFenzi = seqFenzi :+ studentId
+          if(isFenmu){ fenzi += 1 }
+          fenzi += 1
         }
       }
 
@@ -571,6 +570,7 @@ object KledGraph {
         }
       })
 
+      println("the factor p  =" + p)
       factor._cpds = factor._cpds :+ p
       index += 1
       addSeq(indexSeq)
