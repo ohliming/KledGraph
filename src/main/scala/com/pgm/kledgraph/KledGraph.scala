@@ -337,9 +337,11 @@ object KledGraph {
         val target = record.apply(0)
 
         if(value == 1.0 && target == label){
-          seqFenzi = seqFenzi :+ studentId
-          if(isFenmu){ fenzi += 1 }
-          fenzi += 1
+          if(isFenmu){
+            fenzi += 1
+          }else{
+            seqFenzi = seqFenzi :+ studentId
+          }
         }
       }
 
@@ -354,7 +356,6 @@ object KledGraph {
     if( p < threshold && p > 0 ){ // do something
       val pi = (1-p)*fenmu
       val posSeq = randomSeq(pi.toInt, seqFenzi.size)
-      println("the posSeq len is = "+posSeq.size)
       posSeq.foreach(pos => {
         if(setFenmu.contains(seqFenzi(pos))){
           fenzi += 1
