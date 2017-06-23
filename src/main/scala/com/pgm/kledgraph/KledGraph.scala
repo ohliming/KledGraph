@@ -354,6 +354,7 @@ object KledGraph {
     if( p < threshold && p > 0 ){ // do something
       val pi = (1-p)*fenmu
       val posSeq = randomSeq(pi.toInt, seqFenzi.size)
+      println("the posSeq len is = "+posSeq.size)
       posSeq.foreach(pos => {
         if(setFenmu.contains(seqFenzi(pos))){
           fenzi += 1
