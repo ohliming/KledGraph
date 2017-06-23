@@ -359,6 +359,7 @@ object KledGraph {
       println("the pos Set len is ="+ posSet.size)
       posSet.foreach(pos => {
         if(setFenmu.contains(seqFenzi(pos))){
+          println("the pos is =" +pos)
           fenzi += 1
         }
       })
