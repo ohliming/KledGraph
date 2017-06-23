@@ -11,7 +11,6 @@ import scala.util.Random
 import org.json4s._
 import org.json4s.native.JsonMethods._
 
-
 object KledGraph {
   val stageDict: Map[String, Int] = Map(
     "CZ"->1,
@@ -570,7 +569,6 @@ object KledGraph {
         }
       })
 
-      println("the factor p  =" + p)
       factor._cpds = factor._cpds :+ p
       index += 1
       addSeq(indexSeq)
