@@ -469,7 +469,7 @@ object KledGraph {
         })
       }
 
-      if(bFlag) p += pr1
+      if(bFlag) p = p * pr1
       count += 1
     })
     p
@@ -518,7 +518,7 @@ object KledGraph {
         }
         val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
         val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
-        p = p0*p1 // factor 1-0
+        p = p0 + p1 // factor 1-0
       }
 
       println("the 1 stage p is="+ p)
@@ -644,7 +644,7 @@ object KledGraph {
     println("the cpd factor len is:"+ mapFactor.size)
 
     val model = new BayesModel; mapFactor.foreach(x=>{ model.addFactor(x._2) })
-    // model.save("model.txt", sc)
+    // model.save("BayeModel", sc)
     var setFactor:Set[BayesFactor] = Set() // factors set
     mapFactor.foreach(x=>{ setFactor.add(x._2) })
 
