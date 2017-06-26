@@ -455,7 +455,7 @@ object KledGraph {
   }
 
   def sumPositionsPro(cpds:Seq[Double], posMap:Map[Int,Int], len:Int) = {
-    var p = 0.0; var count = 0
+    var p = 0.0; var count = 1
     val loop = new Breaks
     cpds.foreach(pr1=>{
       val index = pos2Seq(count, len)
