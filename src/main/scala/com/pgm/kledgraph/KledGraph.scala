@@ -604,6 +604,9 @@ object KledGraph {
     }else{
       p = targetFactor._cpdNegative.apply(targetPos)
     }
+
+    println("the positive is:"+targetFactor._cpdPositive)
+    println("the negitive is:"+targetFactor._cpdNegative)
     p
   }
 
