@@ -521,7 +521,7 @@ object KledGraph {
         p = p0 + p1 // factor 1-0
       }
 
-      println("the 1 stage p is="+ p)
+      println("the 1 stage p is=" + p)
       childs.foreach(x=>{ // childs variables
         if(mapIndex.contains(x)){
           val childFactor = mapFactor(x._v)
@@ -567,6 +567,7 @@ object KledGraph {
         }
       })
 
+      println("the result p is="+p)
       factor._cpds = factor._cpds :+ p
       index += 1
       addSeq(indexSeq)
