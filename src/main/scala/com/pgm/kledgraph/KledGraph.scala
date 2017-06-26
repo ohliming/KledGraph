@@ -589,6 +589,8 @@ object KledGraph {
     seqVariable.foreach(variable => {// loop the variables
       val factor = sumProductEliminateVar(mapFactor, seqFactor, variable, target)
       seqFactor = seqFactor :+ factor
+      println("the factor positive is:"+factor._cpdPositive)
+      println("the factor negitive is:"+factor._cpdNegative)
     })
 
     val targetFactor = seqFactor.last
