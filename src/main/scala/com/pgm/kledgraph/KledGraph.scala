@@ -550,7 +550,6 @@ object KledGraph {
         }
       })
 
-      println("the 2 stage p is="+p)
       val variableSet = items.toSet // factors
       seqFactor.foreach(x=> {
         if(x._isUsed == false){
@@ -567,8 +566,6 @@ object KledGraph {
           }
         }
       })
-
-      println("the 3 stage p is="+p)
 
       factor._cpds = factor._cpds :+ p
       index += 1
