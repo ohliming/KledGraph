@@ -374,12 +374,7 @@ object KledGraph {
       val bayes = x._2._eliminate
       bayes._parents.foreach(parent => { x._2.addVariable(parent) })
       val variables = x._2.getVariables
-      var indSeq:Seq[Int] = Seq()
-      var strV = mapTopic(bayes._v) +"|"
-      variables.foreach(x=>{
-        indSeq = indSeq :+ 0
-        strV += " " + mapTopic(x._v)
-      })
+      var indSeq:Seq[Int] = Seq(); variables.foreach(x=>{ indSeq = indSeq :+ 0})
 
       if(variables.size > 0) {
         var index = 1
@@ -390,7 +385,6 @@ object KledGraph {
           while( index < border ){
             val p1 = preConditionPro(vecRecords, mapRowStudent, x._1, topicIndex, 1, variables, indSeq, mapIndex)
             val p0 =  1 - p1
-            println(strV +":"+indSeq+" and the p1 ="+p1 + " and p0 = "+p0)
             x._2._cpdPositive = x._2._cpdPositive :+ p1
             x._2._cpdNegative = x._2._cpdNegative :+ p0
             index += 1
@@ -527,6 +521,7 @@ object KledGraph {
         p = p0*p1 // factor 1-0
       }
 
+      println("the 1 stage p is="+ p)
       childs.foreach(x=>{ // childs variables
         if(mapIndex.contains(x)){
           val childFactor = mapFactor(x._v)
@@ -555,6 +550,7 @@ object KledGraph {
         }
       })
 
+      println("the 2 stage p is="+p)
       val variableSet = items.toSet // factors
       seqFactor.foreach(x=> {
         if(x._isUsed == false){
@@ -571,6 +567,8 @@ object KledGraph {
           }
         }
       })
+
+      println("the 3 stage p is="+p)
 
       factor._cpds = factor._cpds :+ p
       index += 1
@@ -646,6 +644,7 @@ object KledGraph {
     println("the cpd factor len is:"+ mapFactor.size)
 
     val model = new BayesModel; mapFactor.foreach(x=>{ model.addFactor(x._2) })
+    model.save("model.txt", sc)
     var setFactor:Set[BayesFactor] = Set() // factors set
     mapFactor.foreach(x=>{ setFactor.add(x._2) })
 
