@@ -644,7 +644,7 @@ object KledGraph {
     println("the cpd factor len is:"+ mapFactor.size)
 
     val model = new BayesModel; mapFactor.foreach(x=>{ model.addFactor(x._2) })
-    model.save("model.txt", sc)
+    // model.save("model.txt", sc)
     var setFactor:Set[BayesFactor] = Set() // factors set
     mapFactor.foreach(x=>{ setFactor.add(x._2) })
 
