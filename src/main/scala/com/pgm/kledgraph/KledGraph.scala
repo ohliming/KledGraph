@@ -505,64 +505,65 @@ object KledGraph {
     items.foreach(x=>{ indexSeq = indexSeq :+ 0})
     addSeq(indexSeq)
 
-    println("the item len is ="+ items.size)
-    while( index < border ) {
-      var mapIndex:Map[BayesVar,Int] = Map()
-      for(pos <- 0 until items.size){ mapIndex += ((items(pos) -> indexSeq(pos))) }
+    if(items.size > 0){
+      while( index < border ) {
+        var mapIndex:Map[BayesVar,Int] = Map()
+        for(pos <- 0 until items.size){ mapIndex += ((items(pos) -> indexSeq(pos))) }
 
-      if( eliVariables.size > 0 ){ // parent variable
-        var posMap:Map[Int,Int] = Map()
-        for(i <- 0 until  eliVariables.size){
-          if(parentSet.contains(eliVariables(i))){
-            posMap += ((i -> mapIndex(eliVariables(i))))
-          }
-        }
-        val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
-        val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
-        p = p0 + p1 // factor 1-0
-      }
-
-      if(p > 0) println("the 1 stage p is=" + p)
-      childs.foreach(x=>{ // childs variables
-        if(mapIndex.contains(x)){
-          val childFactor = mapFactor(x._v)
-          var cp1 = 1.0
-          var bayeV = 0.0
-          for(i<- 0 until childFactor._variables.size){
-            if(childFactor._variables(i).eq(bayes)){
-              cp1 =  if (mapIndex(x) == 1) cp1 * childFactor._cpdPositive(i) else cp1 * childFactor._cpdNegative(i)
-            }else{
-              cp1 = if (mapIndex(x) == 1) cp1  * childFactor._cpdPositive(i) else cp1 * childFactor._cpdNegative(i)
+        if( eliVariables.size > 0 ){ // parent variable
+          var posMap:Map[Int,Int] = Map()
+          for(i <- 0 until  eliVariables.size){
+            if(parentSet.contains(eliVariables(i))){
+              posMap += ((i -> mapIndex(eliVariables(i))))
             }
           }
-
-          if(cp1 > 0.0) {
-            p= p*cp1
-          }
+          val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
+          val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
+          p = p0 + p1 // factor 1-0
         }
-      })
 
-      val variableSet = items.toSet // factors
-      seqFactor.foreach(x=> {
-        if(x._isUsed == false){
-          val fVariable = x.getVariables.toSet
-          val diff = fVariable -- variableSet
-          if( diff.size == 0){
-            var tmpSeq:Seq[Int] = Seq()
-            x._variables.foreach(v => {
-              tmpSeq = tmpSeq :+ 1
-            })
-            val ps = getCPDPosition(tmpSeq)
-            p = p * x._cpds(ps)
-            x.setUsed
+        if(p > 0) println("the 1 stage p is=" + p)
+        childs.foreach(x=>{ // childs variables
+          if(mapIndex.contains(x)){
+            val childFactor = mapFactor(x._v)
+            var cp1 = 1.0
+            var bayeV = 0.0
+            for(i<- 0 until childFactor._variables.size){
+              if(childFactor._variables(i).eq(bayes)){
+                cp1 =  if (mapIndex(x) == 1) cp1 * childFactor._cpdPositive(i) else cp1 * childFactor._cpdNegative(i)
+              }else{
+                cp1 = if (mapIndex(x) == 1) cp1  * childFactor._cpdPositive(i) else cp1 * childFactor._cpdNegative(i)
+              }
+            }
+
+            if(cp1 > 0.0) {
+              p= p*cp1
+            }
           }
-        }
-      })
+        })
 
-      if(p > 0) println("the result p is:"+p)
-      factor._cpds = factor._cpds :+ p
-      index += 1
-      addSeq(indexSeq)
+        val variableSet = items.toSet // factors
+        seqFactor.foreach(x=> {
+          if(x._isUsed == false){
+            val fVariable = x.getVariables.toSet
+            val diff = fVariable -- variableSet
+            if( diff.size == 0){
+              var tmpSeq:Seq[Int] = Seq()
+              x._variables.foreach(v => {
+                tmpSeq = tmpSeq :+ 1
+              })
+              val ps = getCPDPosition(tmpSeq)
+              p = p * x._cpds(ps)
+              x.setUsed
+            }
+          }
+        })
+
+        if(p > 0) println("the result p is:"+p)
+        factor._cpds = factor._cpds :+ p
+        index += 1
+        addSeq(indexSeq)
+      }
     }
 
     factor
@@ -581,8 +582,9 @@ object KledGraph {
 
     seqVariable.foreach(variable => {// loop the variables
       val factor = sumProductEliminateVar(mapFactor, seqFactor, variable, target)
-      println("the factor cpds is="+factor._cpds)
-      seqFactor = seqFactor :+ factor
+      if(factor._cpds.size > 0){
+        seqFactor = seqFactor :+ factor
+      }
     })
 
     val targetFactor = seqFactor.last
