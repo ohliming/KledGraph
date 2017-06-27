@@ -526,28 +526,17 @@ object KledGraph {
       childs.foreach(x=>{ // childs variables
         if(mapIndex.contains(x)){
           val childFactor = mapFactor(x._v)
-          var cp1 = 0.0
+          var cp1 = 1.0
           var bayeV = 0.0
           for(i<- 0 until childFactor._variables.size){
-            if(mapIndex(x) == 1){
-              if(childFactor._variables(i).eq(bayes)){
-                bayeV = childFactor._cpdPositive(i)
-              }else{
-                cp1 += childFactor._cpdPositive(i)
-              }
+            if(childFactor._variables(i).eq(bayes)){
+              cp1 =  if (mapIndex(x) == 1) childFactor._cpdPositive(i) else childFactor._cpdNegative(i)
             }else{
-              if(childFactor._variables(i).eq(bayes)){
-                bayeV = childFactor._cpdNegative(i)
-              }else{
-                cp1 += childFactor._cpdNegative(i)
-              }
+              cp1 = if (mapIndex(x) == 1) cp1  * childFactor._cpdPositive(i) else cp1 * childFactor._cpdNegative(i)
             }
           }
 
-          println("the cp1 is:"+cp1)
-          println("the bayeV is:"+bayeV)
-
-          cp1 = bayeV * cp1
+          if(cp1 > 0) println("the cp1 is ="+ cp1)
           if(cp1 > 0.0) {
             p= p*cp1
           }
