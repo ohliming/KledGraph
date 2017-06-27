@@ -594,6 +594,7 @@ object KledGraph {
 
     val targetFactor = seqFactor.last
     val targetM = mapFactor(target._eliminate._v) // other
+    println("the targetFactor is="+targetFactor._cpds)
     var p:Double = targetFactor._cpds.last
     if(mapEvidences.size > 0){
       var posMap:Map[Int,Int] = Map()
@@ -612,7 +613,7 @@ object KledGraph {
         pr =  sumPositionsPro(targetM._cpdNegative, posMap, targetM._variables.size)
       }
 
-      p = pr *p
+      p = pr * p
     }
 
     p
