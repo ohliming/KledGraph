@@ -542,6 +542,7 @@ object KledGraph {
           }
         })
 
+        if(p > 0) println("the 2 stage p is=" + p)
         val variableSet = items.toSet // factors
         seqFactor.foreach(x=> {
           if(x._isUsed == false){
