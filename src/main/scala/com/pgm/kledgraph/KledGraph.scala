@@ -530,20 +530,18 @@ object KledGraph {
           var bayeV = 0.0
           for(i<- 0 until childFactor._variables.size){
             if(childFactor._variables(i).eq(bayes)){
-              cp1 =  if (mapIndex(x) == 1) childFactor._cpdPositive(i) else childFactor._cpdNegative(i)
+              cp1 =  if (mapIndex(x) == 1) cp1 * childFactor._cpdPositive(i) else cp1 * childFactor._cpdNegative(i)
             }else{
               cp1 = if (mapIndex(x) == 1) cp1  * childFactor._cpdPositive(i) else cp1 * childFactor._cpdNegative(i)
             }
           }
 
-          if(cp1 > 0) println("the cp1 is ="+ cp1)
           if(cp1 > 0.0) {
             p= p*cp1
           }
         }
       })
 
-      if(p > 0) println("the 2 stage p is=" + p)
       val variableSet = items.toSet // factors
       seqFactor.foreach(x=> {
         if(x._isUsed == false){
@@ -561,6 +559,7 @@ object KledGraph {
         }
       })
 
+      if(p > 0) println("the result p is:"+p)
       factor._cpds = factor._cpds :+ p
       index += 1
       addSeq(indexSeq)
