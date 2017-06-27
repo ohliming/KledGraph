@@ -499,7 +499,7 @@ object KledGraph {
 
     val items = factor.getVariables
     var p:Double  = 1.0 // result
-    var index = 1; val border = math.pow(2.0, items.size)
+    var index = 0; val border = math.pow(2.0, items.size)
     val eliVariables = delFactor.getVariables
     var indexSeq:Seq[Int] = Seq()
     items.foreach(x=>{ indexSeq = indexSeq :+ 0})
@@ -544,6 +544,9 @@ object KledGraph {
             }
           }
 
+          println("the cp1 is:"+cp1)
+          println("the bayeV is:"+bayeV)
+
           cp1 = bayeV * cp1
           if(cp1 > 0.0) {
             p= p*cp1
@@ -551,7 +554,7 @@ object KledGraph {
         }
       })
 
-      if( p > 0.0 ) println("the p staged 2 is ="+p)
+      if(p > 0) println("the 2 stage p is=" + p)
       val variableSet = items.toSet // factors
       seqFactor.foreach(x=> {
         if(x._isUsed == false){
@@ -596,7 +599,6 @@ object KledGraph {
 
     val targetFactor = seqFactor.last
     val targetM = mapFactor(target._eliminate._v) // other
-    println("the seq factors len is="+seqFactor.size)
     println("the targetFactor is="+targetFactor._cpds)
     var p:Double = targetFactor._cpds.last
     if(mapEvidences.size > 0){
