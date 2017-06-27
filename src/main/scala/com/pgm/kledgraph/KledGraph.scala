@@ -505,6 +505,7 @@ object KledGraph {
     items.foreach(x=>{ indexSeq = indexSeq :+ 0})
     addSeq(indexSeq)
 
+    println("the item len is ="+ items.size)
     while( index < border ) {
       var mapIndex:Map[BayesVar,Int] = Map()
       for(pos <- 0 until items.size){ mapIndex += ((items(pos) -> indexSeq(pos))) }
@@ -594,6 +595,7 @@ object KledGraph {
 
     val targetFactor = seqFactor.last
     val targetM = mapFactor(target._eliminate._v) // other
+    println("the seq factors len is="+seqFactor.size)
     println("the targetFactor is="+targetFactor._cpds)
     var p:Double = targetFactor._cpds.last
     if(mapEvidences.size > 0){
