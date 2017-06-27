@@ -499,7 +499,7 @@ object KledGraph {
 
     val items = factor.getVariables
     var p:Double  = 1.0 // result
-    var index = 0; val border = math.pow(2.0, items.size)
+    var index = 1; val border = math.pow(2.0, items.size)
     val eliVariables = delFactor.getVariables
     var indexSeq:Seq[Int] = Seq()
     items.foreach(x=>{ indexSeq = indexSeq :+ 0})
@@ -551,6 +551,7 @@ object KledGraph {
         }
       })
 
+      if( p > 0.0 ) println("the p staged 2 is ="+p)
       val variableSet = items.toSet // factors
       seqFactor.foreach(x=> {
         if(x._isUsed == false){
@@ -558,7 +559,7 @@ object KledGraph {
           val diff = fVariable -- variableSet
           if( diff.size == 0){
             var tmpSeq:Seq[Int] = Seq()
-            x._variables.foreach(v =>{
+            x._variables.foreach(v => {
               tmpSeq = tmpSeq :+ 1
             })
             val ps = getCPDPosition(tmpSeq)
@@ -568,7 +569,6 @@ object KledGraph {
         }
       })
 
-      if(p > 0.0) println("the p result is ="+p)
       factor._cpds = factor._cpds :+ p
       index += 1
       addSeq(indexSeq)
