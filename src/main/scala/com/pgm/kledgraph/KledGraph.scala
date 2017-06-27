@@ -567,7 +567,6 @@ object KledGraph {
         }
       })
 
-      println("the result p is="+p)
       factor._cpds = factor._cpds :+ p
       index += 1
       addSeq(indexSeq)
@@ -590,26 +589,24 @@ object KledGraph {
     seqVariable.foreach(variable => {// loop the variables
       val factor = sumProductEliminateVar(mapFactor, seqFactor, variable, target)
       seqFactor = seqFactor :+ factor
-      println("the factor positive is:"+factor._cpdPositive)
-      println("the factor negitive is:"+factor._cpdNegative)
     })
 
     val targetFactor = seqFactor.last
+    val targetM = mapFactor(target._eliminate._v) // other
+
     var seqIndex:Seq[Int] = Seq()
     targetFactor._variables.foreach(x=>{
       seqIndex = seqIndex :+ mapEvidences(x)
     })
 
     val targetPos = getCPDPosition(seqIndex)
-    var p:Double = 0.0
+    var p:Double = targetFactor._cpds.apply(targetPos)
     if(tag == 1){
-      p = targetFactor._cpdPositive.apply(targetPos)
+      p = p * targetM._cpdPositive.apply(targetPos)
     }else{
-      p = targetFactor._cpdNegative.apply(targetPos)
+      p = p * targetM._cpdNegative.apply(targetPos)
     }
 
-    println("the positive is:"+targetFactor._cpdPositive)
-    println("the negitive is:"+targetFactor._cpdNegative)
     p
   }
 
