@@ -521,7 +521,7 @@ object KledGraph {
         p = p0 + p1 // factor 1-0
       }
 
-      println("the 1 stage p is=" + p)
+      if(p > 0) println("the 1 stage p is=" + p)
       childs.foreach(x=>{ // childs variables
         if(mapIndex.contains(x)){
           val childFactor = mapFactor(x._v)
@@ -567,6 +567,7 @@ object KledGraph {
         }
       })
 
+      if(p > 0.0) println("the p result is ="+p)
       factor._cpds = factor._cpds :+ p
       index += 1
       addSeq(indexSeq)
@@ -593,18 +594,25 @@ object KledGraph {
 
     val targetFactor = seqFactor.last
     val targetM = mapFactor(target._eliminate._v) // other
+    var p:Double = targetFactor._cpds.last
+    if(mapEvidences.size > 0){
+      var posMap:Map[Int,Int] = Map()
+      var pos = 0
+      targetM._variables.foreach(x => {
+        if(mapEvidences.contains(x)){
+          posMap += ((pos -> mapEvidences(x)))
+        }
+        pos += 1
+      })
 
-    var seqIndex:Seq[Int] = Seq()
-    targetFactor._variables.foreach(x=>{
-      seqIndex = seqIndex :+ mapEvidences(x)
-    })
+      var pr:Double = 0.0
+      if(tag == 1){
+        pr = sumPositionsPro(targetM._cpdPositive, posMap, targetM._variables.size)
+      }else{
+        pr =  sumPositionsPro(targetM._cpdNegative, posMap, targetM._variables.size)
+      }
 
-    val targetPos = getCPDPosition(seqIndex)
-    var p:Double = targetFactor._cpds.apply(targetPos)
-    if(tag == 1){
-      p = p * targetM._cpdPositive.apply(targetPos)
-    }else{
-      p = p * targetM._cpdNegative.apply(targetPos)
+      p = pr *p
     }
 
     p
