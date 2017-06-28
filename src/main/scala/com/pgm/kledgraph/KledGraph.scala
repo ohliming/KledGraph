@@ -533,7 +533,7 @@ object KledGraph {
               }
             }
 
-            if(cp1 > 0) println("the cp1 is ="+cp1)
+            if(cp1 > 0 and cp1 < 1.0) println("the cp1 is ="+cp1)
             if(cp1 > 0.0) {
               p= p*cp1
             }
