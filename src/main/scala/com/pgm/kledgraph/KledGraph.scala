@@ -530,8 +530,6 @@ object KledGraph {
             for(i<- 0 until childFactor._variables.size){
               if(childFactor._variables(i).eq(bayes)){
                 cp1 =  if (mapIndex(x) == 1) cp1 * childFactor._cpdPositive(i) else cp1 * childFactor._cpdNegative(i)
-              }else{
-                cp1 = if (mapIndex(x) == 1) cp1  * childFactor._cpdPositive(i) else cp1 * childFactor._cpdNegative(i)
               }
             }
 
