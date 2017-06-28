@@ -507,7 +507,7 @@ object KledGraph {
     items.foreach(x=>{ indexSeq = indexSeq :+ 0})
     addSeq(indexSeq)
 
-    if(items.size > 0){
+    if( items.size > 0 ){
       while( index < border ) {
         var mapIndex:Map[BayesVar,Int] = Map()
         for(pos <- 0 until items.size){ mapIndex += ((items(pos) -> indexSeq(pos))) }
@@ -524,6 +524,8 @@ object KledGraph {
           p = p0 + p1 // factor 1-0
         }
 
+        val p1= p
+
         childs.foreach(x=>{ // childs variables
           if(mapIndex.contains(x)){
             val childFactor = mapFactor(x._v)
@@ -534,12 +536,13 @@ object KledGraph {
               }
             }
 
-            if(cp1 > 0.0) {
+            if( cp1 > 0.0 ) {
               p =  if(p > 0.0) p*cp1 else cp1
             }
           }
         })
 
+        var p2 = p
         val variableSet = items.toSet // factors
         seqFactor.foreach(x=> {
           if(x._isUsed == false){
@@ -556,6 +559,12 @@ object KledGraph {
             }
           }
         })
+
+        if(p == 1.0){
+          println("the stage 1 p is:"+p1)
+          println("the stage 2 p is:"+p2)
+          println("the result p is:"+p)
+        }
 
         factor._cpds = factor._cpds :+ p
         index += 1
@@ -605,7 +614,6 @@ object KledGraph {
         pr =  sumPositionsPro(targetM._cpdNegative, posMap, targetM._variables.size)
       }
 
-      println("the pr is="+pr)
       p = pr * p
     }
 
