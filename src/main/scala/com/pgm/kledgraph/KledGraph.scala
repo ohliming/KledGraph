@@ -506,6 +506,8 @@ object KledGraph {
     var indexSeq:Seq[Int] = Seq()
     items.foreach(x=>{ indexSeq = indexSeq :+ 0})
     addSeq(indexSeq)
+    var pt1 = 0.0
+    var pt0 = 0.0
 
     if( items.size > 0 ){
       while( index < border ) {
@@ -521,10 +523,13 @@ object KledGraph {
           }
           val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
           val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
+          pt0 = p0
+          pt1 = p1
+
           p = p0 + p1 // factor 1-0
         }
 
-        val p1= p
+        val pi1= p
 
         childs.foreach(x=>{ // childs variables
           if(mapIndex.contains(x)){
@@ -542,7 +547,7 @@ object KledGraph {
           }
         })
 
-        var p2 = p
+        var pi2 = p
         val variableSet = items.toSet // factors
         seqFactor.foreach(x=> {
           if(x._isUsed == false){
@@ -561,8 +566,8 @@ object KledGraph {
         })
 
         if(p == 1.0){
-          println("the stage 1 p is:"+p1)
-          println("the stage 2 p is:"+p2)
+          println("the stage 1 p is:"+pi1 + " and p0="+pt0+" ,p1="+pt1)
+          println("the stage 2 p is:"+pi2)
           println("the result p is:"+p)
         }
 
