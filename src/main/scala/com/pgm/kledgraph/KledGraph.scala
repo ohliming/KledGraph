@@ -500,7 +500,7 @@ object KledGraph {
     })
 
     val items = factor.getVariables
-    var p:Double  = 1.0 // result
+    var p:Double  = 0.0 // result
     var index = 0; val border = math.pow(2.0, items.size)
     val eliVariables = delFactor.getVariables
     var indexSeq:Seq[Int] = Seq()
