@@ -455,9 +455,9 @@ object KledGraph {
   }
 
   def sumPositionsPro(cpds:Seq[Double], posMap:Map[Int,Int], len:Int) = {
-    var p = 1.0; var count = 1
+    var p = 0.0; var count = 1
     val loop = new Breaks
-    cpds.foreach(pr1=>{
+    cpds.foreach(pi=>{
       val index = pos2Seq(count, len)
       var bFlag = true
       loop.breakable {
@@ -469,7 +469,9 @@ object KledGraph {
         })
       }
 
-      if(bFlag) p = p * pr1
+      if(bFlag && pr1 > 0.0){
+        p = if(p > 0.0) p * pi else pi
+      }
       count += 1
     })
     p
@@ -535,13 +537,12 @@ object KledGraph {
             }
 
             if(cp1 > 0.0) {
-              p= p*cp1
+              p=  if(p > 0.0) p*cp1 else cp1
             }
           }
         })
 
         val p2 = p
-
         val variableSet = items.toSet // factors
         seqFactor.foreach(x=> {
           if(x._isUsed == false){
@@ -553,7 +554,7 @@ object KledGraph {
                 tmpSeq = tmpSeq :+ 1
               })
               val ps = getCPDPosition(tmpSeq)
-              p = p * x._cpds(ps)
+              p =  if(p > 0.0) p * x._cpds(ps) else x._cpds(ps)
               x.setUsed
             }
           }
@@ -562,7 +563,7 @@ object KledGraph {
         if(p > 1.0) {
           println("the staged 1 is "+ p1)
           println("the staged 2 is "+ p2)
-          println("the result p is:"+p)
+          println("the result p is:"+ p)
         }
 
         factor._cpds = factor._cpds :+ p
