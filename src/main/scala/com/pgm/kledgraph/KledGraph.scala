@@ -480,7 +480,7 @@ object KledGraph {
   def sumProductEliminateVar(mapFactor:Map[Int,BayesFactor], seqFactor:Seq[BayesFactor], variable: BayesFactor, target: BayesFactor) = {
     val bayes = variable._eliminate
     val setBayesVal = seqFactor.map(x => x._eliminate).toSet
-    var factor:BayesFactor = new BayesFactor(bayes)
+    var factor: BayesFactor = new BayesFactor(bayes)
     var delFactor = mapFactor(bayes._v)
 
     var parentSet:Set[BayesVar] = Set()
@@ -560,6 +560,12 @@ object KledGraph {
           }
         })
 
+        if(p > 0.0) {
+          println("the staged 1 is "+ p1)
+          println("the staged 2 is "+ p2)
+          println("the result p is:"+ p)
+        }
+
         factor._cpds = factor._cpds :+ p
         index += 1
         addSeq(indexSeq)
@@ -584,7 +590,7 @@ object KledGraph {
       val factor = sumProductEliminateVar(mapFactor, seqFactor, variable, target)
       if(factor._cpds.size > 0){
         seqFactor = seqFactor :+ factor
-        println("the factor cpd is" + factor._cpds)
+        println("the factor cpds is:"+factor._cpds)
       }
     })
 
