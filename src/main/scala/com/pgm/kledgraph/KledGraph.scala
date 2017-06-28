@@ -555,7 +555,7 @@ object KledGraph {
           }
         })
 
-        if(p > 0) println("the result p is:"+p)
+        if(p > 1.0) println("the result p is:"+p)
         factor._cpds = factor._cpds :+ p
         index += 1
         addSeq(indexSeq)
