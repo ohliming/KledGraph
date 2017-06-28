@@ -521,11 +521,8 @@ object KledGraph {
           }
           val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
           val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
-          println("the p1 and p0 is="+p1+","+p0)
           p = p0 + p1 // factor 1-0
         }
-
-        val p1 = p
 
         childs.foreach(x=>{ // childs variables
           if(mapIndex.contains(x)){
@@ -543,13 +540,12 @@ object KledGraph {
           }
         })
 
-        val p2 = p
         val variableSet = items.toSet // factors
         seqFactor.foreach(x=> {
           if(x._isUsed == false){
             val fVariable = x.getVariables.toSet
             val diff = fVariable -- variableSet
-            if( diff.size == 0){
+            if( diff.size == 0 ){
               var tmpSeq:Seq[Int] = Seq()
               x._variables.foreach(v => {
                 tmpSeq = tmpSeq :+ 1
@@ -560,12 +556,6 @@ object KledGraph {
             }
           }
         })
-
-        if(p > 0.0) {
-          println("the staged 1 is "+ p1)
-          println("the staged 2 is "+ p2)
-          println("the result p is:"+ p)
-        }
 
         factor._cpds = factor._cpds :+ p
         index += 1
@@ -597,7 +587,6 @@ object KledGraph {
 
     val targetFactor = seqFactor.last
     val targetM = mapFactor(target._eliminate._v) // other
-    println("the targetFactor is="+targetFactor._cpds)
     var p:Double = targetFactor._cpds.last
     if(mapEvidences.size > 0){
       var posMap:Map[Int,Int] = Map()
@@ -616,6 +605,7 @@ object KledGraph {
         pr =  sumPositionsPro(targetM._cpdNegative, posMap, targetM._variables.size)
       }
 
+      println("the pr is="+pr)
       p = pr * p
     }
 
