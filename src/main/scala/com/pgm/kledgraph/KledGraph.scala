@@ -469,7 +469,7 @@ object KledGraph {
         })
       }
 
-      if(bFlag && pr1 > 0.0){
+      if(bFlag && pi > 0.0){
         p = if(p > 0.0) p * pi else pi
       }
       count += 1
