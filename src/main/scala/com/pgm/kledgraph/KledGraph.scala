@@ -544,9 +544,10 @@ object KledGraph {
 
         val variableSet = items.toSet // factors
         seqFactor.foreach(x=> {
-          if(x._isUsed == false){
+          if( x._isUsed == false ){
             val fVariable = x.getVariables.toSet
             val diff = fVariable -- variableSet
+            println("the diff size is:"+diff.size)
             if( diff.size == 0 ){
               var tmpSeq:Seq[Int] = Seq()
               x._variables.foreach(v => {
@@ -604,7 +605,7 @@ object KledGraph {
       if(tag == 1){
         pr = sumPositionsPro(targetM._cpdPositive, posMap, targetM._variables.size)
       }else{
-        pr =  sumPositionsPro(targetM._cpdNegative, posMap, targetM._variables.size)
+        pr = sumPositionsPro(targetM._cpdNegative, posMap, targetM._variables.size)
       }
 
       p = pr * p
