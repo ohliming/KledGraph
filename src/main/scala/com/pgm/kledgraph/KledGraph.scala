@@ -560,8 +560,9 @@ object KledGraph {
           }
         })
 
-        println("the p2 ="+p2 +" and p ="+p)
-
+        if(p != p){
+          println("the p2 ="+p2 +" and p ="+p)
+        }
         factor._cpds = factor._cpds :+ p
         index += 1
         addSeq(indexSeq)
