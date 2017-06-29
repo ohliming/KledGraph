@@ -587,6 +587,7 @@ object KledGraph {
       val factor = sumProductEliminateVar(mapFactor, seqFactor, variable, target)
       if(factor._cpds.size > 0){
         seqFactor = seqFactor :+ factor
+        println("the seqFactor size is:"+ seqFactor.size)
         //println("the topic is:" +factor._eliminate._v+ "the factor cpds is:" +factor._cpds)
       }
     })
