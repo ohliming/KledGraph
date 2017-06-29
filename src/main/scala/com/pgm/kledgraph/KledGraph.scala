@@ -560,7 +560,7 @@ object KledGraph {
           }
         })
 
-        if(p != p){
+        if(p2 != p){
           println("the p2 ="+p2 +" and p ="+p)
         }
         factor._cpds = factor._cpds :+ p
@@ -583,11 +583,11 @@ object KledGraph {
       pos += 1
     })
 
-    seqVariable.foreach(variable => {// loop the variables
+    seqVariable.foreach(variable => { // loop the variables
       val factor = sumProductEliminateVar(mapFactor, seqFactor, variable, target)
       if(factor._cpds.size > 0){
         seqFactor = seqFactor :+ factor
-        println("the topic is:"+factor._eliminate._v+"the factor cpds is:"+factor._cpds)
+        //println("the topic is:"+factor._eliminate._v+"the factor cpds is:"+factor._cpds)
       }
     })
 
