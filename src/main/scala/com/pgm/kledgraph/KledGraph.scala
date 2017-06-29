@@ -519,6 +519,7 @@ object KledGraph {
               posMap += ((i -> mapIndex(eliVariables(i))))
             }
           }
+
           val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
           val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
 
@@ -582,7 +583,7 @@ object KledGraph {
       val factor = sumProductEliminateVar(mapFactor, seqFactor, variable, target)
       if(factor._cpds.size > 0){
         seqFactor = seqFactor :+ factor
-        println("the factor cpds is:"+factor._cpds)
+        println("the topic is:"+factor._eliminate._v+"the factor cpds is:"+factor._cpds)
       }
     })
 
