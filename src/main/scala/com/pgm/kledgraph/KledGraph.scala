@@ -656,7 +656,10 @@ object KledGraph {
     mapFactor.foreach(x=>{ setFactor.add(x._2) })
 
     val sequence = getSequence(setFactor)
-    println("the sequence is:"+ sequence.foreach(x=> x._eliminate._v) +" and size is:"+sequence.size)
+    println("the sequence and size is:"+sequence.size)
+    sequence.foreach(x=>{
+      println("the v is"+x._eliminate._v)
+    })
     val pos = 5
     val target = sequence(pos); sequence.drop(pos)
 
