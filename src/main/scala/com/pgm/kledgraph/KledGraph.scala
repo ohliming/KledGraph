@@ -433,7 +433,6 @@ object KledGraph {
     var variable:Seq[BayesFactor] = Seq()
     setFactor.foreach(factor => {
       variable = variable :+ factor
-      println("the factor num is:"+factor._eliminate.num)
     })
     variable.sortWith(_._eliminate.num < _._eliminate.num)
   }
@@ -659,7 +658,7 @@ object KledGraph {
     val sequence = getSequence(setFactor)
     println("the sequence and size is:"+sequence.size)
     sequence.foreach(x=>{
-      println("the v is"+x._eliminate._v)
+      println("the v is"+x._eliminate._v+" and num is:"+x._eliminate.num)
     })
     val pos = 5
     val target = sequence(pos); sequence.drop(pos)
