@@ -536,9 +536,7 @@ object KledGraph {
               }
             }
 
-            if( cp1 > 0.0 ) {
-              p =  if(p > 0.0) p*cp1 else cp1
-            }
+            if( cp1 > 0.0 ) { p =  if(p > 0.0) p*cp1 else cp1 }
           }
         })
 
@@ -551,7 +549,9 @@ object KledGraph {
             if( diff.size == 0 ){
               var tmpSeq:Seq[Int] = Seq()
               x._variables.foreach(v => {
-                tmpSeq = tmpSeq :+ 1
+                if(mapIndex.contains(v)){
+                  tmpSeq = tmpSeq :+ mapIndex(v)
+                }
               })
               val ps = getCPDPosition(tmpSeq)
               p =  if(p > 0.0) p * x._cpds(ps) else x._cpds(ps)
@@ -560,9 +560,7 @@ object KledGraph {
           }
         })
 
-        if(p2 != p){
-          println("the p2 ="+p2 +" and p ="+p)
-        }
+        if(p2 != p){ println("the p2 ="+p2+" and p="+p) }
         factor._cpds = factor._cpds :+ p
         index += 1
         addSeq(indexSeq)
@@ -587,7 +585,6 @@ object KledGraph {
       val factor = sumProductEliminateVar(mapFactor, seqFactor, variable, target)
       if(factor._cpds.size > 0){
         seqFactor = seqFactor :+ factor
-        //println("the topic is:" +factor._eliminate._v+ "the factor cpds is:" +factor._cpds)
       }
     })
 
