@@ -560,7 +560,7 @@ object KledGraph {
           }
         })
 
-        if(p2 != p){ println("the p2 ="+p2+" and p="+p) }
+        if(p2 != p){ println( "the p2 ="+p2+" and p="+p) }
         factor._cpds = factor._cpds :+ p
         index += 1
         addSeq(indexSeq)
@@ -654,10 +654,7 @@ object KledGraph {
 
     val sequence = getSequence(setFactor)
     println("the sequence and size is:"+sequence.size)
-    sequence.foreach(x=>{
-      println("the v is"+x._eliminate._v+" and num is:"+x._eliminate.num)
-    })
-    val pos = 5
+    val pos = 170
     val target = sequence(pos); sequence.drop(pos)
 
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
