@@ -433,6 +433,7 @@ object KledGraph {
     var variable:Seq[BayesFactor] = Seq()
     setFactor.foreach(factor => {
       variable = variable :+ factor
+      println("the factor num is:"+factor._eliminate.num)
     })
     variable.sortWith(_._eliminate.num < _._eliminate.num)
   }
