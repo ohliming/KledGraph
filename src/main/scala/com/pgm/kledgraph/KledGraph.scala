@@ -470,7 +470,7 @@ object KledGraph {
       }
 
       if(bFlag && pi > 0.0){
-        p = if(p > 0.0) p * pi else pi
+        p = if(p > 0.0) p  + pi else pi
       }
       count += 1
     })
@@ -522,12 +522,11 @@ object KledGraph {
 
           val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
           val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
-
           p = p0 + p1 // factor 1-0
         }
 
         childs.foreach(x=>{ // childs variables
-          if(mapIndex.contains(x)){
+          if( mapIndex.contains(x) ){
             val childFactor = mapFactor(x._v)
             var cp1 = 1.0
             for(i<- 0 until childFactor._variables.size){
@@ -607,7 +606,6 @@ object KledGraph {
       }else{
         pr = sumPositionsPro(targetM._cpdNegative, posMap, targetM._variables.size)
       }
-
       p = pr * p
     }
 
