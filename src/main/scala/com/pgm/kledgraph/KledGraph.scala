@@ -351,7 +351,7 @@ object KledGraph {
     var p:Double = 0.0
     if( fenmu > 0 ){
       p = if(fenzi < fenmu) fenzi/fenmu else 1.0
-      if(p == 1..0){
+      if(p == 1.0){
         println("the fenzi ="+fenzi+" and fenmu="+fenmu)
       }
     }

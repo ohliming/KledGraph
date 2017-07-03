@@ -16,7 +16,7 @@ class BayesVar(v:Int) {
   var _parents:Set[BayesVar] = Set()
   var _childs:Set[BayesVar] = Set()
 
-  def num = _parents.size
+  def num = _parents.size + _childs.size
   def setVar(value :Int) = _v = value
   def addChild(child:BayesVar) = _childs.add(child)
   def addParent(parent:BayesVar) = _parents.add(parent)
@@ -31,7 +31,7 @@ class BayesFactor(e:BayesVar){
   var _isUsed = false
 
   def getVariables = this._variables
-  def setUsed = _isUsed = true
+  def setUsed = { _isUsed = true }
   def num = this._variables.size
   def addVariable(v:BayesVar) = {this._variables = this._variables :+ v}
 }
