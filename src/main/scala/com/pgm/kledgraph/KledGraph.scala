@@ -351,10 +351,13 @@ object KledGraph {
     var p:Double = 0.0
     if( fenmu > 0 ){
       p = if(fenzi < fenmu) fenzi/fenmu else 1.0
+      if(p == 1..0){
+        println("the fenzi ="+fenzi+" and fenmu="+fenmu)
+      }
     }
 
     if( p < threshold && p > 0 ){ // do something
-      val pi = (1-p)*fenmu
+      val pi = (1-threshold- p)*fenmu
       val size = if(pi > seqFenzi.size) seqFenzi.size else pi.toInt
       val posSet = randomSet(size, seqFenzi.size)
       posSet.foreach(pos => {
@@ -385,6 +388,7 @@ object KledGraph {
           while( index < border ){
             val p1 = preConditionPro(vecRecords, mapRowStudent, x._1, topicIndex, 1, variables, indSeq, mapIndex)
             val p0 =  1 - p1
+
             x._2._cpdPositive = x._2._cpdPositive :+ p1
             x._2._cpdNegative = x._2._cpdNegative :+ p0
             index += 1
@@ -522,8 +526,8 @@ object KledGraph {
 
           val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
           val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
-          println("the cpds positive  ="+delFactor._cpdPositive)
-          println("the cpds negitive  ="+delFactor._cpdNegative)
+          println("the cpds positive ="+delFactor._cpdPositive)
+          println("the cpds negitive ="+delFactor._cpdNegative)
           p = p0 + p1 // factor 1-0
         }
 
