@@ -351,13 +351,10 @@ object KledGraph {
     var p:Double = 0.0
     if( fenmu > 0 ){
       p = if(fenzi < fenmu) fenzi/fenmu else 1.0
-      if(p == 1.0){
-        println("the fenzi ="+fenzi+" and fenmu="+fenmu)
-      }
     }
 
     if( p < threshold && p > 0 ){ // do something
-      val pi = (1-threshold- p)*fenmu
+      val pi = (1- p)*fenmu
       val size = if(pi > seqFenzi.size) seqFenzi.size else pi.toInt
       val posSet = randomSet(size, seqFenzi.size)
       posSet.foreach(pos => {
@@ -367,6 +364,10 @@ object KledGraph {
       })
 
       p = fenzi / fenmu
+    }
+
+    if(p == 1.0){
+      println("the fenzi ="+fenzi+" and fenmu="+fenmu)
     }
 
     p
