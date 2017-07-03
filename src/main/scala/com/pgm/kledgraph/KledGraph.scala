@@ -522,11 +522,11 @@ object KledGraph {
 
           val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
           val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
-          println("the p1="+p1 +" and p0="+p0)
+          println("the cpds positive  ="+delFactor._cpdPositive)
+          println("the cpds negitive  ="+delFactor._cpdNegative)
           p = p0 + p1 // factor 1-0
         }
 
-        println("the p 1 staged is = "+p)
         childs.foreach(x=>{ // childs variables
           if( mapIndex.contains(x) ){
             val childFactor = mapFactor(x._v)
