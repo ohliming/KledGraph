@@ -469,8 +469,8 @@ object KledGraph {
         })
       }
 
-      if(bFlag && pi > 0.0){
-        p = if(p > 0.0) p  + pi else pi
+      if( bFlag && pi > 0.0 ){
+        p = if(p > 0.0) p + pi else pi
       }
       count += 1
     })
@@ -525,6 +525,7 @@ object KledGraph {
           p = p0 + p1 // factor 1-0
         }
 
+        println("the p 1 staged is = "+p)
         childs.foreach(x=>{ // childs variables
           if( mapIndex.contains(x) ){
             val childFactor = mapFactor(x._v)
