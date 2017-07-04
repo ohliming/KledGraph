@@ -547,6 +547,7 @@ object KledGraph {
           p = p0+p1
         }
 
+        /*
         childs.foreach(x=>{ // childs variables
           if( mapIndex.contains(x) ){
             val childFactor = mapFactor(x._v)
@@ -561,7 +562,6 @@ object KledGraph {
           }
         })
 
-        /*
         val p2 = p
         val variableSet = items.toSet // factors
         seqFactor.foreach(x=> {
