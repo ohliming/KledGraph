@@ -546,6 +546,8 @@ object KledGraph {
           val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
           if(p1 > 1.0){
             println("the p1 ="+p1+" and p0 ="+p0)
+            println("the positive is:"+delFactor._cpdPositive)
+            println("the negative is:"+delFactor._cpdNegative)
           }
           p = p0 + p1 // factor 1-0
         }
