@@ -544,11 +544,6 @@ object KledGraph {
 
           val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
           val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
-          if( p1 > 1.0 ){
-            println("the p1 ="+p1+" and p0 ="+p0)
-            println("the positive is:"+delFactor._cpdPositive)
-            println("the negative is:"+delFactor._cpdNegative)
-          }
           p = p0+p1
         }
 
@@ -566,6 +561,7 @@ object KledGraph {
           }
         })
 
+        /*
         val p2 = p
         val variableSet = items.toSet // factors
         seqFactor.foreach(x=> {
@@ -585,8 +581,9 @@ object KledGraph {
             }
           }
         })
+        */
 
-        if(p2 != p){ println( "the p2 ="+p2+" and p="+p) }
+        //if(p2 != p){ println( "the p2 ="+p2+" and p="+p) }
         factor._cpds = factor._cpds :+ p
         index += 1
         addSeq(indexSeq)
