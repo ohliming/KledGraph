@@ -11,6 +11,8 @@ import scala.util.Random
 import org.json4s._
 import org.json4s.native.JsonMethods._
 
+import scala.collection.mutable
+
 object KledGraph {
   val stageDict: Map[String, Int] = Map(
     "CZ"->1,
@@ -50,6 +52,29 @@ object KledGraph {
     mapTopic
   }
 
+  def getStudents(sqlContext : HiveContext) = {
+    val sql = "select distinct f.system_id "+
+              "from ( "+
+              "select distinct a.system_id "+
+              "from(  select distinct system_id,org_id from entity_user where type=2 and org_type=2 ) a "+
+              "JOIN( select org_id from entity_school where enable=1 and private=0 ) b "+
+              "on a.org_id=b.org_id "+
+              "UNION ALL "+
+              "select distinct a.system_id "+
+              "from ( "+
+              "select distinct system_id,org_id from entity_user where type=2 and org_type=4 ) a "+
+              "JOIN( select org_id from entity_school where enable=1 and private=1 ) b "+
+              "on a.org_id=b.org_id ) f;"
+
+    var studSet:Set[Long] = Set()
+    val rows = sqlContext.sql(sql).collect()
+    rows.foreach(x => {
+      studSet.add(x.toString.toLong)
+    })
+
+    studSet
+  }
+
   def getQuestionTopic(mapTopic :Map[Int, String],sqlContext: HiveContext):(Map[Int, Set[Int]], Map[Int,Set[Int]]) = {
     var mapQuestTopic: Map[Int, Set[Int]] = Map()
     var mapTopicQuest: Map[Int, Set[Int]] = Map()
@@ -77,10 +102,10 @@ object KledGraph {
   }
 
   // cache the exceries records
-  def getStudRecords(mapQuestTopic: Map[Int, Set[Int]], mapTopic: Map[Int, String], sqlContext: HiveContext,subjectId:Int,stageId:Int) = {
+  def getStudRecords(mapQuestTopic: Map[Int, Set[Int]], mapTopic: Map[Int, String], studSet:Set[Long], sqlContext: HiveContext,subjectId:Int,stageId:Int) = {
     var listRecords:List[(Long, Int, Int)] = List() // records object
     var sql = "select a.student_id,a.question_id,a.result from entity_student_exercise as a join link_question_topic as b on " +
-      "(b.question_id=a.question_id) join entity_topic as c on (c.id = b.topic_id) where c.subject_id="+subjectId+" and c.stage_id ="+stageId + " and ret_num > 0 limit 200000"
+      "(b.question_id=a.question_id) join entity_topic as c on (c.id = b.topic_id) where c.subject_id="+subjectId+" and c.stage_id ="+stageId + " and ret_num > 0"
     val rows = sqlContext.sql(sql).collect()
     val setKeyTopic = mapTopic.map(x=>x._1).toSet
     val regex="""^\d+$""".r  //process effective records
@@ -90,7 +115,7 @@ object KledGraph {
       var result = x.get(2).toString
       var res = -1  // init
 
-      if ( mapQuestTopic.contains(questionId) ) {
+      if ( mapQuestTopic.contains(questionId) && studSet.contains(studentId) ) {
         val setTopic = mapQuestTopic(questionId)
         val setMerge = setKeyTopic & setTopic
         if (setMerge.size > 0) {
@@ -366,10 +391,6 @@ object KledGraph {
       p = fenzi / fenmu
     }
 
-    if(p == 1.0){
-      println("the fenzi ="+fenzi+" and fenmu="+fenmu)
-    }
-
     p
   }
 
@@ -388,7 +409,7 @@ object KledGraph {
           val topicIndex = mapIndex(x._1)
           while( index < border ){
             val p1 = preConditionPro(vecRecords, mapRowStudent, x._1, topicIndex, 1, variables, indSeq, mapIndex)
-            val p0 = if(p1 > 0 && p1 < 1.0)  1 - p1 else 0.0
+            val p0 = 1-p1
             x._2._cpdPositive = x._2._cpdPositive :+ p1
             x._2._cpdNegative = x._2._cpdNegative :+ p0
             index += 1
@@ -634,7 +655,10 @@ object KledGraph {
     val mapTopicQuest: Map[Int,Set[Int]] = pair._2
     println("the topic len is:" + mapTopicQuest.size)
 
-    val listRecords = getStudRecords(mapQuestTopic, mapTopic, sqlContext, subjectDict("cz_chemical"), stageDict("CZ"))
+    val studSet = getStudents(sqlContext)
+    println("the student count is:"+studSet.size)
+
+    val listRecords = getStudRecords(mapQuestTopic, mapTopic, studSet, sqlContext, subjectDict("cz_chemical"), stageDict("CZ"))
     println("the record len is:" + listRecords.length)
 
     var mapIndex:Map[Int, Int] = mapTopic2Index(mapTopic)
