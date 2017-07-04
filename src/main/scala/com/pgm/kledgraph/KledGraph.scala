@@ -388,7 +388,7 @@ object KledGraph {
           val topicIndex = mapIndex(x._1)
           while( index < border ){
             val p1 = preConditionPro(vecRecords, mapRowStudent, x._1, topicIndex, 1, variables, indSeq, mapIndex)
-            val p0 =  1 - p1
+            val p0 = if(p1 > 0 && p1 < 1.0)  1 - p1 else 0.0
 
             x._2._cpdPositive = x._2._cpdPositive :+ p1
             x._2._cpdNegative = x._2._cpdNegative :+ p0
