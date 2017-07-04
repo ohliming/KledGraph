@@ -53,21 +53,19 @@ object KledGraph {
   }
 
   def getStudents(sqlContext : HiveContext) = {
-    val sql = "select distinct f.system_id "+
-              "from ( "+
-              "select distinct a.system_id "+
-              "from(  select distinct system_id,org_id from entity_user where type=2 and org_type=2 ) a "+
-              "JOIN( select org_id from entity_school where enable=1 and private=0 ) b "+
-              "on a.org_id=b.org_id "+
-              "UNION ALL "+
-              "select distinct a.system_id "+
-              "from ( "+
-              "select distinct system_id,org_id from entity_user where type=2 and org_type=4 ) a "+
-              "JOIN( select org_id from entity_school where enable=1 and private=1 ) b "+
-              "on a.org_id=b.org_id ) f;"
+    val stuSql = "select distinct f.system_id from ( "+
+                 "select distinct a.system_id " +
+                 "from ( select distinct system_id,org_id from entity_user where type=2 and org_type=2 ) a "+
+                 "join ( select org_id from entity_school where enable=1 and private=0 ) b "+
+                 "on a.org_id=b.org_id "+
+                 "UNION ALL " +
+                 "select distinct a.system_id from ( "+
+                 "select distinct system_id,org_id from entity_user where type=2 and org_type=4 ) a " +
+                 "join ( select org_id from entity_school where enable=1 and private=1 ) b " +
+                 "on a.org_id=b.org_id ) f"
 
     var studSet:Set[Long] = Set()
-    val rows = sqlContext.sql(sql).collect()
+    val rows = sqlContext.sql(stuSql).collect()
     rows.foreach(x => {
       studSet.add(x.toString.toLong)
     })
