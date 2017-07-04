@@ -389,7 +389,6 @@ object KledGraph {
           while( index < border ){
             val p1 = preConditionPro(vecRecords, mapRowStudent, x._1, topicIndex, 1, variables, indSeq, mapIndex)
             val p0 = if(p1 > 0 && p1 < 1.0)  1 - p1 else 0.0
-
             x._2._cpdPositive = x._2._cpdPositive :+ p1
             x._2._cpdNegative = x._2._cpdNegative :+ p0
             index += 1
@@ -527,7 +526,9 @@ object KledGraph {
 
           val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
           val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
-          println("the p1 ="+p1+" and p0 ="+p0)
+          if(p1 > 1.0){
+            println("the p1 ="+p1+" and p0 ="+p0)
+          }
           p = p0 + p1 // factor 1-0
         }
 
