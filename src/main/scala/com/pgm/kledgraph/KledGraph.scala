@@ -549,7 +549,7 @@ object KledGraph {
             println("the positive is:"+delFactor._cpdPositive)
             println("the negative is:"+delFactor._cpdNegative)
           }
-          p = p0 + p1 // factor 1-0
+          p = p0*p1
         }
 
         childs.foreach(x=>{ // childs variables
