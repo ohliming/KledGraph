@@ -492,7 +492,7 @@ object KledGraph {
       }
 
       if( bFlag && pi > 0.0 ){
-        p = if(p > 0.0) p + pi else pi
+        p = if(p > 0.0) p * pi else pi
       }
       count += 1
     })
@@ -544,12 +544,12 @@ object KledGraph {
 
           val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
           val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
-          if(p1 > 1.0){
+          if( p1 > 1.0 ){
             println("the p1 ="+p1+" and p0 ="+p0)
             println("the positive is:"+delFactor._cpdPositive)
             println("the negative is:"+delFactor._cpdNegative)
           }
-          p = p0*p1
+          p = p0+p1
         }
 
         childs.foreach(x=>{ // childs variables
