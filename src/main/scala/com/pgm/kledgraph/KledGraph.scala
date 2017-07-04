@@ -67,7 +67,7 @@ object KledGraph {
     var studSet:Set[Long] = Set()
     val rows = sqlContext.sql(stuSql).collect()
     rows.foreach(x => {
-      studSet.add(x.toString.toLong)
+      studSet.add(x.get(0).toString.toLong)
     })
 
     studSet
