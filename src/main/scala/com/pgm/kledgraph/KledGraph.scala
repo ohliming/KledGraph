@@ -506,21 +506,24 @@ object KledGraph {
 
     var parentSet:Set[BayesVar] = Set()
     val parents = bayes._parents
+    var varSet:Set[BayesVar] = Set()
     parents.foreach(x=>{
       if(!setBayesVal.contains(x)){
-        factor.addVariable(x)
         parentSet.add(x)
+        varSet.add(x)
       }
     })
 
     val childs = bayes._childs
     childs.foreach( x=> {
       if(!setBayesVal.contains(x)) {
-        factor.addVariable(x)
+        varSet.add(x)
         val xparents = mapFactor(x._v)._eliminate._parents
-        xparents.foreach(parent => { factor.addVariable(parent)})
+        xparents.foreach(parent => { varSet.add(parent)})
       }
     })
+
+    varSet.foreach(v => factor.addVariable(v))
 
     var items = factor.getVariables
     var p:Double  = 0.0 // result
