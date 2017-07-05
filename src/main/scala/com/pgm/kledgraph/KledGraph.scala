@@ -544,7 +544,7 @@ object KledGraph {
 
           val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
           val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
-          p = p0+p1
+          p = if( p > 0) (p0+p1) * p else p0 + p1
         }
 
         /*
