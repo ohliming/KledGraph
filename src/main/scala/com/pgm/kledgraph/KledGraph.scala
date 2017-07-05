@@ -612,7 +612,7 @@ object KledGraph {
     })
 
     val targetFactor = seqFactor.last
-    println("the target "+targetFactor._eliminate._v +" last is:"+targetFactor._cpds)
+    println("the target "+targetFactor._variables.last._v +" last is:"+targetFactor._cpds)
     val targetM = mapFactor(target._eliminate._v) // other
     var p:Double = targetFactor._cpds.last
     if(mapEvidences.size > 0){
