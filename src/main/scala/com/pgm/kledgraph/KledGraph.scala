@@ -40,6 +40,8 @@ object KledGraph {
     "gz_political"->18
   )
 
+  val loop = new Breaks
+
   def getTopic(stage: Int, subject: Int, sqlContext : HiveContext): Map[Int, String] = {
     var mapTopic :Map[Int, String] = Map()
     var sql = "select id, name from entity_topic where subject_id= "+ subject +" and stage_id = " + stage
@@ -290,7 +292,6 @@ object KledGraph {
   }
 
   def addSeq(indSeq:Seq[Int]) = {
-    val loop = new Breaks
     loop.breakable {
       for(pos <- 0 until indSeq.size){
         if(indSeq(pos) == 0){
@@ -329,7 +330,6 @@ object KledGraph {
 
   def preConditionPro(vecRecords:Seq[Vector], mapRowStudent:Map[Int, Long], topic:Int, position:Int, label:Int, variables:Seq[BayesVar],
                       indSeq:Seq[Int], mapIndex:Map[Int,Int], threshold:Double = 0.2):Double = {
-    val loop  = new Breaks
     var index = 0
     var setFenmu:Set[Long] = Set()
     var seqFenzi:Seq[Long] = Seq()
@@ -478,7 +478,6 @@ object KledGraph {
 
   def sumPositionsPro(cpds:Seq[Double], posMap:Map[Int,Int], len:Int) = {
     var p = 0.0; var count = 1
-    val loop = new Breaks
     cpds.foreach(pi=>{
       val index = pos2Seq(count, len)
       var bFlag = true
@@ -521,11 +520,12 @@ object KledGraph {
       }
     })
 
-    val items = factor.getVariables
+    var items = factor.getVariables
     var p:Double  = 0.0 // result
     var index = 0; val border = math.pow(2.0, items.size)
     val eliVariables = delFactor.getVariables
     var indexSeq:Seq[Int] = Seq()
+
     items.foreach(x=>{ indexSeq = indexSeq :+ 0})
     addSeq(indexSeq)
 
@@ -612,7 +612,7 @@ object KledGraph {
     })
 
     val targetFactor = seqFactor.last
-    println("the target "+targetFactor._variables.last._v +" last is:"+targetFactor._cpds)
+    println("the target "+ targetFactor._variables.last._v + " last is:"+targetFactor._cpds)
     val targetM = mapFactor(target._eliminate._v) // other
     var p:Double = targetFactor._cpds.last
     if(mapEvidences.size > 0){
@@ -680,9 +680,19 @@ object KledGraph {
 
     val sequence = getSequence(setFactor)
     println("the sequence and size is:"+sequence.size)
-    val pos = 170
-    val target = sequence(pos); sequence.drop(pos)
-    println("the target :"+target._eliminate._v)
+    val _v = 15013
+    var pos = 0
+    loop.breakable{
+      for(i <- 0 until sequence.size){
+        if(sequence(i)._eliminate._v == _v){
+          pos = i
+          loop.break
+        }
+      }
+    }
+
+    var target = sequence(pos); sequence.drop(pos)
+    println("the target :"+_v)
 
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
     val p = condSumProductVE(mapFactor, sequence, target, 1, mapEvidences)
