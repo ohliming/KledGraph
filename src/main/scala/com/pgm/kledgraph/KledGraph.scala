@@ -517,6 +517,8 @@ object KledGraph {
     childs.foreach( x=> {
       if(!setBayesVal.contains(x)) {
         factor.addVariable(x)
+        val xparents = mapFactor(x._v)._eliminate._parents
+        xparents.foreach(parent => { factor.addVariable(parent)})
       }
     })
 
@@ -529,6 +531,7 @@ object KledGraph {
     items.foreach(x=>{ indexSeq = indexSeq :+ 0})
     addSeq(indexSeq)
 
+    println("the variable is:"+ items.map(x => x._v))
     if( items.size > 0 ){
       while( index < border ) {
         var mapIndex:Map[BayesVar,Int] = Map()
@@ -551,14 +554,28 @@ object KledGraph {
         childs.foreach(x=>{ // childs variables
           if( mapIndex.contains(x) ){
             val childFactor = mapFactor(x._v)
-            var cp1 = 1.0
-            for(i<- 0 until childFactor._variables.size){
-              if(childFactor._variables(i).eq(bayes)){
-                cp1 =  if (mapIndex(x) == 1) cp1 * childFactor._cpdPositive(i) else cp1 * childFactor._cpdNegative(i)
+
+            var posMap:Map[Int,Int] = Map()
+            var indexSeq:Seq[Int] = Seq()
+            var tpos = 0
+            for(i <- 0 until  childFactor._variables.size){
+              val b = childFactor._variables(i)
+              if(b.eq(bayes)){
+                tpos = i
+                indexSeq = indexSeq :+ 0
+              }else{
+                if( mapIndex.contains(b) ){
+                  indexSeq = indexSeq :+ mapIndex(b)
+                }
               }
             }
 
-            if( cp1 > 0.0 ) { p =  if(p > 0.0) p*cp1 else cp1 }
+            val pos0 = getCPDPosition(indexSeq); indexSeq.update(tpos, 1)
+            val pos1 = getCPDPosition(indexSeq)
+            val cp1 = childFactor._cpdPositive(pos1) + childFactor._cpdNegative(pos0)
+            if(cp1 > 0 ){
+              p = if(p > 0) p * cp1 else cp1
+            }
           }
         })
 
@@ -581,9 +598,10 @@ object KledGraph {
             }
           }
         })
-        */
 
-        //if(p2 != p){ println( "the p2 ="+p2+" and p="+p) }
+        if(p2 != p){ println( "the p2 ="+p2+" and p="+p) }
+
+        */
         factor._cpds = factor._cpds :+ p
         index += 1
         addSeq(indexSeq)
@@ -679,6 +697,7 @@ object KledGraph {
     mapFactor.foreach(x=>{ setFactor.add(x._2) })
 
     val sequence = getSequence(setFactor)
+    // marginal probability
     println("the sequence and size is:"+sequence.size)
     val _v = 15013
     var pos = 0
