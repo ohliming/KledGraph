@@ -612,7 +612,7 @@ object KledGraph {
     })
 
     val targetFactor = seqFactor.last
-    println("the target last is:"+targetFactor._cpds)
+    println("the target "+targetFactor._eliminate._v +" last is:"+targetFactor._cpds)
     val targetM = mapFactor(target._eliminate._v) // other
     var p:Double = targetFactor._cpds.last
     if(mapEvidences.size > 0){
@@ -682,6 +682,7 @@ object KledGraph {
     println("the sequence and size is:"+sequence.size)
     val pos = 170
     val target = sequence(pos); sequence.drop(pos)
+    println("the target :"+target._eliminate._v)
 
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
     val p = condSumProductVE(mapFactor, sequence, target, 1, mapEvidences)
