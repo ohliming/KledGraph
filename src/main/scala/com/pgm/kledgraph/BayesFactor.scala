@@ -1,7 +1,6 @@
 package com.pgm.kledgraph
 
 import org.apache.spark.SparkContext
-import scala.collection.mutable
 import scala.collection.mutable.{Map, Seq, Set}
 
 import org.json4s._
@@ -23,7 +22,7 @@ class BayesVar(v:Int) {
 }
 
 class BayesFactor(e:BayesVar){
-  val _eliminate = e
+  var _eliminate = e
   var _variables:Seq[BayesVar] = Seq()
   var _cpdPositive:Seq[Double] = Seq(0.0) // positive
   var _cpdNegative:Seq[Double] = Seq(0.0) // negative

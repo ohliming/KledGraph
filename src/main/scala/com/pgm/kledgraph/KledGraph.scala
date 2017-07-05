@@ -11,8 +11,6 @@ import scala.util.Random
 import org.json4s._
 import org.json4s.native.JsonMethods._
 
-import scala.collection.mutable
-
 object KledGraph {
   val stageDict: Map[String, Int] = Map(
     "CZ"->1,
@@ -451,12 +449,20 @@ object KledGraph {
     mapIndex
   }
 
-  def getSequence(setFactor:Set[BayesFactor]) = {
+  def getSequence(setFactor:Set[BayesFactor], v:Int) = {
     var variable:Seq[BayesFactor] = Seq()
+    var vVariable:Seq[BayesFactor] = Seq() // include v factors
     setFactor.foreach(factor => {
-      variable = variable :+ factor
+      val fSet = factor.getVariables.map(x => x._v).toSet
+      if(fSet.contains(v)){
+        vVariable = vVariable :+ factor
+      }else{
+        variable = variable :+ factor
+      }
     })
+
     variable.sortWith(_._eliminate.num < _._eliminate.num)
+    variable ++ vVariable // result
   }
 
   def pos2Seq(x:Int, len:Int) = {
@@ -523,7 +529,7 @@ object KledGraph {
       }
     })
 
-    varSet.foreach(v => factor.addVariable(v))
+    varSet.foreach(v => factor.addVariable(v)) // add variables
 
     var items = factor.getVariables
     var p:Double  = 0.0 // result
@@ -699,11 +705,12 @@ object KledGraph {
     var setFactor:Set[BayesFactor] = Set() // factors set
     mapFactor.foreach(x=>{ setFactor.add(x._2) })
 
-    val sequence = getSequence(setFactor)
+
     // marginal probability
-    println("the sequence and size is:"+sequence.size)
     val _v = 15013
     var pos = 0
+    val sequence = getSequence(setFactor, _v)
+    println("the sequence and size is:"+sequence.size)
     loop.breakable{
       for(i <- 0 until sequence.size){
         if(sequence(i)._eliminate._v == _v){
@@ -715,7 +722,6 @@ object KledGraph {
 
     var target = sequence(pos); sequence.drop(pos)
     println("the target :"+_v)
-
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
     val p = condSumProductVE(mapFactor, sequence, target, 1, mapEvidences)
     println("the result p=" + p)  // output p
