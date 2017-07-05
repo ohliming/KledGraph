@@ -721,6 +721,7 @@ object KledGraph {
     }
 
     var target = sequence(pos); sequence.drop(pos)
+    println("the seqence last is:"+ sequence.last.getVariables)
     println("the target :"+_v)
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
     val p = condSumProductVE(mapFactor, sequence, target, 1, mapEvidences)
