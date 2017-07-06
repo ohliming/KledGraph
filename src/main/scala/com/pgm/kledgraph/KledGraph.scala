@@ -11,6 +11,8 @@ import scala.util.Random
 import org.json4s._
 import org.json4s.native.JsonMethods._
 
+import scala.collection.mutable
+
 object KledGraph {
   val stageDict: Map[String, Int] = Map(
     "CZ"->1,
@@ -507,6 +509,41 @@ object KledGraph {
     p
   }
 
+  def getTopChilds(childs:Set[BayesVar], mapFactor:Map[Int,BayesFactor],setBayesVal:scala.collection.immutable.Set[BayesVar], varSet:Set[BayesVar], bayes: BayesVar, n:Int) = {
+    // process childs
+    var childMap:Map[BayesVar,Double] = Map()
+    childs.foreach( x=> {
+      if(!setBayesVal.contains(x)){
+        var indexSeq:Seq[Int] = Seq()
+        val f = mapFactor(x._v)
+        val xVariable = f.getVariables
+        xVariable.foreach(v => {
+          if(v.eq(bayes)){
+            indexSeq = indexSeq :+ 1
+          }else{
+            indexSeq = indexSeq :+ 0
+          }
+        })
+
+        val pos = getCPDPosition(indexSeq)
+        val p1 = f._cpdPositive(pos)
+        childMap += ((x -> p1))
+      }
+    })
+
+    val sortMap = childMap.toSeq.sortWith(_._2>_._2)
+    for(i <- 0 until 2){
+      val child = sortMap(i)._1
+      val xparent = child._parents
+      xparent.foreach(x=> {
+        if(!setBayesVal.contains(x)){
+          varSet.add(x)
+        }
+      })
+    }
+
+  }
+
   def sumProductEliminateVar(mapFactor:Map[Int,BayesFactor], seqFactor:Seq[BayesFactor], variable: BayesFactor, target: BayesFactor) = {
     val bayes = variable._eliminate
     val setBayesVal = seqFactor.map(x => x._eliminate).toSet
@@ -524,17 +561,7 @@ object KledGraph {
     })
 
     val childs = bayes._childs
-    childs.foreach( x=> {
-      if(!setBayesVal.contains(x)) {
-        varSet.add(x)
-        val xparents = x._parents
-        xparents.foreach(x =>{
-          if(!setBayesVal.contains(x)){
-            varSet.add(x)
-          }
-        })
-      }
-    })
+    getTopChilds(childs, mapFactor, setBayesVal, varSet, bayes, 3)
 
     varSet.foreach(v => factor.addVariable(v)) // add variables
     var items = factor.getVariables
@@ -544,7 +571,6 @@ object KledGraph {
     var indexSeq:Seq[Int] = Seq()
 
     items.foreach( x=>{ indexSeq = indexSeq :+ 0 })
-
     println("the items size is:"+items.size)
     if( items.size > 0 ){
       while( index < border ) {
@@ -579,6 +605,8 @@ object KledGraph {
               }else{
                 if( mapIndex.contains(b) ) {
                   indexSeq = indexSeq :+ mapIndex(b)
+                }else{
+                  indexSeq = indexSeq :+ 0
                 }
               }
             }
