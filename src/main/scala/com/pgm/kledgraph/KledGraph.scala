@@ -527,6 +527,12 @@ object KledGraph {
     childs.foreach( x=> {
       if(!setBayesVal.contains(x)) {
         varSet.add(x)
+        val xparents = x._parents
+        xparents.foreach(x =>{
+          if(!setBayesVal.contains(x)){
+            varSet.add(x)
+          }
+        })
       }
     })
 
@@ -556,7 +562,6 @@ object KledGraph {
           p = p0 + p1
         }
 
-        /*
         childs.foreach(x=>{ // childs variables
           if( mapIndex.contains(x) ){
             val childFactor = mapFactor(x._v)
@@ -584,7 +589,6 @@ object KledGraph {
             }
           }
         })
-        */
 
         val p2 = p
         val variableSet = items.toSet // factors
