@@ -540,6 +540,9 @@ object KledGraph {
     items.foreach(x=>{ indexSeq = indexSeq :+ 0})
     addSeq(indexSeq)
 
+    if(setBayesVal.contains(target._eliminate)){
+      println("the setBayes is:"+ setBayesVal.map(x=> x._v) )
+    }
     println("the variable is:"+ items.map(x => x._v))
     if( items.size > 0 ){
       while( index < border ) {
@@ -721,7 +724,7 @@ object KledGraph {
     }
 
     var target = sequence(pos); sequence.drop(pos)
-    println("the seqence last is:"+ sequence.last.getVariables)
+    println("the seqence last is:"+ sequence.last.getVariables.map(x=> x._v))
     println("the target :"+_v)
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
     val p = condSumProductVE(mapFactor, sequence, target, 1, mapEvidences)
