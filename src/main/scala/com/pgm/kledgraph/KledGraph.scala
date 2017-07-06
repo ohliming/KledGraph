@@ -521,7 +521,6 @@ object KledGraph {
       }
     })
 
-    /*
     val childs = bayes._childs
     childs.foreach( x=> {
       if(!setBayesVal.contains(x)) {
@@ -534,7 +533,6 @@ object KledGraph {
         })
       }
     })
-    */
 
     varSet.foreach(v => factor.addVariable(v)) // add variables
     var items = factor.getVariables
