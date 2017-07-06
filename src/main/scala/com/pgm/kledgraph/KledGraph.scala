@@ -537,7 +537,6 @@ object KledGraph {
 
     items.foreach( x=>{ indexSeq = indexSeq :+ 0 })
     addSeq(indexSeq)
-
     println("the process is:"+ items.map(x => x._v))
     if( items.size > 0 ){
       while( index < border ) {
@@ -571,7 +570,7 @@ object KledGraph {
                 tpos = i
                 indexSeq = indexSeq :+ 0
               }else{
-                if( mapIndex.contains(b) ){
+                if( mapIndex.contains(b) ) {
                   indexSeq = indexSeq :+ mapIndex(b)
                 }
               }
@@ -634,6 +633,12 @@ object KledGraph {
       if(factor._cpds.size > 0){
         println("the variable is:"+ variable.getVariables.map(x=> x._v))
         seqFactor = seqFactor :+ factor
+      }
+    })
+
+    seqFactor.foreach(x => {
+      if(x._eliminate._v == 15013){
+        println("Error, the targe is in seqFactor!")
       }
     })
 
