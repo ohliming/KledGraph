@@ -544,6 +544,8 @@ object KledGraph {
     var indexSeq:Seq[Int] = Seq()
 
     items.foreach( x=>{ indexSeq = indexSeq :+ 0 })
+
+    println("the items size is:"+items.size)
     if( items.size > 0 ){
       while( index < border ) {
         var mapIndex:Map[BayesVar,Int] = Map()
