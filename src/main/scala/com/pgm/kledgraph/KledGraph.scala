@@ -454,11 +454,13 @@ object KledGraph {
     var variable:Seq[BayesFactor] = Seq()
     var vVariable:Seq[BayesFactor] = Seq() // include v factors
     setFactor.foreach(factor => {
-      val fSet = factor.getVariables.map(x => x._v).toSet
-      if(fSet.contains(v)){
-        vVariable = vVariable :+ factor
-      }else{
-        variable = variable :+ factor
+      if(factor._eliminate._v != v){
+        val fSet = factor.getVariables.map(x => x._v).toSet
+        if(fSet.contains(v)){
+          vVariable = vVariable :+ factor
+        }else{
+          variable = variable :+ factor
+        }
       }
     })
 
@@ -704,19 +706,8 @@ object KledGraph {
 
     // marginal probability
     val _v = 15013
-    var pos = 0
     val sequence = getSequence(setFactor, _v)
-    loop.breakable{
-      for(i <- 0 until sequence.size){
-        if(sequence(i)._eliminate._v == _v){
-          pos = i
-          loop.break
-        }
-      }
-    }
-
-    println("the seq len is:"+ sequence.size)
-    var target = sequence(pos); sequence.drop(pos)
+    var target = mapFactor(_v)
     println("the target :"+_v + " and pos is:")
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
     println("the sequence and size is:"+sequence.size)
