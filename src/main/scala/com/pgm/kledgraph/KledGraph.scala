@@ -525,7 +525,11 @@ object KledGraph {
       if(!setBayesVal.contains(x)) {
         varSet.add(x)
         val xparents = mapFactor(x._v)._eliminate._parents
-        xparents.foreach(parent => { varSet.add(parent)})
+        xparents.foreach(parent => {
+          if(!setBayesVal.contains(parent)){
+            varSet.add(parent)
+          }
+        })
       }
     })
 
