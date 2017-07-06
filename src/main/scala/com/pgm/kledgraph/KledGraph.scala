@@ -175,6 +175,7 @@ object KledGraph {
     if(fenmu > 0){
       p = if(fenzi < fenmu) fenzi / fenmu else 1.0
     }
+
     p
   }
 
@@ -520,6 +521,7 @@ object KledGraph {
       }
     })
 
+    /*
     val childs = bayes._childs
     childs.foreach( x=> {
       if(!setBayesVal.contains(x)) {
@@ -532,21 +534,18 @@ object KledGraph {
         })
       }
     })
+    */
 
     varSet.foreach(v => factor.addVariable(v)) // add variables
-
     var items = factor.getVariables
     var p:Double  = 0.0 // result
     var index = 0; val border = math.pow(2.0, items.size)
     val eliVariables = delFactor.getVariables
     var indexSeq:Seq[Int] = Seq()
 
-    items.foreach(x=>{ indexSeq = indexSeq :+ 0})
+    items.foreach( x=>{ indexSeq = indexSeq :+ 0 })
     addSeq(indexSeq)
 
-    if(setBayesVal.contains(target._eliminate)){
-      println("the setBayes is:"+ setBayesVal.map(x=> x._v) )
-    }
     println("the variable is:"+ items.map(x => x._v))
     if( items.size > 0 ){
       while( index < border ) {
