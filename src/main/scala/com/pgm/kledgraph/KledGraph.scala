@@ -538,7 +538,7 @@ object KledGraph {
     items.foreach( x=>{ indexSeq = indexSeq :+ 0 })
     addSeq(indexSeq)
 
-    println("the variable is:"+ items.map(x => x._v))
+    println("the process is:"+ items.map(x => x._v))
     if( items.size > 0 ){
       while( index < border ) {
         var mapIndex:Map[BayesVar,Int] = Map()
@@ -632,6 +632,7 @@ object KledGraph {
     seqVariable.foreach(variable => { // loop the variables
       val factor = sumProductEliminateVar(mapFactor, seqFactor, variable, target)
       if(factor._cpds.size > 0){
+        println("the variable is:"+ variable.getVariables.map(x=> x._v))
         seqFactor = seqFactor :+ factor
       }
     })
@@ -719,7 +720,6 @@ object KledGraph {
     }
 
     var target = sequence(pos); sequence.drop(pos)
-    println("the seqence last is:"+ sequence.last.getVariables.map(x=> x._v))
     println("the target :"+_v)
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
     val p = condSumProductVE(mapFactor, sequence, target, 1, mapEvidences)
