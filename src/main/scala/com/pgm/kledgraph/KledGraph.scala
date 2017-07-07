@@ -576,7 +576,6 @@ object KledGraph {
       while( index < border ) {
         var mapIndex:Map[BayesVar,Int] = Map()
         for(pos <- 0 until items.size){ mapIndex += ((items(pos) -> indexSeq(pos))) }
-
         if( eliVariables.size > 0 ){ // parent variable
           var posMap:Map[Int,Int] = Map()
           for(i <- 0 until  eliVariables.size){
@@ -590,10 +589,10 @@ object KledGraph {
           p = p0 + p1
         }
 
+        /*
         childs.foreach(x=>{ // childs variables
           if( mapIndex.contains(x) ){
             val childFactor = mapFactor(x._v)
-
             var posMap:Map[Int,Int] = Map()
             var indexSeq:Seq[Int] = Seq()
             var tpos = 0
@@ -619,6 +618,7 @@ object KledGraph {
             }
           }
         })
+        */
 
         val p2 = p
         val variableSet = items.toSet // factors
@@ -734,8 +734,7 @@ object KledGraph {
     var setFactor:Set[BayesFactor] = Set() // factors set
     mapFactor.foreach(x=>{ setFactor.add(x._2) })
 
-    // marginal probability
-    val _v = 15013
+    val _v = 15013  // marginal probability
     val sequence = getSequence(setFactor, _v)
     var target = mapFactor(_v)
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
