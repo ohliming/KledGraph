@@ -532,7 +532,8 @@ object KledGraph {
     })
 
     val sortMap = childMap.toSeq.sortWith(_._2>_._2)
-    for(i <- 0 until 2){
+    val range = if(sortMap.size > n) n else sortMap.size
+    for(i <- 0 until range){
       val child = sortMap(i)._1
       val xparent = child._parents
       xparent.foreach(x=> {
@@ -561,8 +562,7 @@ object KledGraph {
     })
 
     val childs = bayes._childs
-    getTopChilds(childs, mapFactor, setBayesVal, varSet, bayes, 3)
-
+    getTopChilds(childs, mapFactor, setBayesVal, varSet, bayes, 2)
     varSet.foreach(v => factor.addVariable(v)) // add variables
     var items = factor.getVariables
     var p:Double  = 0.0 // result
