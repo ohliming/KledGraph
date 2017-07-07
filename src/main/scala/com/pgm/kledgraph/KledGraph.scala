@@ -617,12 +617,12 @@ object KledGraph {
         })
         */
 
-        val variableSet = items.toSet // factors
+        val variableSet = items.map(x=> x._v).toSet // factors
         seqFactor.foreach(x=> {
           if( x._isUsed == false ){
-            val fVariable = x.getVariables.toSet
+            val fVariable = x.getVariables.map(x=>x._v).toSet
             val diff = fVariable -- variableSet
-            println("the diff size is:"+ diff.size + " the fariable size:"+ fVariable.size + " and items size:"+  variableSet.size)
+            println("the diff size is:"+ diff.size + " the fvariable size:"+ fVariable.size + " and items size:"+  variableSet.size)
             if( diff.size == 0 ){
               var tmpSeq:Seq[Int] = Seq()
               x._variables.foreach(v => {
