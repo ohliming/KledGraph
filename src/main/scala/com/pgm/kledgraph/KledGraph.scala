@@ -633,7 +633,7 @@ object KledGraph {
               })
 
               val ps = getCPDPosition(tmpSeq)
-              println("the cpd p ="+ x._cpds(ps) + " and seqFactor size:"+ seqFactor.size)
+              println("the cpd p =" + x._cpds(ps) + " and seqFactor size:"+ seqFactor.size)
               p =  if(p > 0.0) p * x._cpds(ps) else x._cpds(ps)
               x.setUsed
             }
@@ -663,6 +663,7 @@ object KledGraph {
     seqVariable.foreach(variable => { // loop the variables
       val factor = sumProductEliminateVar(mapFactor, seqFactor, variable, target)
       if(factor._cpds.size > 0){
+        println("the factor cpds is:"+factor._cpds)
         seqFactor = seqFactor :+ factor
       }
     })
