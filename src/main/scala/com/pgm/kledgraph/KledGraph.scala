@@ -622,9 +622,10 @@ object KledGraph {
           if( x._isUsed == false ){
             val fVariable = x.getVariables.map(x=>x._v).toSet
             val diff = fVariable -- variableSet
-            if(fVariable.size > diff.size){
+            if( diff.size >= 1 && diff.size < 3) {
               println("the diff size is:"+ diff.size + " the fvariable size:"+ fVariable.size + " and items size:"+  variableSet.size)
             }
+
             if( diff.size == 0 ){
               var tmpSeq:Seq[Int] = Seq()
               x._variables.foreach(v => {
