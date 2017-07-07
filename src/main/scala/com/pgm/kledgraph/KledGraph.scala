@@ -640,6 +640,8 @@ object KledGraph {
           }
         })
 
+        if(p >= 1.0) println("the p="+p + " and bayes is:"+bayes._v)
+
         factor._cpds = factor._cpds :+ p
         index += 1
         addSeq(indexSeq)
@@ -663,7 +665,6 @@ object KledGraph {
     seqVariable.foreach(variable => { // loop the variables
       val factor = sumProductEliminateVar(mapFactor, seqFactor, variable, target)
       if(factor._cpds.size > 0){
-        println("the factor cpds is:"+factor._cpds)
         seqFactor = seqFactor :+ factor
       }
     })
