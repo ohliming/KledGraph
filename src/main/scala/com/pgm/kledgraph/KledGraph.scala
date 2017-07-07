@@ -11,7 +11,6 @@ import scala.util.Random
 import org.json4s._
 import org.json4s.native.JsonMethods._
 
-import scala.collection.mutable
 
 object KledGraph {
   val stageDict: Map[String, Int] = Map(
@@ -628,10 +627,13 @@ object KledGraph {
               x._variables.foreach(v => {
                 if(mapIndex.contains(v)){
                   tmpSeq = tmpSeq :+ mapIndex(v)
+                }else{
+                  tmpSeq = tmpSeq :+ 0
                 }
               })
+
               val ps = getCPDPosition(tmpSeq)
-              println("the cpd p  ="+ x._cpds(ps))
+              println("the cpd p ="+ x._cpds(ps) + " and seqFactor size:"+ seqFactor.size)
               p =  if(p > 0.0) p * x._cpds(ps) else x._cpds(ps)
               x.setUsed
             }
