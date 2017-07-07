@@ -578,9 +578,9 @@ object KledGraph {
         for(pos <- 0 until items.size){ mapIndex += ((items(pos) -> indexSeq(pos))) }
         if( eliVariables.size > 0 ){ // parent variable
           var posMap:Map[Int,Int] = Map()
-          for(i <- 0 until  eliVariables.size){
+          for( i <- 0 until  eliVariables.size ){
             if(parentSet.contains(eliVariables(i))){
-              posMap += ((i -> mapIndex(eliVariables(i))))
+              posMap += (( i -> mapIndex(eliVariables(i)) ))
             }
           }
 
@@ -618,9 +618,8 @@ object KledGraph {
             }
           }
         })
-        */
 
-        val p2 = p
+        */
         val variableSet = items.toSet // factors
         seqFactor.foreach(x=> {
           if( x._isUsed == false ){
