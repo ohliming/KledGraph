@@ -622,7 +622,7 @@ object KledGraph {
           if( x._isUsed == false ){
             val fVariable = x.getVariables.toSet
             val diff = fVariable -- variableSet
-            println("the diff size is:"+ diff.size)
+            println("the diff size is:"+ diff.size + " the fariable size:"+ fVariable.size + " and items size:"+  variableSet.size)
             if( diff.size == 0 ){
               var tmpSeq:Seq[Int] = Seq()
               x._variables.foreach(v => {
@@ -639,8 +639,6 @@ object KledGraph {
             }
           }
         })
-
-        if(p >= 1.0) println("the p="+p + " and bayes is:"+bayes._v)
 
         factor._cpds = factor._cpds :+ p
         index += 1
@@ -742,7 +740,7 @@ object KledGraph {
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
     println("the sequence and size is:"+sequence.size)
     val p = condSumProductVE(mapFactor, sequence, target, 1, mapEvidences)
-    println("the result p=" + p)  // output p
+    println("the result p=" + p)
 
     sc.stop
   }
