@@ -615,13 +615,14 @@ object KledGraph {
             }
           }
         })
-
         */
+
         val variableSet = items.toSet // factors
         seqFactor.foreach(x=> {
           if( x._isUsed == false ){
             val fVariable = x.getVariables.toSet
             val diff = fVariable -- variableSet
+            println("the diff size is:"+ diff.size)
             if( diff.size == 0 ){
               var tmpSeq:Seq[Int] = Seq()
               x._variables.foreach(v => {
@@ -633,7 +634,6 @@ object KledGraph {
               })
 
               val ps = getCPDPosition(tmpSeq)
-              println("the cpd p =" + x._cpds(ps) + " and seqFactor size:"+ seqFactor.size)
               p =  if(p > 0.0) p * x._cpds(ps) else x._cpds(ps)
               x.setUsed
             }
