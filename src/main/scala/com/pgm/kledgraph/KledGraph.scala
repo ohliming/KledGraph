@@ -589,6 +589,7 @@ object KledGraph {
           p = p0 + p1
         }
 
+        /*
         childs.foreach(x=>{ // childs variables
           if( mapIndex.contains(x) ){
             val childFactor = mapFactor(x._v)
@@ -617,6 +618,8 @@ object KledGraph {
             }
           }
         })
+
+        */
 
         seqFactor.foreach(x=> {
           if( x._isUsed == false ){
@@ -662,12 +665,12 @@ object KledGraph {
     seqVariable.foreach(variable => { // loop the variables
       val factor = sumProductEliminateVar(mapFactor, seqFactor, variable, target)
       if(factor._cpds.size > 0){
+        println("the target is:"+ factor._variables.map(x=>x._v)+"the factor is:"+ factor._cpds)
         seqFactor = seqFactor :+ factor
       }
     })
 
     val targetFactor = seqFactor.last
-    println("the target "+ targetFactor._variables.last._v + " last is:"+targetFactor._cpds)
     val targetM = mapFactor(target._eliminate._v) // other
     var p:Double = targetFactor._cpds.last
     if(mapEvidences.size > 0){
