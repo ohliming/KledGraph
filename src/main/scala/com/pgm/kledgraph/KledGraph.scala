@@ -580,7 +580,7 @@ object KledGraph {
           var posMap:Map[Int,Int] = Map()
           for( i <- 0 until eliVariables.size ){
             if(parentSet.contains(eliVariables(i))){
-              posMap += (( i -> mapIndex(eliVariables(i)) ))
+              posMap += (( i -> indexSeq(i) ))
             }
           }
 
