@@ -620,11 +620,10 @@ object KledGraph {
         })
         */
 
-        val variableSet = items.map(x=> x._v).toSet // factors
         seqFactor.foreach(x=> {
           if( x._isUsed == false ){
             val fVariable = x.getVariables.map(x=>x._v).toSet
-            val diff = fVariable -- variableSet
+            val diff = fVariable -- itemsVSet
             println("the diff size:"+ diff.size + " the fvariable size:"+ fVariable.size + " and items size:"+  variableSet.size)
 
             if( diff.size == 0 ){
