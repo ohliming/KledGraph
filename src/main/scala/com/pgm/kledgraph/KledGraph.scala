@@ -399,7 +399,7 @@ object KledGraph {
       var indSeq:Seq[Int] = Seq(); variables.foreach(x=>{ indSeq = indSeq :+ 0})
 
       if(variables.size > 0) {
-        var index = 1
+        var index = 0
         addSeq(indSeq)
         val border = math.pow(2.0, variables.size)
         if(mapIndex.contains(x._2._eliminate._v)){
@@ -487,7 +487,7 @@ object KledGraph {
   }
 
   def sumPositionsPro(cpds:Seq[Double], posMap:Map[Int,Int], len:Int) = {
-    var p = 0.0; var count = 1
+    var p = 0.0; var count = 0
     cpds.foreach(pi=>{
       val index = pos2Seq(count, len)
       var bFlag = true
