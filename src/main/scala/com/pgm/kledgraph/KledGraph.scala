@@ -563,7 +563,7 @@ object KledGraph {
     })
 
     val childs = bayes._childs
-    var itemsVSet:Set[Int] = Set(); parents.foreach(x=> itemsVSet.add(x._v))ddddd
+    var itemsVSet:Set[Int] = Set(); parents.foreach(x=> itemsVSet.add(x._v))
     getTopChilds(childs, mapFactor, setBayesVal, varSet, itemsVSet, bayes, 2)
 
     varSet.foreach(v => factor.addVariable(v)) // add variables
@@ -625,7 +625,7 @@ object KledGraph {
           if( x._isUsed == false ){
             val fVariable = x.getVariables.map(x=>x._v).toSet
             val diff = fVariable -- itemsVSet
-            println("the diff size:"+ diff.size + " the fvariable size:"+ fVariable.size + " and items size:"+  variableSet.size)
+            println("the diff size:"+ diff.size + " the fvariable size:"+ fVariable.size + " and items size:"+  itemsVSet.size)
 
             if( diff.size == 0 ){
               var tmpSeq:Seq[Int] = Seq()
