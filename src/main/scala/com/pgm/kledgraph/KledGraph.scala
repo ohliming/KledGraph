@@ -625,9 +625,8 @@ object KledGraph {
           if( x._isUsed == false ){
             val fVariable = x.getVariables.map(x=>x._v).toSet
             val diff = fVariable -- itemsVSet
-            println("the diff size:"+ diff.size + " the fvariable size:"+ fVariable.size + " and items size:"+  itemsVSet.size)
-
             if( diff.size == 0 ){
+              println("the diff size:"+ diff.size + " the fvariable size:"+ fVariable.size + " and items size:"+  itemsVSet.size)
               var tmpSeq:Seq[Int] = Seq()
               x._variables.foreach(v => {
                 if(mapIndex.contains(v)){
