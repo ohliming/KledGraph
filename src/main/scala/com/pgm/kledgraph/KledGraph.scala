@@ -40,7 +40,6 @@ object KledGraph {
   )
 
   val loop = new Breaks
-
   def getTopic(stage: Int, subject: Int, sqlContext : HiveContext): Map[Int, String] = {
     var mapTopic :Map[Int, String] = Map()
     var sql = "select id, name from entity_topic where subject_id= "+ subject +" and stage_id = " + stage
@@ -622,7 +621,7 @@ object KledGraph {
           if( x._isUsed == false ){
             val fVariable = x.getVariables.map(x=>x._v).toSet
             val diff = fVariable -- variableSet
-            if( diff.size == 1 ) {
+            if( fVariable.size > 1 && (diff.size == 1) ) {
               println("the diff size:"+ diff.size + " the fvariable size:"+ fVariable.size + " and items size:"+  variableSet.size +
                 " and delete factor:"+bayes._v + " and diff:"+ diff)
             }
