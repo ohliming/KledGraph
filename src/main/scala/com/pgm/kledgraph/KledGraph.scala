@@ -510,7 +510,7 @@ object KledGraph {
   }
 
   def getTopChilds(childs:Set[BayesVar], mapFactor:Map[Int,BayesFactor],setBayesVal:scala.collection.immutable.Set[BayesVar], varSet:Set[BayesVar],
-                   itemsVSet:scala.collection.immutable.Set[Int], bayes: BayesVar, n:Int) = {     // process childs
+                   itemsVSet:Set[Int], bayes: BayesVar, n:Int) = {     // process childs
     var childMap:Map[BayesVar,Double] = Map()
     childs.foreach( x=> {
       if(!setBayesVal.contains(x)){
@@ -518,6 +518,7 @@ object KledGraph {
         val f = mapFactor(x._v)
         val xVariable = f.getVariables
         xVariable.foreach(v => {
+          itemsVSet.add(v._v)
           if(v.eq(bayes)){
             indexSeq = indexSeq :+ 1
           }else{
@@ -562,7 +563,7 @@ object KledGraph {
     })
 
     val childs = bayes._childs
-    var itemsVSet:scala.collection.immutable.Set[Int] = parents.map(x=> x._v).toSet
+    var itemsVSet:Set[Int] = Set(); parents.foreach(x=> itemsVSet.add(x._v))ddddd
     getTopChilds(childs, mapFactor, setBayesVal, varSet, itemsVSet, bayes, 2)
 
     varSet.foreach(v => factor.addVariable(v)) // add variables
