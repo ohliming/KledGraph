@@ -11,6 +11,8 @@ import scala.util.Random
 import org.json4s._
 import org.json4s.native.JsonMethods._
 
+import scala.collection.mutable
+
 
 object KledGraph {
   val stageDict: Map[String, Int] = Map(
@@ -507,8 +509,8 @@ object KledGraph {
     p
   }
 
-  def getTopChilds(childs:Set[BayesVar], mapFactor:Map[Int,BayesFactor],setBayesVal:scala.collection.immutable.Set[BayesVar], varSet:Set[BayesVar], bayes: BayesVar, n:Int) = {
-    // process childs
+  def getTopChilds(childs:Set[BayesVar], mapFactor:Map[Int,BayesFactor],setBayesVal:scala.collection.immutable.Set[BayesVar], varSet:Set[BayesVar],
+                   itemsVSet:scala.collection.immutable.Set[Int], bayes: BayesVar, n:Int) = {     // process childs
     var childMap:Map[BayesVar,Double] = Map()
     childs.foreach( x=> {
       if(!setBayesVal.contains(x)){
@@ -560,7 +562,9 @@ object KledGraph {
     })
 
     val childs = bayes._childs
-    getTopChilds(childs, mapFactor, setBayesVal, varSet, bayes, 2)
+    var itemsVSet:scala.collection.immutable.Set[Int] = parents.map(x=> x._v).toSet
+    getTopChilds(childs, mapFactor, setBayesVal, varSet, itemsVSet, bayes, 2)
+
     varSet.foreach(v => factor.addVariable(v)) // add variables
     var items = factor.getVariables
     var p:Double  = 0.0 // result
@@ -621,10 +625,7 @@ object KledGraph {
           if( x._isUsed == false ){
             val fVariable = x.getVariables.map(x=>x._v).toSet
             val diff = fVariable -- variableSet
-            if( fVariable.size > 1 && (diff.size == 1) ) {
-              println("the diff size:"+ diff.size + " the fvariable size:"+ fVariable.size + " and items size:"+  variableSet.size +
-                " and delete factor:"+bayes._v + " and diff:"+ diff)
-            }
+            println("the diff size:"+ diff.size + " the fvariable size:"+ fVariable.size + " and items size:"+  variableSet.size)
 
             if( diff.size == 0 ){
               var tmpSeq:Seq[Int] = Seq()
