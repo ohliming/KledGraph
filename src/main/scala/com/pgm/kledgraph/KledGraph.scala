@@ -578,7 +578,7 @@ object KledGraph {
         for(pos <- 0 until items.size){ mapIndex += ((items(pos) -> indexSeq(pos))) }
         if( eliVariables.size > 0 ){ // parent variable
           var posMap:Map[Int,Int] = Map()
-          for( i <- 0 until  eliVariables.size ){
+          for( i <- 0 until eliVariables.size ){
             if(parentSet.contains(eliVariables(i))){
               posMap += (( i -> mapIndex(eliVariables(i)) ))
             }
@@ -588,6 +588,7 @@ object KledGraph {
           val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
           p = p0 + p1
           if( p == 1.0 ){
+            println("the index is:"+index+" and seq is:"+indexSeq)
             println("the posMap is:"+posMap)
             println("the positive:"+p1+"："+delFactor._cpdPositive)
             println("the negative:"+p0+":"+delFactor._cpdNegative)
@@ -670,7 +671,6 @@ object KledGraph {
     seqVariable.foreach(variable => { // loop the variables
       val factor = sumProductEliminateVar(mapFactor, seqFactor, variable, target)
       if(factor._cpds.size > 0){
-        //println("the target is:"+ factor._variables.map(x=>x._v)+"the factor is:"+ factor._cpds)
         seqFactor = seqFactor :+ factor
       }
     })
