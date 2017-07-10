@@ -358,7 +358,6 @@ object KledGraph {
 
         val value  = record.apply(position)
         val target = record.apply(0)
-
         if(value == 1.0 && target == label){
           if(isFenmu){
             fenzi += 1
@@ -590,7 +589,6 @@ object KledGraph {
           p = p0 + p1
         }
 
-        /*
         childs.foreach(x=>{ // childs variables
           if( mapIndex.contains(x) ){
             val childFactor = mapFactor(x._v)
@@ -619,14 +617,12 @@ object KledGraph {
             }
           }
         })
-        */
 
         seqFactor.foreach(x=> {
           if( x._isUsed == false ){
             val fVariable = x.getVariables.map(x=>x._v).toSet
             val diff = fVariable -- itemsVSet
             if( diff.size == 0 ){
-              println("the diff size:"+ diff.size + " the fvariable size:"+ fVariable.size + " and items size:"+  itemsVSet.size)
               var tmpSeq:Seq[Int] = Seq()
               x._variables.foreach(v => {
                 if(mapIndex.contains(v)){
