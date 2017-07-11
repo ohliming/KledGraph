@@ -612,8 +612,10 @@ object KledGraph {
             val pos0 = getCPDPosition(indexSeq)
             indexSeq.update(tpos, 1)
             val pos1 = getCPDPosition(indexSeq)
-            val cp1 = childFactor._cpdPositive(pos1) + childFactor._cpdNegative(pos0)
-            println("the cp1 is:"+cp1 +" and positive is:"+childFactor._cpdPositive(pos1) +" and negative is:"+childFactor._cpdNegative(pos0))
+            var cp1 = (childFactor._cpdPositive(pos1) * childFactor._cpdPositive(pos0))
+            cp1 += (childFactor._cpdNegative(pos1) * childFactor._cpdNegative(pos0))
+
+            println("the cp1 is ="+cp1)
             if( cp1 > 0 ){
               p = if(p > 0) p * cp1 else cp1
             }
