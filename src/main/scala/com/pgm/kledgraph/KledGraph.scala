@@ -590,6 +590,7 @@ object KledGraph {
           }
         }
 
+        /*
         childs.foreach(x=>{ // childs variables
           if( mapIndex.contains(x) ){
             val childFactor = mapFactor(x._v)
@@ -619,6 +620,7 @@ object KledGraph {
             }
           }
         })
+        */
 
         sFactor.foreach(x=> {
           if( x._isUsed == false ){
