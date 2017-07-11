@@ -604,7 +604,7 @@ object KledGraph {
                 if( mapIndex.contains(b) ) {
                   indexSeq = indexSeq :+ mapIndex(b)
                 }else{
-                  indexSeq = indexSeq :+ 0
+                  indexSeq = indexSeq :+ 1
                 }
               }
             }
