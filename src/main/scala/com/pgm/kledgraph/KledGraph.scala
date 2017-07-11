@@ -11,8 +11,6 @@ import scala.util.Random
 import org.json4s._
 import org.json4s.native.JsonMethods._
 
-import scala.collection.mutable
-
 
 object KledGraph {
   val stageDict: Map[String, Int] = Map(
@@ -486,13 +484,14 @@ object KledGraph {
     indSeq.reverse
   }
 
-  def sumPositionsPro(cpds:Seq[Double], posMap:Map[Int,Int], len:Int) = {
-    var p = 0.0; var count = 0
+  def sumPositionsPro(cpds:Seq[Double], pMap:Map[Int,Int], len:Int) = {
+    var p = 0.0
+    var cnt = 0
     cpds.foreach(pi=>{
-      val index = pos2Seq(count, len)
+      val index = pos2Seq(cnt, len)
       var bFlag = true
       loop.breakable {
-        posMap.foreach(pair => {
+        pMap.foreach(pair => {
           if(index(pair._1) != pair._2 ) {
             bFlag = false
             loop.break
@@ -501,9 +500,9 @@ object KledGraph {
       }
 
       if( bFlag && pi > 0.0 ){
-        p = if(p > 0.0) p * pi else pi
+        p = if( p > 0.0 ) p * pi else pi
       }
-      count += 1
+      cnt += 1
     })
     p
   }
@@ -545,9 +544,9 @@ object KledGraph {
 
   }
 
-  def sumProductEliminateVar(mapFactor:Map[Int,BayesFactor], seqFactor:Seq[BayesFactor], variable: BayesFactor, target: BayesFactor) = {
+  def sumProductEliminateVar(mapFactor:Map[Int,BayesFactor], sFactor:Seq[BayesFactor], variable: BayesFactor, target: BayesFactor) = {
     val bayes = variable._eliminate
-    val setBayesVal = seqFactor.map(x => x._eliminate).toSet
+    val setBayesVal = sFactor.map(x => x._eliminate).toSet
     var factor: BayesFactor = new BayesFactor(bayes)
     var delFactor = mapFactor(bayes._v)
 
@@ -627,7 +626,7 @@ object KledGraph {
         })
         */
 
-        seqFactor.foreach(x=> {
+        sFactor.foreach(x=> {
           if( x._isUsed == false ){
             val fVariable = x.getVariables.map(x=>x._v).toSet
             val diff = fVariable -- itemsVSet
