@@ -590,11 +590,9 @@ object KledGraph {
           }
         }
 
-        /*
         childs.foreach(x=>{ // childs variables
           if( mapIndex.contains(x) ){
             val childFactor = mapFactor(x._v)
-            var posMap:Map[Int,Int] = Map()
             var indexSeq:Seq[Int] = Seq()
             var tpos = 0
             for(i <- 0 until  childFactor._variables.size){
@@ -615,12 +613,12 @@ object KledGraph {
             indexSeq.update(tpos, 1)
             val pos1 = getCPDPosition(indexSeq)
             val cp1 = childFactor._cpdPositive(pos1) + childFactor._cpdNegative(pos0)
-            if(cp1 > 0 ){
+            println("the cp1 is:"+cp1 +" and positive is:"+childFactor._cpdPositive(pos1) +" and negative is:"+childFactor._cpdNegative(pos0))
+            if( cp1 > 0 ){
               p = if(p > 0) p * cp1 else cp1
             }
           }
         })
-        */
 
         sFactor.foreach(x=> {
           if( x._isUsed == false ){
