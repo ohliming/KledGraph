@@ -583,15 +583,17 @@ object KledGraph {
             }
           }
 
-          val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
-          val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
-          p = p0 + p1
-          if( p == 1.0 ){
-            println("bayes:"+bayes._v+"the index is:"+index+" and seq is:"+indexSeq)
-            println("the posMap is:"+posMap)
-            println("the positive:"+p1+"："+delFactor._cpdPositive)
-            println("the negative:"+p0+":"+delFactor._cpdNegative)
-            println(" ")
+          if(posMap.size > 0){
+            val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
+            val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
+            p = p0 + p1
+            if( p == 1.0 ){
+              println("bayes:"+bayes._v+"the index is:"+index+" and seq is:"+indexSeq)
+              println("the posMap is:"+posMap)
+              println("the positive:"+p1+"："+delFactor._cpdPositive)
+              println("the negative:"+p0+":"+delFactor._cpdNegative)
+              println(" ")
+            }
           }
         }
 
