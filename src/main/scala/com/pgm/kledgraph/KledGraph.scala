@@ -615,8 +615,11 @@ object KledGraph {
             var cp1 = (childFactor._cpdPositive(pos1) * childFactor._cpdPositive(pos0))
             cp1 += (childFactor._cpdNegative(pos1) * childFactor._cpdNegative(pos0))
 
-            println("the cp1 is ="+cp1)
-            if( cp1 > 0 ){
+            println("the cp1 is ="+cp1 + " and pos1 ="+pos1 + " and pos0 ="+pos0)
+            println("the positive is:"+ childFactor._cpdPositive)
+            println("the negative is:"+ childFactor._cpdNegative)
+            println(" ")
+            if( cp1 > 0.0 ){
               p = if(p > 0) p * cp1 else cp1
             }
           }
