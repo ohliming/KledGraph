@@ -610,7 +610,7 @@ object KledGraph {
             }
 
             val pos0 = getCPDPosition(iSeq)
-            indexSeq.update(tpos, 1)
+            iSeq.update(tpos, 1)
             val pos1 = getCPDPosition(iSeq)
             var cp1 = (childFactor._cpdPositive(pos1) * childFactor._cpdPositive(pos0))
             cp1 += (childFactor._cpdNegative(pos1) * childFactor._cpdNegative(pos0))
