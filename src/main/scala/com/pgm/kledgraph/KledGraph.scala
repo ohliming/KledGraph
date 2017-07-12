@@ -5,12 +5,11 @@ import org.apache.spark.SparkContext
 import org.apache.spark.sql.hive.HiveContext
 import org.apache.spark.mllib.linalg.{Vector, Vectors}
 
-import scala.collection.mutable.{ListBuffer, Map, Seq, Set}
+import scala.collection.mutable.{ArrayBuffer, ListBuffer, Map, Seq, Set}
 import scala.util.control._
 import scala.util.Random
 import org.json4s._
 import org.json4s.native.JsonMethods._
-import org.omg.CORBA.BAD_POLICY_VALUE
 
 
 object KledGraph {
@@ -451,21 +450,44 @@ object KledGraph {
   }
 
   def getSequence(setFactor:Set[BayesFactor], v:Int) = {
-    var variable:Seq[BayesFactor] = Seq()
-    var vVariable:Seq[BayesFactor] = Seq() // include v factors
+    var vGeneral:ArrayBuffer[BayesFactor] = ArrayBuffer()
+    var vVariable:ArrayBuffer[BayesFactor] = ArrayBuffer()
     setFactor.foreach(factor => {
       if(factor._eliminate._v != v){
         val fSet = factor.getVariables.map(x => x._v).toSet
         if(fSet.contains(v)){
-          vVariable = vVariable :+ factor
+          vVariable += factor
         }else{
-          variable = variable :+ factor
+          vGeneral += factor
         }
       }
     })
 
-    variable.sortWith(_._eliminate.num < _._eliminate.num)
-    variable ++ vVariable // result
+    var gSort = vGeneral.sortWith(_._eliminate.num < _._eliminate.num)
+    var vSort = vVariable.sortWith(_._eliminate.num < _._eliminate.num)
+    val last = vVariable.last; gSort.trimEnd(1)
+
+    var res:Seq[BayesFactor] = Seq()
+    var preNum = 0
+    var nNum = 0
+    var tBuffer:ArrayBuffer[BayesFactor] = ArrayBuffer()
+    gSort.foreach(x => {
+      nNum = x._eliminate.num
+      if(tBuffer.size == 0){
+        tBuffer += x
+      }else{
+        if(preNum == nNum){
+          tBuffer += x
+        }else{
+          val t = tBuffer.sortWith(_._eliminate._v < _._eliminate._v)
+          res ++= t
+          tBuffer.clear()
+        }
+      }
+      preNum = nNum
+    })
+    res = res :+ last
+    res
   }
 
   def pos2Seq(x:Int, len:Int) = {
@@ -739,7 +761,7 @@ object KledGraph {
     val sequence = getSequence(setFactor, _v)
     var target = mapFactor(_v)
     println("the"+_v+"parents is:"+target._eliminate._parents.map(x=> x._v).toSeq)
-    val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
+    val mapEvidences:Map[BayesVar,Int] = Map(mapFactor(15098)._eliminate -> 1, mapFactor(64)._eliminate -> 1) // conditional factors
     println("the sequence and size is:"+sequence.size)
     val p = condSumProductVE(mapFactor, sequence, target, 1, mapEvidences)
     println("the result p=" + p)
