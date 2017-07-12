@@ -592,7 +592,7 @@ object KledGraph {
 
         childs.foreach(c=>{ // childs variables
           if( mapIndex.contains(c) ){
-            var childFactor = mapFactor(c._v)
+            val childFactor = mapFactor(c._v)
             var iSeq:Seq[Int] = Seq()
             var tpos = 0
             for(i <- 0 until  childFactor._variables.size){
@@ -614,12 +614,6 @@ object KledGraph {
             val pos1 = getCPDPosition(iSeq)
             var cp1 = (childFactor._cpdPositive(pos1) * childFactor._cpdPositive(pos0))
             cp1 += (childFactor._cpdNegative(pos1) * childFactor._cpdNegative(pos0))
-
-            println("the bayes is:"+bayes._v+" child is:"+c._v+" the cp1 is ="+cp1 + " and pos1 ="+pos1 + " and pos0 ="+pos0)
-            println("the index is:"+index + " and indexSeq is:"+ indexSeq + " and iSeq is:"+ iSeq)
-            println("the positive is:"+ childFactor._cpdPositive)
-            println("the negative is:"+ childFactor._cpdNegative)
-            println(" ")
             if( cp1 > 0.0 ){
               p = if(p > 0) p * cp1 else cp1
             }
@@ -641,6 +635,9 @@ object KledGraph {
               })
 
               val ps = getCPDPosition(tmpSeq)
+              if(x._cpds(ps) > 0){
+                println("the factor p is:"+x._cpds(ps))
+              }
               p =  if(p > 0.0) p * x._cpds(ps) else x._cpds(ps)
               x.setUsed
             }
