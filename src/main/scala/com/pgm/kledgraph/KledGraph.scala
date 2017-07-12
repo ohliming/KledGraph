@@ -10,6 +10,7 @@ import scala.util.control._
 import scala.util.Random
 import org.json4s._
 import org.json4s.native.JsonMethods._
+import org.omg.CORBA.BAD_POLICY_VALUE
 
 
 object KledGraph {
@@ -737,6 +738,7 @@ object KledGraph {
     val _v = 15013  // marginal probability
     val sequence = getSequence(setFactor, _v)
     var target = mapFactor(_v)
+    println("the"+_v+"parents is:"+target._eliminate._parents.map(x=> x._v).toSeq)
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
     println("the sequence and size is:"+sequence.size)
     val p = condSumProductVE(mapFactor, sequence, target, 1, mapEvidences)
