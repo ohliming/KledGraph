@@ -575,7 +575,7 @@ object KledGraph {
       while( index < border ) {
         var mapIndex:Map[BayesVar,Int] = Map()
         for(pos <- 0 until items.size){ mapIndex += ((items(pos) -> indexSeq(pos))) }
-        if( eliVariables.size > 0 ){ // parent variable
+        if( eliVariables.size > 0 ){
           var posMap:Map[Int,Int] = Map()
           for( i <- 0 until eliVariables.size ){
             if(parentSet.contains(eliVariables(i))){
@@ -635,9 +635,6 @@ object KledGraph {
               })
 
               val ps = getCPDPosition(tmpSeq)
-              if(x._cpds(ps) > 0){
-                println("the factor p is:"+x._cpds(ps))
-              }
               p =  if(p > 0.0) p * x._cpds(ps) else x._cpds(ps)
               x.setUsed
             }
