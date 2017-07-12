@@ -599,7 +599,7 @@ object KledGraph {
               val b = childFactor._variables(i)
               if(b.eq(bayes)){
                 tpos = i
-                indexSeq = indexSeq :+ 0
+                iSeq = iSeq :+ 0
               }else{
                 if( mapIndex.contains(b) ) {
                   iSeq = iSeq :+ mapIndex(b)
