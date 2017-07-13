@@ -762,6 +762,8 @@ object KledGraph {
 
     val _v = 15013  // marginal probability
     val sequence = getSequence(setFactor, _v)
+
+    println("the seq is:"+ sequence.map(x=> x._eliminate._v))
     var target = mapFactor(_v)
     println("the"+_v+"parents is:"+target._eliminate._parents.map(x=> x._v).toSeq)
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
