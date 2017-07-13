@@ -643,6 +643,7 @@ object KledGraph {
           }
         })
 
+        println("the p is:" + p)
         sFactor.foreach(x=> {
           if( x._isUsed == false ){
             val fVariable = x.getVariables.map(x=>x._v).toSet
