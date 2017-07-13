@@ -761,7 +761,7 @@ object KledGraph {
     val sequence = getSequence(setFactor, _v)
     var target = mapFactor(_v)
     println("the"+_v+"parents is:"+target._eliminate._parents.map(x=> x._v).toSeq)
-    val mapEvidences:Map[BayesVar,Int] = Map(mapFactor(15098)._eliminate -> 1, mapFactor(64)._eliminate -> 1) // conditional factors
+    val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
     println("the sequence and size is:"+sequence.size)
     val p = condSumProductVE(mapFactor, sequence, target, 1, mapEvidences)
     println("the result p=" + p)
