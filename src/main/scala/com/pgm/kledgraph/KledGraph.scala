@@ -463,29 +463,10 @@ object KledGraph {
       }
     })
 
-    var gSort = vGeneral.sortWith(_._eliminate.num < _._eliminate.num)
     var vSort = vVariable.sortWith(_._eliminate.num < _._eliminate.num)
-    val lastF = vVariable.last; gSort.trimEnd(1)
-
-    var res:Seq[BayesFactor] = Seq()
-    var preNum = 0
-    var nNum = 0
-    var tBuffer:ArrayBuffer[BayesFactor] = ArrayBuffer()
-    gSort.foreach(x => {
-      nNum = x._eliminate.num
-      if(tBuffer.size == 0){
-        tBuffer += x
-      }else{
-        if(preNum == nNum){
-          tBuffer += x
-        }else{
-          val t = tBuffer.sortWith(_._eliminate._v < _._eliminate._v)
-          res ++= t
-          tBuffer.clear()
-        }
-      }
-      preNum = nNum
-    })
+    val lastF = vVariable.last; vSort.trimEnd(1)
+    var nres = vSort ++ vGeneral
+    var res = nres.sortWith(_._eliminate.num < _._eliminate.num)
     res = res :+ lastF
     res
   }
@@ -670,7 +651,6 @@ object KledGraph {
         })
 
         println("the p1 ="+p1+ " and p2="+ p2 + " and p ="+ p)
-
         factor._cpds = factor._cpds :+ p
         index += 1
         addSeq(indexSeq)
