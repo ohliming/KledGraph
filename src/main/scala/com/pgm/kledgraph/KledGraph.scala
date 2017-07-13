@@ -574,6 +574,7 @@ object KledGraph {
     var index = 0; val border = math.pow(2.0, items.size)
     val eliVariables = delFactor.getVariables
     var indexSeq:Seq[Int] = Seq()
+    println("the item is:"+ items.map(x => x._v))
     items.foreach( x=>{ indexSeq = indexSeq :+ 0 })
     if( items.size > 0 ){
       while( index < border ) {
@@ -650,7 +651,10 @@ object KledGraph {
           }
         })
 
-        println("the p1 ="+p1+ " and p2="+ p2 + " and p ="+ p)
+        if(p1 != p2 || p2 != p || p1 != p){
+          println("the p1 ="+p1+ " and p2="+ p2 + " and p ="+ p)
+        }
+
         factor._cpds = factor._cpds :+ p
         index += 1
         addSeq(indexSeq)
@@ -674,7 +678,6 @@ object KledGraph {
     seqVariable.foreach(variable => { // loop the variables
       val factor = sumProductEliminateVar(mapFactor, seqFactor, variable, target)
       if(factor._cpds.size > 0){
-        println("the delete element is:"+ factor._eliminate._v)
         seqFactor = seqFactor :+ factor
       }
     })
