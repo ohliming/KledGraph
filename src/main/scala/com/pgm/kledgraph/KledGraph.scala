@@ -659,6 +659,9 @@ object KledGraph {
 
               val ps = getCPDPosition(tmpSeq)
               p =  if(p > 0.0) p * x._cpds(ps) else x._cpds(ps)
+              if(x._cpds(ps) > 0){
+                println("the cpds p is:"+ x._cpds(ps))
+              }
               x.setUsed
             }
           }
