@@ -613,6 +613,8 @@ object KledGraph {
           }
         }
 
+        val p1 = p
+
         childs.foreach(c=>{ // childs variables
           if( mapIndex.contains(c) ){
             val childFactor = mapFactor(c._v)
@@ -643,7 +645,8 @@ object KledGraph {
           }
         })
 
-        println("the p is:" + p)
+        val p2 = p
+
         sFactor.foreach(x=> {
           if( x._isUsed == false ){
             val fVariable = x.getVariables.map(x=>x._v).toSet
@@ -659,15 +662,14 @@ object KledGraph {
               })
 
               val ps = getCPDPosition(tmpSeq)
-              if(x._cpds(ps) > 0){
-                println("p = "+ p +" the cpds p is:"+ x._cpds(ps))
-              }
               p =  if(p > 0.0) p * x._cpds(ps) else x._cpds(ps)
 
               x.setUsed
             }
           }
         })
+
+        println("the p1 ="+p1+ " and p2="+ p2 + " and p ="+ p)
 
         factor._cpds = factor._cpds :+ p
         index += 1
