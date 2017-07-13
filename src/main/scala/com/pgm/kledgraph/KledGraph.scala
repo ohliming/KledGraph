@@ -588,7 +588,7 @@ object KledGraph {
     var index = 0; val border = math.pow(2.0, items.size)
     val eliVariables = delFactor.getVariables
     var indexSeq:Seq[Int] = Seq()
-    println("the item is:"+ items.map(x => x._v))
+    println("the item is:"+ items.map(x => x._v)+" and the factors len is:"+ setBayesVal.size)
     items.foreach( x=>{ indexSeq = indexSeq :+ 0 })
     if( items.size > 0 ){
       while( index < border ) {
@@ -609,7 +609,6 @@ object KledGraph {
           }
         }
 
-        val p1 = p
         childs.foreach(c=>{ // childs variables
           if( mapIndex.contains(c) ){
             val childFactor = mapFactor(c._v)
@@ -640,7 +639,6 @@ object KledGraph {
           }
         })
 
-        val p2 = p
         sFactor.foreach(x=> {
           if( x._isUsed == false ){
             val fVariable = x.getVariables.map(x=>x._v).toSet
@@ -662,10 +660,6 @@ object KledGraph {
             }
           }
         })
-
-        if(p1 != p2 || p2 != p || p1 != p){
-          println("the p1 ="+p1+ " and p2="+ p2 + " and p ="+ p)
-        }
 
         factor._cpds = factor._cpds :+ p
         index += 1
