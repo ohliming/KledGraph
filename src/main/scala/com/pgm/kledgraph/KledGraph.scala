@@ -465,8 +465,22 @@ object KledGraph {
 
     var vSort = vVariable.sortWith(_._eliminate.num < _._eliminate.num)
     val lastF = vVariable.last; vSort.trimEnd(1)
-    var nres = vSort ++ vGeneral
-    var res = nres.sortWith(_._eliminate.num < _._eliminate.num)
+    var nres = (vSort ++ vGeneral).sortWith(_._eliminate.num < _._eliminate.num)
+    var res:Seq[BayesFactor] = Seq()
+    var tBuf:ArrayBuffer[BayesFactor] = ArrayBuffer()
+    var preV = 0
+    var nowV = 0
+    nres.foreach(x=> {
+      nowV = x._eliminate.num
+      if(preV != nowV && tBuf.size > 0){
+        res ++= tBuf.sortWith(_._eliminate._v < _._eliminate._v)
+        tBuf.clear()
+      }
+
+      tBuf += x
+      preV = nowV
+    })
+
     res = res :+ lastF
     res
   }
@@ -596,7 +610,6 @@ object KledGraph {
         }
 
         val p1 = p
-
         childs.foreach(c=>{ // childs variables
           if( mapIndex.contains(c) ){
             val childFactor = mapFactor(c._v)
@@ -628,7 +641,6 @@ object KledGraph {
         })
 
         val p2 = p
-
         sFactor.foreach(x=> {
           if( x._isUsed == false ){
             val fVariable = x.getVariables.map(x=>x._v).toSet
