@@ -465,6 +465,7 @@ object KledGraph {
       preV = nowV
     })
 
+    res ++= tBuf
     res
   }
 
