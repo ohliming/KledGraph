@@ -527,7 +527,7 @@ object KledGraph {
   }
 
   def getTopChilds(childs:Set[BayesVar], mapFactor:Map[Int,BayesFactor], setBayes:scala.collection.immutable.Set[BayesVar], vSet:Set[BayesVar],
-                   itemsVSet:Set[Int], bayes: BayesVar, n:Int) = {     // process childs
+                   itemsVSet:Set[Int], bayes: BayesVar, n:Int) = { // process childs
     var childMap:Map[BayesVar,Double] = Map()
     childs.foreach( x=> {
       if(!setBayes.contains(x)){
@@ -560,7 +560,6 @@ object KledGraph {
         }
       })
     }
-
   }
 
   def sumProductEliminateVar(mapFactor:Map[Int,BayesFactor], sFactor:Seq[BayesFactor], variable: BayesFactor, target: BayesFactor) = {
@@ -684,10 +683,7 @@ object KledGraph {
 
     seqVariable.foreach(variable => { // loop the variables
       val factor = sumProductEliminateVar(mapFactor, seqFactor, variable, target)
-      if(factor._cpds.size > 0){
-        println("the factors cpds is:"+ factor._cpds)
-        seqFactor = seqFactor :+ factor
-      }
+      seqFactor = seqFactor :+ factor
     })
 
     val targetFactor = seqFactor.last
