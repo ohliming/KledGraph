@@ -449,6 +449,25 @@ object KledGraph {
     mapIndex
   }
 
+  def gradationSort(vSort:ArrayBuffer[BayesFactor]) = {
+    var res:Seq[BayesFactor] = Seq()
+    var tBuf:ArrayBuffer[BayesFactor] = ArrayBuffer()
+    var preV = 0
+    var nowV = 0
+    vSort.foreach(x=> {
+      nowV = x._eliminate.num
+      if(preV != nowV && tBuf.size > 0){
+        res ++= tBuf.sortWith(_._eliminate._v < _._eliminate._v)
+        tBuf.clear()
+      }
+
+      tBuf += x
+      preV = nowV
+    })
+
+    res
+  }
+
   def getSequence(setFactor:Set[BayesFactor], v:Int) = {
     var vGeneral:ArrayBuffer[BayesFactor] = ArrayBuffer()
     var vVariable:ArrayBuffer[BayesFactor] = ArrayBuffer()
@@ -463,27 +482,11 @@ object KledGraph {
       }
     })
 
-    var vSort = vVariable.sortWith(_._eliminate.num < _._eliminate.num)
-    val lastF = vVariable.last; vSort.trimEnd(1)
-    var nres = (vSort ++ vGeneral).sortWith(_._eliminate.num < _._eliminate.num)
-    var res:Seq[BayesFactor] = Seq()
-    var tBuf:ArrayBuffer[BayesFactor] = ArrayBuffer()
-    var preV = 0
-    var nowV = 0
-    nres.foreach(x=> {
-      nowV = x._eliminate.num
-      if(preV != nowV && tBuf.size > 0){
-        res ++= tBuf.sortWith(_._eliminate._v < _._eliminate._v)
-        tBuf.clear()
-      }
-
-      tBuf += x
-      preV = nowV
-    })
-
-    res ++= tBuf
-    res = res :+ lastF
-    res
+    var vSort1 = vVariable.sortWith(_._eliminate.num < _._eliminate.num)
+    var vSort2 = vGeneral.sortWith(_._eliminate.num < _._eliminate.num)
+    var res1 = gradationSort(vSort1)
+    var res2 = gradationSort(vSort2)
+    res1 ++ res2
   }
 
   def pos2Seq(x:Int, len:Int) = {
@@ -699,7 +702,7 @@ object KledGraph {
       var pos = 0
       targetM._variables.foreach(x => {
         if(mapEvidences.contains(x)){
-          posMap += ((pos -> mapEvidences(x)))
+          posMap += (( pos -> mapEvidences(x) ))
         }
         pos += 1
       })
@@ -762,7 +765,7 @@ object KledGraph {
 
     var target = mapFactor(_v)
     println("the seq is:"+ sequence.map(x=> x._eliminate._v))
-    println("the"+_v+"parents is:"+target._eliminate._parents.map(x=> x._v).toSeq)
+    println("the "+_v+" parents is:"+target._eliminate._parents.map(x=> x._v).toSeq)
     val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
     println("the sequence and size is:"+sequence.size)
     val p = condSumProductVE(mapFactor, sequence, target, 1, mapEvidences)
