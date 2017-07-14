@@ -466,6 +466,7 @@ object KledGraph {
     var vSort = vVariable.sortWith(_._eliminate.num < _._eliminate.num)
     val lastF = vVariable.last; vSort.trimEnd(1)
     var nres = (vSort ++ vGeneral).sortWith(_._eliminate.num < _._eliminate.num)
+    println("the nres len is:"+ nres.size)
     var res:Seq[BayesFactor] = Seq()
     var tBuf:ArrayBuffer[BayesFactor] = ArrayBuffer()
     var preV = 0
