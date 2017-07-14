@@ -588,7 +588,7 @@ object KledGraph {
     var index = 0; val border = math.pow(2.0, items.size)
     val eliVariables = delFactor.getVariables
     var indexSeq:Seq[Int] = Seq()
-    println("the item is:"+ items.map(x => x._v)+" and the factors len is:"+ setBayesVal.size)
+    println( "the item is:"+ items.map(x => x._v)+" and the factors len is:"+ setBayesVal.size )
     items.foreach( x=>{ indexSeq = indexSeq :+ 0 })
     if( items.size > 0 ){
       while( index < border ) {
@@ -684,7 +684,7 @@ object KledGraph {
     var setBayesVar:Seq[BayesVar] = Seq()
     seqVariable.foreach(variable => { // loop the variables
       val factor = sumProductEliminateVar(mapFactor, seqFactor, setBayesVar, variable, target)
-      setBayesVar = setBayesVar :+ factor._eliminate
+      setBayesVar = setBayesVar :+ variable._eliminate
       if(factor._cpds.size > 0){
         seqFactor = seqFactor :+ factor
       }
