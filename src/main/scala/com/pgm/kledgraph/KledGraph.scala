@@ -562,9 +562,9 @@ object KledGraph {
     }
   }
 
-  def sumProductEliminateVar(mapFactor:Map[Int,BayesFactor], sFactor:Seq[BayesFactor], variable: BayesFactor, target: BayesFactor) = {
+  def sumProductEliminateVar(mapFactor:Map[Int,BayesFactor], setBayes:Seq[BayesVar], variable: BayesFactor, target: BayesFactor) = {
     val bayes = variable._eliminate
-    val setBayesVal = sFactor.map(x => x._eliminate).toSet
+    val setBayesVal = setBayes.toSet
     var factor: BayesFactor = new BayesFactor(bayes)
     var delFactor = mapFactor(bayes._v)
 
@@ -681,9 +681,13 @@ object KledGraph {
       pos += 1
     })
 
+    var setBayesVar:Seq[BayesVar] = Seq()
     seqVariable.foreach(variable => { // loop the variables
-      val factor = sumProductEliminateVar(mapFactor, seqFactor, variable, target)
-      seqFactor = seqFactor :+ factor
+      val factor = sumProductEliminateVar(mapFactor, setBayesVar, variable, target)
+      setBayesVar = setBayesVar :+ factor._eliminate
+      if(factor._cpds.size > 0){
+        seqFactor = seqFactor :+ factor
+      }
     })
 
     val targetFactor = seqFactor.last
