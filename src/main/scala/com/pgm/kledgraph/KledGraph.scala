@@ -683,8 +683,8 @@ object KledGraph {
 
     var setBayesVar:Seq[BayesVar] = Seq()
     seqVariable.foreach(variable => { // loop the variables
-      val factor = sumProductEliminateVar(mapFactor, seqFactor, setBayesVar, variable, target)
       setBayesVar = setBayesVar :+ variable._eliminate
+      val factor = sumProductEliminateVar(mapFactor, seqFactor, setBayesVar, variable, target)
       if(factor._cpds.size > 0){
         seqFactor = seqFactor :+ factor
       }
