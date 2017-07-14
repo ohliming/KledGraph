@@ -588,8 +588,8 @@ object KledGraph {
     var index = 0; val border = math.pow(2.0, items.size)
     val eliVariables = delFactor.getVariables
     var indexSeq:Seq[Int] = Seq()
-    println( "the item is:"+ items.map(x => x._v)+" and the factors len is:"+ setBayesVal.size )
-    items.foreach( x=>{ indexSeq = indexSeq :+ 0 })
+    println( "the item is:"+ items.map(x => x._v))
+    items.foreach( x =>{ indexSeq = indexSeq :+ 0 })
     if( items.size > 0 ){
       while( index < border ) {
         var mapIndex:Map[BayesVar,Int] = Map()
@@ -686,6 +686,7 @@ object KledGraph {
       setBayesVar = setBayesVar :+ variable._eliminate
       val factor = sumProductEliminateVar(mapFactor, seqFactor, setBayesVar, variable, target)
       if(factor._cpds.size > 0){
+        println("the factor cpds is:"+ factor._cpds)
         seqFactor = seqFactor :+ factor
       }
     })
@@ -754,7 +755,7 @@ object KledGraph {
     val model = new BayesModel; mapFactor.foreach(x=>{ model.addFactor(x._2) })
     // model.save("BayeModel", sc)
     var setFactor:Set[BayesFactor] = Set() // factors set
-    mapFactor.foreach(x=>{ setFactor.add(x._2) })
+    mapFactor.foreach(x=> { setFactor.add(x._2) })
 
     val _v = 15013  // marginal probability
     val sequence = getSequence(setFactor, _v)

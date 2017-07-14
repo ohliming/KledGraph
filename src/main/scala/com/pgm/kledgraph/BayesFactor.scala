@@ -54,6 +54,7 @@ class BayesModel {
       val jsonMap = compact(render(mapRes)).toString
       resSeq = resSeq :+ jsonMap
     })
+
     val rdd = sc.makeRDD(resSeq)
     rdd.saveAsTextFile(hFile)
   }
