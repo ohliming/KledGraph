@@ -483,8 +483,8 @@ object KledGraph {
       }
     })
 
-    var vSort1 = vVariable.sortWith(_._eliminate.num < _._eliminate.num)
-    var vSort2 = vGeneral.sortWith(_._eliminate.num < _._eliminate.num)
+    var vSort2 = vVariable.sortWith(_._eliminate.num < _._eliminate.num)
+    var vSort1 = vGeneral.sortWith(_._eliminate.num < _._eliminate.num)
     var res1 = gradationSort(vSort1)
     var res2 = gradationSort(vSort2)
     res1 ++ res2
