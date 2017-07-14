@@ -465,7 +465,7 @@ object KledGraph {
       preV = nowV
     })
 
-    res ++= tBuf
+    res ++= tBuf.sortWith(_._eliminate._v < _._eliminate._v)
     res
   }
 
