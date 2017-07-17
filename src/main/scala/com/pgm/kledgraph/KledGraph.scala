@@ -596,13 +596,13 @@ object KledGraph {
     items.foreach( x =>{ indexSeq = indexSeq :+ 0 })
     if( items.size > 0 ){
       while( index < border ) {
-        var mapIndex:Map[BayesVar,Int] = Map()
-        for(pos <- 0 until items.size){ mapIndex += ((items(pos) -> indexSeq(pos))) }
+        var map2Index:Map[BayesVar,Int] = Map()
+        for(pos <- 0 until items.size){ map2Index += ((items(pos) -> indexSeq(pos))) }
         if( eliVariables.size > 0 ){
           var posMap:Map[Int,Int] = Map()
           for( i <- 0 until eliVariables.size ){
             if(parentSet.contains(eliVariables(i))){
-              posMap += (( i -> mapIndex(eliVariables(i)) ))
+              posMap += (( i -> map2Index(eliVariables(i)) ))
             }
           }
 
@@ -614,7 +614,7 @@ object KledGraph {
         }
 
         childs.foreach(c=>{ // childs variables
-          if( mapIndex.contains(c) ){
+          if( map2Index.contains(c) ){
             val childFactor = mapFactor(c._v)
             var iSeq:Seq[Int] = Seq()
             var tpos = 0
@@ -624,8 +624,8 @@ object KledGraph {
                 tpos = i
                 iSeq = iSeq :+ 0
               }else{
-                if( mapIndex.contains(b) ) {
-                  iSeq = iSeq :+ mapIndex(b)
+                if( map2Index.contains(b) ) {
+                  iSeq = iSeq :+ map2Index(b)
                 }else{
                   iSeq = iSeq :+ 1
                 }
@@ -650,8 +650,8 @@ object KledGraph {
             if( diff.size == 0 ){
               var tmpSeq:Seq[Int] = Seq()
               x._variables.foreach(v => {
-                if(mapIndex.contains(v)){
-                  tmpSeq = tmpSeq :+ mapIndex(v)
+                if(map2Index.contains(v)){
+                  tmpSeq = tmpSeq :+ map2Index(v)
                 }else{
                   tmpSeq = tmpSeq :+ 0
                 }
