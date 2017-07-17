@@ -585,8 +585,8 @@ object KledGraph {
     val childs = bayes._childs
     var itemsVSet:Set[Int] = Set(); parents.foreach(x=> itemsVSet.add(x._v))
     getTopChilds(childs, mapFactor, setBayesVal, varSet, itemsVSet, bayes, 2)
-
-    varSet.foreach(v => factor.addVariable(v)) // add variables
+    val varSort = varSet.toSeq.sortWith(_._v < _._v)
+    varSort.foreach(v => factor.addVariable(v)) // add variables
     var items = factor.getVariables
     var p:Double  = 0.0 // result
     var index = 0; val border = math.pow(2.0, items.size)
