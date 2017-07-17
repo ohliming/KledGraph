@@ -102,7 +102,7 @@ object KledGraph {
   def getStudRecords(mapQuestTopic: Map[Int, Set[Int]], mapTopic: Map[Int, String], studSet:Set[Long], sqlContext: HiveContext,subjectId:Int,stageId:Int) = {
     var listRecords:List[(Long, Int, Int)] = List() // records object
     var sql = "select a.student_id,a.question_id,a.result from entity_student_exercise as a join link_question_topic as b on " +
-      "(b.question_id=a.question_id) join entity_topic as c on (c.id = b.topic_id) where c.subject_id="+subjectId+" and c.stage_id ="+stageId + " and ret_num > 0 limit 200000"
+      "(b.question_id=a.question_id) join entity_topic as c on (c.id = b.topic_id) where c.subject_id="+subjectId+" and c.stage_id ="+stageId + " and ret_num > 0"
     val rows = sqlContext.sql(sql).collect()
     val setKeyTopic = mapTopic.map(x=>x._1).toSet
     val regex="""^\d+$""".r  //process effective records
@@ -609,11 +609,12 @@ object KledGraph {
           if( posMap.size > 0 ){
             val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
             val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
+            println("")
             println("the xp1 ="+ p1+ " xp0="+p0 + " posMap ="+posMap)
             println("the positive is:"+ delFactor._cpdPositive)
             println("the negitive is:"+ delFactor._cpdNegative)
-            println("")
             p = p0 + p1
+            if(p == 1.0) p = 0.0
           }
         }
 
