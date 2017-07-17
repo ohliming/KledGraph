@@ -613,6 +613,7 @@ object KledGraph {
           }
         }
 
+        val p1 = p
         childs.foreach(c=>{ // childs variables
           if( map2Index.contains(c) ){
             val childFactor = mapFactor(c._v)
@@ -643,6 +644,8 @@ object KledGraph {
           }
         })
 
+        val p2= p
+
         sFactor.foreach(x=> {
           if( x._isUsed == false ){
             val fVariable = x.getVariables.map(x=>x._v).toSet
@@ -666,6 +669,7 @@ object KledGraph {
         })
 
         factor._cpds = factor._cpds :+ p
+        println("the p1 ="+ p1 + " p2="+p2+" p="+ p)
         index += 1
         addSeq(indexSeq)
       }
@@ -678,7 +682,7 @@ object KledGraph {
                        tag:Int /*0~1~-1*/, mapEvidences:Map[BayesVar, Int]) = {  // conditional probability
     var seqFactor:Seq[BayesFactor] = Seq()
     var pos = 0; val evidSet = mapEvidences.map(x=>{ mapFactor(x._1._v)}).toSet
-    seqVariable.foreach(x=>{// cut evidences
+    seqVariable.foreach(x=>{ // cut evidences
       if(evidSet.contains(x)){
         seqVariable.drop(pos)
       }
@@ -698,7 +702,7 @@ object KledGraph {
     val targetFactor = seqFactor.last
     val targetM = mapFactor(target._eliminate._v) // other
     var p:Double = targetFactor._cpds.last
-    if(mapEvidences.size > 0){
+    if( mapEvidences.size > 0 ){
       var posMap:Map[Int,Int] = Map()
       var pos = 0
       targetM._variables.foreach(x => {
