@@ -206,7 +206,7 @@ object KledGraph {
   }
 
   def structGrahpList(listRecords:List[(Long,Int,Int)], mapTopic:Map[Int, String], mapQuestTopic:Map[Int,Set[Int]],
-                      mapTopicQuest:Map[Int,Set[Int]],throld: Int = 30, inDreege:Int = 5, outDreege:Int = 4) = {
+                      mapTopicQuest:Map[Int,Set[Int]],throld: Int = 30, inDreege:Int = 3, outDreege:Int = 4) = {
     var listPair:List[((Int,Int),Int)] = List()
     mapTopic.foreach(topic1 => {
       mapTopic.foreach(topic2 => {
