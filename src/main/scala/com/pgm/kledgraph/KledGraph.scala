@@ -206,7 +206,7 @@ object KledGraph {
   }
 
   def structGrahpList(listRecords:List[(Long,Int,Int)], mapTopic:Map[Int, String], mapQuestTopic:Map[Int,Set[Int]],
-                      mapTopicQuest:Map[Int,Set[Int]],throld: Int = 30, inDreege:Int = 3, outDreege:Int = 4) = {
+                      mapTopicQuest:Map[Int,Set[Int]],throld: Int = 30, inDreege:Int = 4, outDreege:Int = 5) = {
     var listPair:List[((Int,Int),Int)] = List()
     mapTopic.foreach(topic1 => {
       mapTopic.foreach(topic2 => {
@@ -508,7 +508,7 @@ object KledGraph {
   }
 
   def sumPositionsPro(cpds:Seq[Double], pMap:Map[Int,Int], len:Int) = {
-    var p = 0.0
+    var p = 1.0
     var cnt = 0
     cpds.foreach(pi=>{
       val index = pos2Seq(cnt, len)
@@ -522,8 +522,8 @@ object KledGraph {
         })
       }
 
-      if( bFlag && pi > 0.0 ){
-        p = if( p > 0.0 ) p * pi else pi
+      if( bFlag ){
+        p = p * pi
       }
       cnt += 1
     })
@@ -609,15 +609,12 @@ object KledGraph {
           if( posMap.size > 0 ){
             val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
             val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
-            println("")
             println("the xp1 ="+ p1+ " xp0="+p0 + " posMap ="+posMap)
             println("the positive is:"+ delFactor._cpdPositive)
             println("the negitive is:"+ delFactor._cpdNegative)
             p = p0 + p1
-            if(p == 1.0) p = 0.0
           }
         }
-
         val p1 = p
         childs.foreach(c=>{ // childs variables
           if( map2Index.contains(c) ){
@@ -649,8 +646,7 @@ object KledGraph {
           }
         })
 
-        val p2= p
-
+        val p2 = p
         sFactor.foreach(x=> {
           if( x._isUsed == false ){
             val fVariable = x.getVariables.map(x=>x._v).toSet
@@ -673,8 +669,9 @@ object KledGraph {
           }
         })
 
+        println("the p="+p +" and p1="+p1+" p2="+p2)
+        println("")
         factor._cpds = factor._cpds :+ p
-        println("the p1 ="+ p1 + " p2="+p2+" p="+ p)
         index += 1
         addSeq(indexSeq)
       }
