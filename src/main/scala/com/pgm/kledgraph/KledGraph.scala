@@ -395,16 +395,15 @@ object KledGraph {
       bayes._parents.foreach(parent => { x._2.addVariable(parent) })
       val variables = x._2.getVariables
       var indSeq:Seq[Int] = Seq(); variables.foreach(x=>{ indSeq = indSeq :+ 0})
-
       if(variables.size > 0) {
         var index = 0
-        addSeq(indSeq)
         val border = math.pow(2.0, variables.size)
         if(mapIndex.contains(x._2._eliminate._v)){
           val topicIndex = mapIndex(x._1)
           while( index < border ){
             val p1 = preConditionPro(vecRecords, mapRowStudent, x._1, topicIndex, 1, variables, indSeq, mapIndex)
             val p0 = 1-p1
+            println("the p1="+p1 + " and p0="+p0)
             x._2._cpdPositive = x._2._cpdPositive :+ p1
             x._2._cpdNegative = x._2._cpdNegative :+ p0
             index += 1
@@ -592,7 +591,7 @@ object KledGraph {
     var index = 0; val border = math.pow(2.0, items.size)
     val eliVariables = delFactor.getVariables
     var indexSeq:Seq[Int] = Seq()
-    println( "the item is:"+ items.map(x => x._v))
+    //println( "the item is:"+ items.map(x => x._v))
     items.foreach( x =>{ indexSeq = indexSeq :+ 0 })
     if( items.size > 0 ){
       while( index < border ) {
@@ -609,9 +608,9 @@ object KledGraph {
           if( posMap.size > 0 ){
             val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
             val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
-            println("the xp1 ="+ p1+ " xp0="+p0 + " posMap ="+posMap)
-            println("the positive is:"+ delFactor._cpdPositive)
-            println("the negitive is:"+ delFactor._cpdNegative)
+            //println("the xp1 ="+ p1+ " xp0="+p0 + " posMap ="+posMap)
+            //println("the positive is:"+ delFactor._cpdPositive)
+            //println("the negitive is:"+ delFactor._cpdNegative)
             p = p0 + p1
           }
         }
@@ -669,8 +668,8 @@ object KledGraph {
           }
         })
 
-        println("the p="+p +" and p1="+p1+" p2="+p2)
-        println("")
+        //println("the p="+p +" and p1="+p1+" p2="+p2)
+        //println("")
         factor._cpds = factor._cpds :+ p
         index += 1
         addSeq(indexSeq)
