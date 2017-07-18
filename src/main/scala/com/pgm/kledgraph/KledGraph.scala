@@ -206,7 +206,7 @@ object KledGraph {
   }
 
   def structGrahpList(listRecords:List[(Long,Int,Int)], mapTopic:Map[Int, String], mapQuestTopic:Map[Int,Set[Int]],
-                      mapTopicQuest:Map[Int,Set[Int]],throld: Int = 30, inDreege:Int = 4, outDreege:Int = 5) = {
+                      mapTopicQuest:Map[Int,Set[Int]],throld: Int = 30, inDreege:Int = 3, outDreege:Int = 4) = {
     var listPair:List[((Int,Int),Int)] = List()
     mapTopic.foreach(topic1 => {
       mapTopic.foreach(topic2 => {
@@ -373,20 +373,17 @@ object KledGraph {
       p = if(fenzi < fenmu) fenzi/fenmu else 1.0
     }
 
-    /*
-    if( p < threshold && p > 0 ){ // do something
-      val pi = (1- p)*fenmu
-      val size = if(pi > seqFenzi.size) seqFenzi.size else pi.toInt
-      val posSet = randomSet(size, seqFenzi.size)
-      posSet.foreach(pos => {
-        if(setFenmu.contains(seqFenzi(pos))){
-          fenzi += 1
+    if( p < threshold && p > 0 ){
+      var cnt = 0
+      seqFenzi.foreach(studId => {
+        if(setFenmu.contains(studId)){
+          cnt += 1
         }
       })
 
-      p = fenzi / fenmu
+      val pro = (cnt / seqFenzi.size) * (1-threshold)
+      p = p + pro
     }
-    */
 
     p
   }
@@ -610,9 +607,6 @@ object KledGraph {
           if( posMap.size > 0 ){
             val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
             val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
-            //println("the xp1 ="+ p1+ " xp0="+p0 + " posMap ="+posMap)
-            //println("the positive is:"+ delFactor._cpdPositive)
-            //println("the negitive is:"+ delFactor._cpdNegative)
             p = p0 + p1
           }
         }
@@ -670,8 +664,6 @@ object KledGraph {
           }
         })
 
-        //println("the p="+p +" and p1="+p1+" p2="+p2)
-        //println("")
         factor._cpds = factor._cpds :+ p
         index += 1
         addSeq(indexSeq)
