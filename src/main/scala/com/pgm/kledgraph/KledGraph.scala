@@ -373,6 +373,7 @@ object KledGraph {
       p = if(fenzi < fenmu) fenzi/fenmu else 1.0
     }
 
+    /*
     if( p < threshold && p > 0 ){ // do something
       val pi = (1- p)*fenmu
       val size = if(pi > seqFenzi.size) seqFenzi.size else pi.toInt
@@ -385,6 +386,7 @@ object KledGraph {
 
       p = fenzi / fenmu
     }
+    */
 
     p
   }
