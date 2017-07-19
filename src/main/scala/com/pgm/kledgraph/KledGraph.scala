@@ -402,7 +402,6 @@ object KledGraph {
           while( index < border ){
             val p1 = preConditionPro(vecRecords, mapRowStudent, x._1, topicIndex, 1, variables, indSeq, mapIndex)
             val p0 = 1-p1
-            println("the p1="+p1 + " and p0="+p0)
             x._2._cpdPositive = x._2._cpdPositive :+ p1
             x._2._cpdNegative = x._2._cpdNegative :+ p0
             index += 1
@@ -689,7 +688,6 @@ object KledGraph {
       setBayesVar = setBayesVar :+ variable._eliminate
       val factor = sumProductEliminateVar(mapFactor, seqFactor, setBayesVar, variable, target)
       if(factor._cpds.size > 0){
-        println("the factor cpds is:"+ factor._cpds)
         seqFactor = seqFactor :+ factor
       }
     })
@@ -766,7 +764,7 @@ object KledGraph {
     var target = mapFactor(_v)
     println("the seq is:"+ sequence.map(x=> x._eliminate._v))
     println("the "+_v+" parents is:"+target._eliminate._parents.map(x=> x._v).toSeq)
-    val mapEvidences:Map[BayesVar,Int] = Map() // conditional factors
+    val mapEvidences:Map[BayesVar,Int] = Map(mapFactor(15108)._eliminate -> 1) // conditional factors
     println("the sequence and size is:"+sequence.size)
     val p = condSumProductVE(mapFactor, sequence, target, 1, mapEvidences)
     println("the result p=" + p)
