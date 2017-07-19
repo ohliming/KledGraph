@@ -373,7 +373,7 @@ object KledGraph {
       p = if(fenzi < fenmu) fenzi/fenmu else 1.0
     }
 
-    if( p < threshold && p > 0 ){
+    if( p < threshold && p > 0 && seqFenzi.size > 0 ){
       var cnt = 0
       seqFenzi.foreach(studId => {
         if(setFenmu.contains(studId)){
