@@ -238,7 +238,6 @@ object KledGraph {
       val inCnt = if(mapParents.contains(topic2)) mapParents(topic2).size else 0
       val outCnt = if(mapChilds.contains(topic1)) mapChilds(topic1).size else 0
       if(!bFlag && inCnt < inDreege && outCnt < outDreege ){
-        println(mapTopic(topic1)+"->"+mapTopic(topic2)+" p =" + math.max(p0,p1))
         initPair = initPair. +: (topic1, topic2)
         if(mapParents.contains(topic2)){
           mapParents(topic2).add(topic1)
@@ -589,7 +588,7 @@ object KledGraph {
     var index = 0; val border = math.pow(2.0, items.size)
     val eliVariables = delFactor.getVariables
     var indexSeq:Seq[Int] = Seq()
-    //println( "the item is:"+ items.map(x => x._v))
+    println( "the item is:"+ items.map(x => x._v))
     items.foreach( x =>{ indexSeq = indexSeq :+ 0 })
     if( items.size > 0 ){
       while( index < border ) {
@@ -754,17 +753,18 @@ object KledGraph {
     println("the cpd factor len is:"+ mapFactor.size)
 
     val model = new BayesModel; mapFactor.foreach(x=>{ model.addFactor(x._2) })
-    // model.save("BayeModel", sc)
-    var setFactor:Set[BayesFactor] = Set() // factors set
+    model.save("/liming/BayeModel", sc)
+    var setFactor:Set[BayesFactor] = Set()
     mapFactor.foreach(x=> { setFactor.add(x._2) })
 
-    val _v = 15013  // marginal probability
+    val _v = 15013
     val sequence = getSequence(setFactor, _v)
 
     var target = mapFactor(_v)
-    println("the seq is:"+ sequence.map(x=> x._eliminate._v))
-    println("the "+_v+" parents is:"+target._eliminate._parents.map(x=> x._v).toSeq)
-    val mapEvidences:Map[BayesVar,Int] = Map(mapFactor(15108)._eliminate -> 1) // conditional factors
+    val parentTarget =  target._eliminate._parents.map(x=>x._v).toSeq
+    println("the parent is:"+ parentTarget)
+
+    val mapEvidences:Map[BayesVar,Int] = Map(mapFactor(parentTarget(0))._eliminate -> 1) // conditional factors
     println("the sequence and size is:"+sequence.size)
     val p = condSumProductVE(mapFactor, sequence, target, 1, mapEvidences)
     println("the result p=" + p)
