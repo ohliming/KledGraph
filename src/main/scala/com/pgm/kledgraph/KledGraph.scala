@@ -465,16 +465,19 @@ object KledGraph {
     res
   }
 
-  def getSequence(setFactor:Set[BayesFactor], v:Int) = {
+  def getSequence(setFactor:Set[BayesFactor], mapEvidences:Map[BayesVar,Int], v:Int) = {
     var vGeneral:ArrayBuffer[BayesFactor] = ArrayBuffer()
     var vVariable:ArrayBuffer[BayesFactor] = ArrayBuffer()
+    val setEvid = mapEvidences.map(x=> x._1).toSet
     setFactor.foreach(factor => {
-      if(factor._eliminate._v != v){
-        val fSet = factor.getVariables.map(x => x._v).toSet
-        if(fSet.contains(v)){
-          vVariable += factor
-        }else{
-          vGeneral += factor
+      if(setEvid.contains(factor._eliminate)){
+        if(factor._eliminate._v != v){
+          val fSet = factor.getVariables.map(x => x._v).toSet
+          if(fSet.contains(v)){
+            vVariable += factor
+          }else{
+            vGeneral += factor
+          }
         }
       }
     })
@@ -758,14 +761,14 @@ object KledGraph {
     mapFactor.foreach(x=> { setFactor.add(x._2) })
 
     val _v = 15013
-    val sequence = getSequence(setFactor, _v)
-
     var target = mapFactor(_v)
     val parentTarget =  target._eliminate._parents.map(x=>x._v).toSeq
     println("the parent is:"+ parentTarget)
-
     val mapEvidences:Map[BayesVar,Int] = Map(mapFactor(parentTarget(0))._eliminate -> 1) // conditional factors
+
+    val sequence = getSequence(setFactor, mapEvidences, _v)
     println("the sequence and size is:"+sequence.size)
+
     val p = condSumProductVE(mapFactor, sequence, target, 1, mapEvidences)
     println("the result p=" + p)
 
