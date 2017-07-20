@@ -705,7 +705,7 @@ object KledGraph {
       }
 
       var index = 0
-      var sump = 0
+      var sump:Double = 0.0
       targetFactor._cpds.foreach(d => {
         val arr = pos2Seq(index, targetFactor._variables.size)
         if(arr(pos) == tag){
@@ -715,6 +715,7 @@ object KledGraph {
         index += 1
       })
 
+      println("the sum ="+sump+ " and p ="+p)
       if(sump > 0.0){
         p = p/ sump
       }
