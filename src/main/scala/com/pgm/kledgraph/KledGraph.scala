@@ -692,29 +692,32 @@ object KledGraph {
     })
 
     val targetFactor = seqFactor.last
-    val targetM = mapFactor(target._eliminate._v) // other
     var p:Double = targetFactor._cpds.last
-    if( mapEvidences.size > 0 ){
-      var posMap:Map[Int,Int] = Map()
+    if( mapEvidences.size > 0 ){ // condition
       var pos = 0
-      targetM._variables.foreach(x => {
-        if(mapEvidences.contains(x)){
-          posMap += (( pos -> mapEvidences(x) ))
-        }
-        pos += 1
-      })
-
-      var pr:Double = 0.0
-      if(tag == 1){
-        pr = sumPositionsPro(targetM._cpdPositive, posMap, targetM._variables.size)
-      }else{
-        pr = sumPositionsPro(targetM._cpdNegative, posMap, targetM._variables.size)
+      loop.breakable {
+        targetFactor._variables.foreach(x => {
+          if(x._v == target._eliminate._v){
+            loop.break
+          }
+          pos += 1
+        })
       }
 
-      println("the posMap is:"+posMap)
-      println("the positive cpd is:"+targetM._cpdPositive)
-      println("the pr ="+pr+" p="+p)
-      p = if(pr > 0) pr *p else p
+      var index = 0
+      var sump = 0
+      targetFactor._cpds.foreach(d => {
+        val arr = pos2Seq(index, targetFactor._variables.size)
+        if(arr(pos) == tag){
+          sump += d
+        }
+
+        index += 1
+      })
+
+      if(sump > 0.0){
+        p = p/ sump
+      }
     }
 
     p
