@@ -470,14 +470,12 @@ object KledGraph {
     var vVariable:ArrayBuffer[BayesFactor] = ArrayBuffer()
     val setEvid = mapEvidences.map(x=> x._1).toSet
     setFactor.foreach(factor => {
-      if(setEvid.contains(factor._eliminate)){
-        if(factor._eliminate._v != v){
-          val fSet = factor.getVariables.map(x => x._v).toSet
-          if(fSet.contains(v)){
-            vVariable += factor
-          }else{
-            vGeneral += factor
-          }
+      if(!setEvid.contains(factor._eliminate) && factor._eliminate._v != v){
+        val fSet = factor.getVariables.map(x => x._v).toSet
+        if(fSet.contains(v)){
+          vVariable += factor
+        }else{
+          vGeneral += factor
         }
       }
     })
