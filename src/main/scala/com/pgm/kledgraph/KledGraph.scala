@@ -609,7 +609,7 @@ object KledGraph {
             p = p0 + p1
           }
         }
-        val p1 = p
+
         childs.foreach(c=>{ // childs variables
           if( map2Index.contains(c) ){
             val childFactor = mapFactor(c._v)
@@ -640,7 +640,6 @@ object KledGraph {
           }
         })
 
-        val p2 = p
         sFactor.foreach(x=> {
           if( x._isUsed == false ){
             val fVariable = x.getVariables.map(x=>x._v).toSet
@@ -711,7 +710,11 @@ object KledGraph {
       }else{
         pr = sumPositionsPro(targetM._cpdNegative, posMap, targetM._variables.size)
       }
-      p = pr * p
+
+      println("the posMap is:"+posMap)
+      println("the positive cpd is:"+targetM._cpdPositive)
+      println("the pr ="+pr+" p="+p)
+      p = if(pr > 0) pr *p else p
     }
 
     p
