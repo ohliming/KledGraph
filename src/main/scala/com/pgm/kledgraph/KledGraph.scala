@@ -237,6 +237,7 @@ object KledGraph {
       val bFlag = isLoopGraph(topic1, topic2, mapParents)
       val inCnt = if(mapParents.contains(topic2)) mapParents(topic2).size else 0
       val outCnt = if(mapChilds.contains(topic1)) mapChilds(topic1).size else 0
+
       if(!bFlag && inCnt < inDreege && outCnt < outDreege ){
         initPair = initPair. +: (topic1, topic2)
         if(mapParents.contains(topic2)){
@@ -610,6 +611,7 @@ object KledGraph {
           }
         }
 
+        val p1 = p
         childs.foreach(c=>{ // childs variables
           if( map2Index.contains(c) ){
             val childFactor = mapFactor(c._v)
@@ -640,6 +642,7 @@ object KledGraph {
           }
         })
 
+        val p2 = p
         sFactor.foreach(x=> {
           if( x._isUsed == false ){
             val fVariable = x.getVariables.map(x=>x._v).toSet
@@ -662,6 +665,7 @@ object KledGraph {
           }
         })
 
+        println("the p1="+p1+" p2="+p2+" p="+p)
         factor._cpds = factor._cpds :+ p
         index += 1
         addSeq(indexSeq)
