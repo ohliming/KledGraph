@@ -589,9 +589,8 @@ object KledGraph {
     var p:Double  = 0.0 // result
     var index = 0; val border = math.pow(2.0, items.size)
     val eliVariables = delFactor.getVariables
-    var indexSeq:Seq[Int] = Seq()
+    var indexSeq:Seq[Int] = Seq(); items.foreach( x =>{ indexSeq = indexSeq :+ 0 })
     println( "the item is:"+ items.map(x => x._v))
-    items.foreach( x =>{ indexSeq = indexSeq :+ 0 })
     if( items.size > 0 ){
       while( index < border ) {
         var map2Index:Map[BayesVar,Int] = Map()
@@ -607,6 +606,8 @@ object KledGraph {
           if( posMap.size > 0 ){
             val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
             val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
+            println("the positive is:"+delFactor._cpdPositive)
+            println("the negative is:"+delFactor._cpdNegative)
             p = p0 + p1
           }
         }
@@ -644,7 +645,7 @@ object KledGraph {
 
         val p2 = p
         sFactor.foreach(x=> {
-          if( x._isUsed == false ){
+          if( x._isUsed >= 0 ){
             val fVariable = x.getVariables.map(x=>x._v).toSet
             val diff = fVariable -- itemsVSet
             if( diff.size == 0 ){
@@ -659,18 +660,23 @@ object KledGraph {
 
               val ps = getCPDPosition(tmpSeq)
               p =  if(p > 0.0) p * x._cpds(ps) else x._cpds(ps)
-
-              x.setUsed
+              x._isUsed = 1
             }
           }
         })
 
-        println("the p1="+p1+" p2="+p2+" p="+p)
+        println("the p1="+p1+" p2="+p2+" p="+p+ " index ="+index)
         factor._cpds = factor._cpds :+ p
         index += 1
         addSeq(indexSeq)
       }
     }
+
+    sFactor.foreach(x=>{
+      if(x._isUsed  == 1){
+        x.setUsed
+      }
+    })
 
     factor
   }

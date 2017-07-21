@@ -27,10 +27,10 @@ class BayesFactor(e:BayesVar){
   var _cpdPositive:Seq[Double] = Seq() // positive
   var _cpdNegative:Seq[Double] = Seq() // negative
   var _cpds:Seq[Double] = Seq() // merge table
-  var _isUsed = false
+  var _isUsed = 0
 
   def getVariables = this._variables
-  def setUsed = { _isUsed = true }
+  def setUsed = { _isUsed = -1 }
   def num = this._variables.size
   def addVariable(v:BayesVar) = {this._variables = this._variables :+ v}
 }
