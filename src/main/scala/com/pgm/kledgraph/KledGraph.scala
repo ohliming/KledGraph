@@ -695,29 +695,35 @@ object KledGraph {
     var p:Double = targetFactor._cpds.last
     if( mapEvidences.size > 0 ){ // condition
       var pos = 0
-      loop.breakable {
-        targetFactor._variables.foreach(x => {
-          if(x._v == target._eliminate._v){
-            loop.break
-          }
-          pos += 1
-        })
-      }
+      var posMap:Map[Int,Int] = Map()
+      targetFactor._variables.foreach(x => {
+        if(mapEvidences.contains(x)){
+          posMap += ((pos -> mapEvidences(x)))
+        }
+        pos += 1
+      })
 
       var index = 0
       var sump:Double = 0.0
       targetFactor._cpds.foreach(d => {
         val arr = pos2Seq(index, targetFactor._variables.size)
-        if(arr(pos) == tag){
-          sump += d
+        var bFlag = true
+        loop.breakable {
+          posMap.foreach( x =>{
+            if(arr(x._1) != x._2){
+              bFlag = false
+              loop.break
+            }
+          })
         }
-
+        if(bFlag){sump += d}
         index += 1
       })
 
+      println("the cpd is:"+ targetFactor._cpds)
       println("the sum ="+sump+ " and p ="+p)
       if(sump > 0.0){
-        p = p/ sump
+        p = p / sump
       }
     }
 
