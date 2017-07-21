@@ -775,7 +775,7 @@ object KledGraph {
     var target = mapFactor(_v)
     val parentTarget =  target._eliminate._parents.map(x=>x._v).toSeq
     println("the parent is:"+ parentTarget)
-    val mapEvidences:Map[BayesVar,Int] = Map(mapFactor(parentTarget(0))._eliminate -> 1) // conditional factors
+    val mapEvidences:Map[BayesVar,Int] = Map(mapFactor(parentTarget(0))._eliminate -> 1, mapFactor(parentTarget(1))._eliminate ->1) // conditional factors
 
     val sequence = getSequence(setFactor, mapEvidences, _v)
     println("the sequence and size is:"+sequence.size)
