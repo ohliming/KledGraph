@@ -606,8 +606,6 @@ object KledGraph {
           if( posMap.size > 0 ){
             val p1 = sumPositionsPro(delFactor._cpdPositive, posMap, eliVariables.size)
             val p0 = sumPositionsPro(delFactor._cpdNegative, posMap, eliVariables.size)
-            println("the positive is:"+delFactor._cpdPositive)
-            println("the negative is:"+delFactor._cpdNegative)
             p = p0 + p1
           }
         }
@@ -618,7 +616,7 @@ object KledGraph {
             val childFactor = mapFactor(c._v)
             var iSeq:Seq[Int] = Seq()
             var tpos = 0
-            for(i <- 0 until  childFactor._variables.size){
+            for(i <- 0 until childFactor._variables.size){
               val b = childFactor._variables(i)
               if(b.eq(bayes)){
                 tpos = i
@@ -659,6 +657,7 @@ object KledGraph {
               })
 
               val ps = getCPDPosition(tmpSeq)
+              println("the p temp facotr is:"+ x._cpds(ps))
               p =  if(p > 0.0) p * x._cpds(ps) else x._cpds(ps)
               x._isUsed = 1
             }
@@ -672,12 +671,7 @@ object KledGraph {
       }
     }
 
-    sFactor.foreach(x=>{
-      if(x._isUsed  == 1){
-        x.setUsed
-      }
-    })
-
+    sFactor.foreach(x=>{ if(x._isUsed  == 1){x.setUsed}})
     factor
   }
 
@@ -779,13 +773,14 @@ object KledGraph {
     val model = new BayesModel; mapFactor.foreach(x=>{ model.addFactor(x._2) })
     model.save("./liming/BayeModel", sc)
     var setFactor:Set[BayesFactor] = Set()
-    mapFactor.foreach(x=> { setFactor.add(x._2) })
+    mapFactor.foreach( x=> { setFactor.add(x._2) })
 
     val _v = 15013
     var target = mapFactor(_v)
     val parentTarget =  target._eliminate._parents.map(x=>x._v).toSeq
     println("the parent is:"+ parentTarget)
-    val mapEvidences:Map[BayesVar,Int] = Map(mapFactor(parentTarget(0))._eliminate -> 1, mapFactor(parentTarget(1))._eliminate ->1) // conditional factors
+    // conditional factors
+    val mapEvidences:Map[BayesVar, Int] = Map(mapFactor(parentTarget(0))._eliminate -> 1, mapFactor(parentTarget(1))._eliminate ->1)
 
     val sequence = getSequence(setFactor, mapEvidences, _v)
     println("the sequence and size is:"+sequence.size)
