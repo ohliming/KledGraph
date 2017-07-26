@@ -672,6 +672,10 @@ object KledGraph {
     factor
   }
 
+  def mapSumProduct(mapFactor:Map[Int,BayesFactor])= { // map
+
+  }
+
   def condSumProductVE(mapFactor:Map[Int,BayesFactor], seqVariable:Seq[BayesFactor], target: BayesFactor,
                        tag:Int /*0~1~-1*/, mapEvidences:Map[BayesVar, Int]) = {  // conditional probability
     var seqFactor:Seq[BayesFactor] = Seq()
@@ -688,6 +692,7 @@ object KledGraph {
       setBayesVar = setBayesVar :+ variable._eliminate
       val factor = sumProductEliminateVar(mapFactor, seqFactor, setBayesVar, variable, target)
       if(factor._cpds.size > 0){
+        println("variable is:"+factor._variables.map(x=>x._v)+"the facotr cpd is:"+ factor._cpds)
         seqFactor = seqFactor :+ factor
       }
     })
@@ -722,9 +727,7 @@ object KledGraph {
         index += 1
       })
 
-      println("the cpd is:"+ targetFactor._cpds)
-      println("the sum ="+sump+ " and p ="+p)
-      if(sump > 0.0){
+      if( sump > 0.0 ){
         p = p / sump
       }
     }
