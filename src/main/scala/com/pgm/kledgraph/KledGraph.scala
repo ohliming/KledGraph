@@ -645,7 +645,6 @@ object KledGraph {
             val fVariable = x.getVariables.map(x=>x._v).toSet
             val diff = fVariable -- itemsVSet
             if( diff.size == 0 ){
-              println("the variables is:"+ fVariable+" and item set is:"+itemsVSet)
               var tmpSeq:Seq[Int] = Seq()
               x._variables.foreach(v => {
                 if(map2Index.contains(v)){
@@ -775,13 +774,18 @@ object KledGraph {
     if(!isCache){ // Generating Models
       staticTopicCPD(mapFactor, vecRecords, mapRowStudent, mapIndex, mapTopic)
       println("the cpd factor len is:"+ mapFactor.size)
-
       val model = new BayesModel; mapFactor.foreach(x=>{ model.addFactor(x._2) })
       model.save("./liming/BayeModel", sc)
     }else{
       val model = new BayesModel
       model.load("./liming/BayeModel",sc)
-
+      val factorSet = model._factors
+      factorSet.foreach(x=>{
+        if(mapFactor.contains(x._eliminate._v)){
+          mapFactor(x._eliminate._v)._cpdPositive = x._cpdPositive
+          mapFactor(x._eliminate._v)._cpdNegative = x._cpdNegative
+        }
+      })
     }
 
     var setFactor:Set[BayesFactor] = Set()
