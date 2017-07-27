@@ -732,6 +732,10 @@ object KledGraph {
       }
     }
 
+    val mTarget = mapFactor(target._eliminate._v)
+    println("the target variable is:"+ mTarget._variables.map(x=>x._v))
+    println("the varable cpd is:"+ mTarget._cpds )
+
     p
   }
 
