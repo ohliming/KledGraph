@@ -672,10 +672,6 @@ object KledGraph {
     factor
   }
 
-  def mapSumProduct(mapFactor:Map[Int,BayesFactor])= { // map
-
-  }
-
   def condSumProductVE(mapFactor:Map[Int,BayesFactor], seqVariable:Seq[BayesFactor], target: BayesFactor,
                        tag:Int /*0~1~-1*/, mapEvidences:Map[BayesVar, Int]) = {  // conditional probability
     var seqFactor:Seq[BayesFactor] = Seq()
@@ -775,11 +771,19 @@ object KledGraph {
     var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor, initPair)
     println("the init factor len is:"+mapFactor.size)
 
-    staticTopicCPD(mapFactor, vecRecords, mapRowStudent, mapIndex, mapTopic)
-    println("the cpd factor len is:"+ mapFactor.size)
+    var isCache = false
+    if(isCache){ // Generating Models
+      staticTopicCPD(mapFactor, vecRecords, mapRowStudent, mapIndex, mapTopic)
+      println("the cpd factor len is:"+ mapFactor.size)
 
-    val model = new BayesModel; mapFactor.foreach(x=>{ model.addFactor(x._2) })
-    model.save("./liming/BayeModel", sc)
+      val model = new BayesModel; mapFactor.foreach(x=>{ model.addFactor(x._2) })
+      model.save("./liming/BayeModel", sc)
+    }else{
+      val model = new BayesModel
+      model.load("./liming/BayeModel",sc)
+
+    }
+
     var setFactor:Set[BayesFactor] = Set()
     mapFactor.foreach( x=> { setFactor.add(x._2) })
 
@@ -795,7 +799,6 @@ object KledGraph {
 
     val p = condSumProductVE(mapFactor, sequence, target, 1, mapEvidences)
     println("the result p=" + p)
-
     sc.stop
   }
 }
