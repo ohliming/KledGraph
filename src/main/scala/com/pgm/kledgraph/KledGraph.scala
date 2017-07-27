@@ -780,7 +780,7 @@ object KledGraph {
     var setFactor:Set[BayesFactor] = Set()
     mapFactor.foreach( x=> { setFactor.add(x._2) })
 
-    val _v = 15013
+    val _v = 15115
     var target = mapFactor(_v)
     val parentTarget =  target._eliminate._parents.map(x=>x._v).toSeq
     println("the parent is:"+ parentTarget)
