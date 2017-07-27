@@ -771,8 +771,8 @@ object KledGraph {
     var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor, initPair)
     println("the init factor len is:"+mapFactor.size)
 
-    var isCache = false
-    if(isCache){ // Generating Models
+    var isCache = true
+    if(!isCache){ // Generating Models
       staticTopicCPD(mapFactor, vecRecords, mapRowStudent, mapIndex, mapTopic)
       println("the cpd factor len is:"+ mapFactor.size)
 
