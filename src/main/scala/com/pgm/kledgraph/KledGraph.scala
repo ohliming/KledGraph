@@ -734,7 +734,10 @@ object KledGraph {
 
     val mTarget = mapFactor(target._eliminate._v)
     println("the target variable is:"+ mTarget._variables.map(x=>x._v))
-    println("the varable cpd is:"+ mTarget._cpds )
+    println("the positive cpd is:"+ mTarget._cpdPositive )
+    mTarget._variables.foreach(x =>{
+      println("parent "+ x._v+" num is:"+ x.num)
+    })
 
     p
   }
