@@ -775,10 +775,10 @@ object KledGraph {
       staticTopicCPD(mapFactor, vecRecords, mapRowStudent, mapIndex, mapTopic)
       println("the cpd factor len is:"+ mapFactor.size)
       val model = new BayesModel; mapFactor.foreach(x=>{ model.addFactor(x._2) })
-      model.save("./liming/BayeModel", sc)
+      model.save("hdfs://liming/BayeModel", sc)
     }else{
       val model = new BayesModel
-      model.load("./liming/BayeModel",sc)
+      model.load("hdfs://liming/BayeModel",sc)
       val factorSet = model._factors
       factorSet.foreach(x=>{
         if(mapFactor.contains(x._eliminate._v)){
