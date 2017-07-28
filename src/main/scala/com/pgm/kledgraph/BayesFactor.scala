@@ -32,7 +32,11 @@ class BayesFactor(e:BayesVar){
   def getVariables = this._variables
   def setUsed = { _isUsed = -1 }
   def num = this._variables.size
-  def addVariable(v:BayesVar) = {this._variables = this._variables :+ v}
+  def addVariable(v:BayesVar) = { this._variables = this._variables :+ v }
+}
+
+class JunctionTree { // clique tree
+
 }
 
 class BayesModel {
