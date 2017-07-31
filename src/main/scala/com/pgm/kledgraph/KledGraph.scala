@@ -687,7 +687,7 @@ object KledGraph {
       setBayesVar = setBayesVar :+ variable._eliminate
       val factor = sumProductEliminateVar(mapFactor, seqFactor, setBayesVar, variable, target)
       if(factor._cpds.size > 0){
-        println("variable is:"+factor._variables.map(x=>x._v)+"the facotr cpd is:"+ factor._cpds)
+        println( "variable is:" + factor._variables.map(x=>x._v) + "the facotr cpd is:"+ factor._cpds)
         seqFactor = seqFactor :+ factor
       }
     })
@@ -770,7 +770,6 @@ object KledGraph {
     var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor, initPair)
     println("the init factor len is:"+mapFactor.size)
 
-
     staticTopicCPD(mapFactor, vecRecords, mapRowStudent, mapIndex, mapTopic)
     println("the cpd factor len is:"+ mapFactor.size)
     val model = new BayesModel; mapFactor.foreach(x=>{ model.addFactor(x._2) })
@@ -780,12 +779,11 @@ object KledGraph {
     mapFactor.foreach( x=> { setFactor.add(x._2) })
 
     val _v = 15115
-    var target = mapFactor(_v)
+    var target = mapFactor(_v) // conditional factors
     val parentTarget =  target._eliminate._parents.map(x=>x._v).toSeq
     println("the parent is:"+ parentTarget)
-    // conditional factors
-    val mapEvidences:Map[BayesVar, Int] = Map(mapFactor(parentTarget(0))._eliminate -> 1, mapFactor(parentTarget(1))._eliminate ->1)
 
+    val mapEvidences:Map[BayesVar, Int] = Map(mapFactor(parentTarget(0))._eliminate -> 1, mapFactor(parentTarget(1))._eliminate ->1)
     val sequence = getSequence(setFactor, mapEvidences, _v)
     println("the sequence and size is:"+sequence.size)
 
