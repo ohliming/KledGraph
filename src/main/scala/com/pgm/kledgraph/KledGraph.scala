@@ -770,23 +770,11 @@ object KledGraph {
     var mapFactor:Map[Int, BayesFactor] =  Map(); makeMapFactor(mapFactor, initPair)
     println("the init factor len is:"+mapFactor.size)
 
-    var isCache = true
-    if(!isCache){ // Generating Models
-      staticTopicCPD(mapFactor, vecRecords, mapRowStudent, mapIndex, mapTopic)
-      println("the cpd factor len is:"+ mapFactor.size)
-      val model = new BayesModel; mapFactor.foreach(x=>{ model.addFactor(x._2) })
-      model.save("hdfs://liming/BayeModel", sc)
-    }else{
-      val model = new BayesModel
-      model.load("hdfs://liming/BayeModel",sc)
-      val factorSet = model._factors
-      factorSet.foreach(x=>{
-        if(mapFactor.contains(x._eliminate._v)){
-          mapFactor(x._eliminate._v)._cpdPositive = x._cpdPositive
-          mapFactor(x._eliminate._v)._cpdNegative = x._cpdNegative
-        }
-      })
-    }
+
+    staticTopicCPD(mapFactor, vecRecords, mapRowStudent, mapIndex, mapTopic)
+    println("the cpd factor len is:"+ mapFactor.size)
+    val model = new BayesModel; mapFactor.foreach(x=>{ model.addFactor(x._2) })
+    model.save("hdfs://liming/BayeModel", sc)
 
     var setFactor:Set[BayesFactor] = Set()
     mapFactor.foreach( x=> { setFactor.add(x._2) })
