@@ -686,8 +686,7 @@ object KledGraph {
     seqVariable.foreach(variable => { // loop the variables
       setBayesVar = setBayesVar :+ variable._eliminate
       val factor = sumProductEliminateVar(mapFactor, seqFactor, setBayesVar, variable, target)
-      if(factor._cpds.size > 0){
-        println( "variable is:" + factor._variables.map(x=>x._v) + "the facotr cpd is:"+ factor._cpds)
+      if(factor._cpds.size > 0){s
         seqFactor = seqFactor :+ factor
       }
     })
@@ -726,13 +725,6 @@ object KledGraph {
         p = p / sump
       }
     }
-
-    val mTarget = mapFactor(target._eliminate._v)
-    println("the target variable is:"+ mTarget._variables.map(x=>x._v))
-    println("the positive cpd is:"+ mTarget._cpdPositive )
-    mTarget._variables.foreach(x =>{
-      println("parent "+ x._v+" num is:"+ x.num)
-    })
 
     p
   }
