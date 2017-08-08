@@ -708,7 +708,7 @@ object KledGraph {
         }
       })
 
-      node = mapFactor(node)
+      node = edge(node)
     }
     println("the edge len is:"+ edge.size)
   }
