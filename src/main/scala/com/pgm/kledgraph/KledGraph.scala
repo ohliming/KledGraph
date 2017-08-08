@@ -685,7 +685,8 @@ object KledGraph {
 
     val edge:Map[BayesFactor, BayesFactor] = Map()
     var nodeSet:Set[Int] = Set(); nodes.foreach(x => nodeSet.add(x._eliminate._v))
-    nodes.foreach(node => { // make edge
+    var node = mapFactor(nodeSet.last)
+    while(nodeSet.size > 0){
       val v = node._eliminate._v
       nodeSet.remove(v)
       var vs1 = node.getVariables.map( x => x._v )
@@ -698,6 +699,7 @@ object KledGraph {
         val cnt = (vs1.toSet & vs2.toSet).size
         if( cnt > inCnt ){
           val source = mapFactor(target)
+
           if(edge.contains(node)){
             edge.update(node, source)
           }else{
@@ -705,8 +707,9 @@ object KledGraph {
           }
         }
       })
-    })
 
+      node = mapFactor(node)
+    }
     println("the edge len is:"+ edge.size)
   }
 
