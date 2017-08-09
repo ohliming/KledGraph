@@ -708,8 +708,12 @@ object KledGraph {
         }
       })
 
-      if( nodeSet.size > 1 && edge.contains(node) ){
-        node = edge(node)
+      if( nodeSet.size > 1 ){
+        if(edge.contains(node)){
+          node = edge(node)
+        }else{
+          node = mapFactor(nodeSet.last)
+        }
       }
     }
     println("the edge len is:"+ edge.size)
