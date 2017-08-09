@@ -692,14 +692,14 @@ object KledGraph {
       var vs1 = node.getVariables.map( x => x._v )
       vs1 = vs1 :+ v
 
-      val inCnt = 0
+      var inCnt = 0
       nodeSet.foreach(target => {
         var vs2 = mapFactor(target).getVariables.map( x => x._v)
         vs2 = vs2 :+ target
         val cnt = (vs1.toSet & vs2.toSet).size
         if( cnt > inCnt ){
           val source = mapFactor(target)
-
+          inCnt = cnt
           if(edge.contains(node)){
             edge.update(node, source)
           }else{
@@ -708,7 +708,7 @@ object KledGraph {
         }
       })
 
-      if(nodeSet.size > 1){
+      if( nodeSet.size > 1 && edge.contains(node) ){
         node = edge(node)
       }
     }
