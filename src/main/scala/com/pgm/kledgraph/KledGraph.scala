@@ -708,14 +708,17 @@ object KledGraph {
         }
       })
 
-      if( nodeSet.size > 1 ){
+      if( nodeSet.size > 0 ) {
         if(edge.contains(node)){
           node = edge(node)
         }else{
-          node = mapFactor(nodeSet.last)
+          val source = mapFactor(nodeSet.last)
+          edge += ((node -> source))
+          node = source
         }
       }
     }
+
     println("the edge len is:"+ edge.size)
   }
 
@@ -830,8 +833,7 @@ object KledGraph {
     val p = condSumProductVE(mapFactor, sequence, target, 1, mapEvidences)
     println("the result p=" + p)
 
-    // map struct for pgm
-    mapMaxSumProduct(mapFactor, sequence)
+    mapMaxSumProduct(mapFactor, sequence) // map struct for pgm
     sc.stop
   }
 }
