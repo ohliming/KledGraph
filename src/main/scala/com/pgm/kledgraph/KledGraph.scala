@@ -703,7 +703,7 @@ object KledGraph {
           if(edge.contains(node)){
             edge.update(node, source)
           }else{
-            edge += ((node, source))
+            edge += ((node -> source))
           }
         }
       })
@@ -719,7 +719,7 @@ object KledGraph {
       }
     }
 
-    println("the edge len is:"+ edge.size)
+    println("edge len is:" + edge.size+ " node len is:"+ nodeSet.size)
   }
 
   def condSumProductVE(mapFactor:Map[Int,BayesFactor], seqVariable:Seq[BayesFactor], target: BayesFactor,
