@@ -673,7 +673,6 @@ object KledGraph {
 
   def mapMaxSumProduct( mapFactor:Map[Int,BayesFactor], seqVariable:Seq[BayesFactor] ) = {    // make clique tree
     var nodes:Seq[BayesFactor] = Seq()
-
     var setBayesVar:Seq[BayesVar] = Seq()
     seqVariable.foreach(x => {
       setBayesVar = setBayesVar :+ x._eliminate
@@ -685,7 +684,9 @@ object KledGraph {
 
     val edge:Map[BayesFactor, BayesFactor] = Map()
     var nodeSet:Set[Int] = Set(); nodes.foreach(x => nodeSet.add(x._eliminate._v))
+    var nodeSetBak = nodeSet.clone()
     var node = mapFactor(nodeSet.last)
+    println("the node set len is:"+nodeSet.size +" ,"+nodeSetBak.size)
     while(nodeSet.size > 0){ // make edge
       val v = node._eliminate._v
       nodeSet.remove(v)
@@ -719,7 +720,22 @@ object KledGraph {
       }
     }
 
-    println("edge len is:" + edge.size+ " node len is:"+ nodeSet.size)
+    // variable elimination
+    var seqFactor:Seq[BayesFactor] = Seq()
+    var variable = mapFactor(nodeSetBak.last)
+    while (nodeSetBak.size > 0){
+      val factor = sumProductEliminateVar(mapFactor, seqFactor, setBayesVar, variable )
+      seqFactor = seqFactor :+ factor
+      nodeSetBak.remove(variable._eliminate._v)
+      if(edge.contains(variable)){
+        variable = edge(variable)
+      }else{
+        variable = mapFactor(nodeSetBak.last)
+      }
+    }
+
+    seqFactor
+    println("the seq factor len is:"+ seqFactor.size)
   }
 
   def condSumProductVE(mapFactor:Map[Int,BayesFactor], seqVariable:Seq[BayesFactor], target: BayesFactor,
