@@ -655,7 +655,10 @@ object KledGraph {
               })
 
               val ps = getCPDPosition(tmpSeq)
-              p =  if(p > 0.0) p * x._cpds(ps) else x._cpds(ps)
+              if(ps < x._cpds.size) {
+                p =  if(p > 0.0) p * x._cpds(ps) else x._cpds(ps)
+              }
+
               x._isUsed = 1
             }
           }
@@ -734,8 +737,8 @@ object KledGraph {
       }
     }
 
-    seqFactor
     println("the seq factor len is:"+ seqFactor.size)
+    seqFactor
   }
 
   def condSumProductVE(mapFactor:Map[Int,BayesFactor], seqVariable:Seq[BayesFactor], target: BayesFactor,
