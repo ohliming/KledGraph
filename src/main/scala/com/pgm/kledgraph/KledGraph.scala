@@ -687,9 +687,7 @@ object KledGraph {
 
     val edge:Map[BayesFactor, BayesFactor] = Map()
     var nodeSet:Set[Int] = Set(); nodes.foreach(x => nodeSet.add(x._eliminate._v))
-    var nodeSetBak = nodeSet.clone()
     var node = mapFactor(nodeSet.last)
-    println("the node set len is:"+nodeSet.size +" ,"+nodeSetBak.size)
     while(nodeSet.size > 0){ // make edge
       val v = node._eliminate._v
       nodeSet.remove(v)
@@ -723,17 +721,8 @@ object KledGraph {
       }
     }
 
-    // variable elimination
-    var seqFactor:Seq[BayesFactor] = Seq()
-    nodeSetBak.foreach(x => {
-      if(mapFactor.contains(x)){
-        val variable = mapFactor(x)
-        val factor = sumProductEliminateVar(mapFactor, seqFactor, setBayesVar, variable )
-        seqFactor = seqFactor :+ factor
-      }
-    })
-
-    seqFactor
+    // construction of a cluster tree
+    nodes
   }
 
   def condSumProductVE(mapFactor:Map[Int,BayesFactor], seqVariable:Seq[BayesFactor], target: BayesFactor,
