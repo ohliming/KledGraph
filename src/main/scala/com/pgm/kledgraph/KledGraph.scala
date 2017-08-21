@@ -725,19 +725,14 @@ object KledGraph {
 
     // variable elimination
     var seqFactor:Seq[BayesFactor] = Seq()
-    var variable = mapFactor(nodeSetBak.last)
-    while (nodeSetBak.size > 0){
-      val factor = sumProductEliminateVar(mapFactor, seqFactor, setBayesVar, variable )
-      seqFactor = seqFactor :+ factor
-      nodeSetBak.remove(variable._eliminate._v)
-      if(edge.contains(variable)){
-        variable = edge(variable)
-      }else{
-        variable = mapFactor(nodeSetBak.last)
+    nodeSetBak.foreach(x => {
+      if(mapFactor.contains(x)){
+        val variable = mapFactor(x)
+        val factor = sumProductEliminateVar(mapFactor, seqFactor, setBayesVar, variable )
+        seqFactor = seqFactor :+ factor
       }
-    }
+    })
 
-    println("the seq factor len is:"+ seqFactor.size)
     seqFactor
   }
 
