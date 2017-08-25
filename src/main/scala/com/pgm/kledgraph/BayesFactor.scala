@@ -6,6 +6,7 @@ import scala.collection.mutable.{Map, Seq, Set}
 import org.json4s._
 import org.json4s.native.JsonMethods._
 import org.json4s.JsonDSL._
+import scala.util.control._
 /**
   * Created by liming on 17-5-8.
   */
@@ -35,8 +36,39 @@ class BayesFactor(e:BayesVar){
   def addVariable(v:BayesVar) = { this._variables = this._variables :+ v }
 }
 
-class JunctionTree { // clique tree
+class JunctionTree {
+  var _factors:Seq[BayesFactor] = Seq()
+  var _left:Seq[BayesFactor] = Seq()
+  var _right:Seq[BayesFactor] = Seq()
+  val loop = new Breaks
 
+  def addFactors(b:BayesFactor) = { this._factors = this._factors :+ b }
+  def makeTree(edge:Map[BayesFactor, BayesFactor], root:BayesFactor) = {
+
+    var rightRoot = root // make right
+    while( edge.contains(rightRoot) ){
+      _right = _right :+ rightRoot
+      rightRoot = edge(rightRoot)
+    }
+
+    var leftRoot = root // make left
+    loop.breakable {
+      var old = leftRoot
+      while(true){
+        edge.foreach(x=> {
+          val source = x._2
+          if(source.eq(leftRoot)){
+            leftRoot = x._1
+            _left = _left :+ leftRoot
+          }
+        })
+
+        if( old.eq(leftRoot) ){ loop.break } // end
+      }
+    }
+  }
+
+  def calMapMaxSumProduct() = {}
 }
 
 class BayesModel {
@@ -50,7 +82,7 @@ class BayesModel {
       mapRes += (( "cpdNegative" -> factor._cpdNegative.toString ))
       mapRes += (( "cpdPositive" -> factor._cpdPositive.toString ))
       mapRes += (( "cpds" -> factor._cpds.toString ))
-      mapRes += (( "variables" -> factor._variables.map(x=>x._v).toString ))
+      mapRes += (( "variables" -> factor._variables.map(x => x._v).toString ))
       mapRes += (( "eliParents" -> factor._eliminate._parents.map(x=>x._v).toString ))
       mapRes += (( "eliChilds" -> factor._eliminate._childs.map(x=>x._v).toString ))
       mapRes += (( "eliV" -> factor._eliminate._v.toString ))
