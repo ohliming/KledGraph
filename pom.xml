@@ -79,7 +79,7 @@
           </descriptorRefs>
           <archive>
             <manifest>
-              <mainClass>com.pgm.kledgraph.KledGraph </mainClass>
+              <mainClass> com.pgm.kledgraph.KledGraph </mainClass>
             </manifest>
           </archive>
         </configuration>

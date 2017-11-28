@@ -176,7 +176,6 @@ object KledGraph {
     if(fenmu > 0){
       p = if(fenzi < fenmu) fenzi / fenmu else 1.0
     }
-
     p
   }
 

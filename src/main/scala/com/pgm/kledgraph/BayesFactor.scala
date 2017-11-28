@@ -7,6 +7,8 @@ import org.json4s._
 import org.json4s.native.JsonMethods._
 import org.json4s.JsonDSL._
 import scala.util.control._
+
+
 /**
   * Created by liming on 17-5-8.
   */
@@ -38,13 +40,12 @@ class BayesFactor(e:BayesVar){
 
 class JunctionTree {
   var _factors:Seq[BayesFactor] = Seq()
-  var _left:Seq[BayesFactor] = Seq()
+  var _left:Seq[Seq[BayesFactor]] = Seq()
   var _right:Seq[BayesFactor] = Seq()
   val loop = new Breaks
 
   def addFactors(b:BayesFactor) = { this._factors = this._factors :+ b }
   def makeTree(edge:Map[BayesFactor, BayesFactor], root:BayesFactor) = {
-
     var rightRoot = root // make right
     while( edge.contains(rightRoot) ){
       _right = _right :+ rightRoot
@@ -53,22 +54,33 @@ class JunctionTree {
 
     var leftRoot = root // make left
     loop.breakable {
-      var old = leftRoot
+      val old = leftRoot
       while(true){
+        val stack = new scala.collection.mutable.Stack[BayesFactor]
         edge.foreach(x=> {
           val source = x._2
           if(source.eq(leftRoot)){
             leftRoot = x._1
-            _left = _left :+ leftRoot
+            stack.push(leftRoot)
           }
         })
 
-        if( old.eq(leftRoot) ){ loop.break } // end
+        if( old.eq(leftRoot) ){ loop.break }
       }
     }
   }
 
-  def calMapMaxSumProduct() = {}
+  def calMapMaxSumProduct() = { // map part
+    val map = 0.0
+    _left.foreach(x=>{
+
+    })
+
+    _right.foreach(x=>{
+
+    })
+    map
+  }
 }
 
 class BayesModel {
@@ -129,7 +141,7 @@ class BayesModel {
           cpdsPositive.foreach(x=>{factor._cpdPositive = factor._cpds :+ x})
         }else if(k.equals("cpdNegative")){
           val cpdNegative = v.replace("List(","").replace(")","").split(",").map(x=> x.toDouble)
-          cpdNegative.foreach(x=>{factor._cpdNegative = factor._cpds :+ x})
+          cpdNegative.foreach(x => {factor._cpdNegative = factor._cpds :+ x})
         }
       }
 
