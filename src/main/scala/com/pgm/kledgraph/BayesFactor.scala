@@ -18,7 +18,7 @@ class BayesVar(v:Int) {
   var _parents:Set[BayesVar] = Set()
   var _childs:Set[BayesVar] = Set()
 
-  def num = _parents.size + _childs.size
+  def nm = _parents.size + _childs.size
   def setVar(value :Int) = _v = value
   def addChild(child:BayesVar) = _childs.add(child)
   def addParent(parent:BayesVar) = _parents.add(parent)
